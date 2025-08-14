@@ -6,8 +6,8 @@
 }
 
 :root {
-  --primary-color: #000000;
-  --background-color: rgb(255, 255, 255);
+  --accent-color: #0B0014;
+  --background-color: #EDEBD7;
 }
 
 /* Adds Jackpot font to be used */
@@ -117,7 +117,7 @@ a:hover::after {
   position: fixed;
   width: 100%;
   bottom: 0;
-  background-color: white;
+  background-color: var(--background-color);
 }
 
 .footer-nav a {
@@ -129,7 +129,7 @@ a:hover::after {
   position: fixed;
   top: -5px;
   width: 100%;
-  background-color: white;
+  background-color: var(--background-color);
   text-align: center;
   padding: 10px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);

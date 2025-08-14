@@ -1,2 +1,6 @@
-node_modules
-Gemfile.lock
+# Build files
+_site
+.sass*
+
+# Node.js
+node_modules/*
