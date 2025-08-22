@@ -1,22 +1,16 @@
 ---
 import Default from "../layouts/Default.astro"
-import Button from "../components/Button.astro"
 ---
 
 <Default>
   <div>
     <h1 class="title">
-      <span style={{ color: 'var(--fg)'}}>Hack</span><span style={{ color: '#0051ba' }}>KU</span>
-      <span style={{ color: '#e8000d' }}>26</span>
+      <span style={{ color: 'var(--fg)'}}>Hack</span><span style={{ color: 'var(--ku_blue)' }}>KU</span>
+      <span style={{ color: 'var(--ku_red)' }}>26</span>
     </h1>
     <h1 id="countdown">--d --h --m --s</h1>
-    <h2 class="important">coming soon!</h2>
+    <h2 class="important wave">coming soon!</h2>
     <p>~ April 2026</p>
-    <!-- <Button --> 
-    <!--   link="https://docs.google.com/forms/d/1kbk5-X0MkiU0WTwci18-0cNaQuIgh6yXsoofGszHNnY/edit" -->
-    <!-- > -->
-    <!--    Apply to Be an Organizer! -->
-    <!-- </Button> -->
   </div>
 </Default>
 
@@ -25,7 +19,7 @@ div {
   color: var(--fg_gutter);
   width: 100dvw;
   height: 100dvh;
-  
+
   display: flex;
   flex-direction: column;
   place-content: center;
@@ -43,6 +37,18 @@ div {
 
 .important {
   color: #f2a900;
+  animation: wave 1.5s ease-in-out infinite;
+}
+
+@keyframes wave {
+0% {
+  transform: translateY(0);
+}
+50% {
+  transform: translateY(-8px);
+}
+100% {
+  transform: translateY(0);
 }
 </style>
 
