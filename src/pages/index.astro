@@ -1,0 +1,74 @@
+---
+import Default from "../layouts/Default.astro"
+---
+
+<Default>
+  <div>
+    <h1 class="title">
+      <span style={{ color: 'var(--fg)'}}>Hack</span><span style={{ color: '#0051ba' }}>KU</span>
+      <span style={{ color: '#e8000d' }}>26</span>
+    </h1>
+    <h1 id="countdown">--d --h --m --s</h1>
+    <h2 class="important">coming soon!</h2>
+    <p>~ April 2026</p>
+  </div>
+</Default>
+
+<style>
+div {
+  color: var(--fg_gutter);
+  width: 100dvw;
+  height: 100dvh;
+  
+  display: flex;
+  flex-direction: column;
+  place-content: center;
+  text-align: center;
+}
+
+.title {
+  font-size: 4rem;
+
+  /* Mobile styles */
+  @media (max-width: 768px) {
+    font-size: 3rem;
+  }
+}
+
+.important {
+  color: #f2a900;
+}
+</style>
+
+<script>
+// Set the date we're counting down to
+var countDownDate = new Date("Apr 17, 2026 00:00:00").getTime();
+
+// Update the count down every 1 second
+var x = setInterval(function () {
+  // Get the current date and time
+  var now = new Date().getTime();
+
+  // Find the distance between now and the count down date
+  var distance = countDownDate - now;
+
+  // Time calculations for days, hours, minutes and seconds
+  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+  const countDown = document.getElementById("countdown")!;
+
+  // Display the result in the element with id="countdown"
+  countDown.innerText =
+    "~" + days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+
+  // If the count down is finished, write some text
+  if (distance < 0) {
+    clearInterval(x);
+    countDown.innerText = "EXPIRED";
+  }
+}, 1000);
+</script>
+

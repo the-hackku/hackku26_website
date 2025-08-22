@@ -1,0 +1,29 @@
+---
+import BannerSvg from '../assets/mlh-banner.svg'
+---
+<a href="https://mlh.io/seasons/2026/events" target="_blank" rel="noopener noreferrer">
+  <BannerSvg />
+</a>
+
+<style>
+svg {
+  position: fixed;
+  top: -5px;
+  right: 5%;
+  z-index: 1000;
+
+  transition: transform 0.2s;
+  height: 20%;
+
+  /* Mobile styles */
+  @media (max-width: 768px) {
+    transform: translateX(5%);
+    height: 15%;
+  }
+}
+
+svg:hover {
+  transform: translateY(10px) scale(1.1);
+}
+
+</style>
