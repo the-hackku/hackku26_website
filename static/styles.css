@@ -5,6 +5,7 @@
   box-sizing: border-box;
 }
 
+/* Global colors */
 :root {
   --accent-color: #0B0014;
   --background-color: #EDEBD7;
@@ -25,10 +26,36 @@ body {
   align-items: center;
   height: 100vh;
   margin: 0;
+
   background-image: url("/static/assets/web_background.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
+}
+
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+a::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0);
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: var(--primary-color);
+  transform-origin: bottom right;
+  transition: transform 0.25s ease-out;
+}
+
+a:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
 }
 
 #mlh-trust-badge {
@@ -83,31 +110,6 @@ body {
 
 .logo-img {
   width: 20%;
-}
-
-a {
-  color: var(--primary-color);
-  text-decoration: none;
-  margin-bottom: 10px;
-  position: relative;
-}
-
-a::after {
-  content: "";
-  position: absolute;
-  width: 100%;
-  transform: scaleX(0);
-  height: 2px;
-  bottom: 0;
-  left: 0;
-  background-color: var(--primary-color);
-  transform-origin: bottom right;
-  transition: transform 0.25s ease-out;
-}
-
-a:hover::after {
-  transform: scaleX(1);
-  transform-origin: bottom left;
 }
 
 .footer-nav {
@@ -220,39 +222,4 @@ a:hover::after {
     margin: 0 5px;
     text-decoration: none;
   }
-
-  /* .code-item {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-left: 0px;
-    margin-right: 0px;
-  }
-
-  #warning-box {
-    margin-top: 0px;
-    margin-bottom: 0px;
-  }
-
-  .code-title {
-    margin-top: 0px;
-    margin-bottom: 0px;
-  }
-
-  .code-list {
-    margin-bottom: 0px;
-    margin-top: 0px;
-  }
-
-  .code-paragraph {
-    margin-top: 10px;
-    margin-bottom: 10px;
-  }
-
-  #photo-title {
-    margin-top: 30px;
-  }
-
-  #rules-title {
-    margin-top: -50px;
-  } */
 }
