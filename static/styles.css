@@ -13,7 +13,7 @@
 /* Adds Jackpot font to be used */
 @font-face {
   font-family: "Jackpot";
-  src: url("../fonts/Jackpot.ttf") format("truetype");
+  src: url("fonts/Jackpot.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -111,13 +111,11 @@ a:hover::after {
 }
 
 .footer-nav {
-  color: #fff;
   text-align: center;
   padding: 10px 0;
   position: fixed;
   width: 100%;
   bottom: 0;
-  background-color: var(--background-color);
 }
 
 .footer-nav a {
