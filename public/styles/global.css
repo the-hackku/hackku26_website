@@ -1,0 +1,52 @@
+/* Global colors */
+:root {
+  --fg: #252422;
+  --fg_gutter: #595959;
+  --bg: #d7d2cb;
+}
+
+/* Adds Jackpot font to be used */
+@font-face {
+  font-family: "Jackpot";
+  src: url("/fonts/Jackpot.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* CSS reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg);
+  font-family: "Jackpot", sans-serif;
+  color: var(--fg);
+}
+
+a {
+  color: var(--fg);
+  text-decoration: none;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+a::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0);
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  /* background-color: var(--primary-color); */
+  transform-origin: bottom right;
+  transition: transform 0.25s ease-out;
+}
+
+a:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
