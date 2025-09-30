@@ -1,6 +1,7 @@
 ---
 import Default from "../layouts/Default.astro"
 import Button from "../components/Button.astro"
+import Countdown from "../components/Countdown.jsx"
 ---
 
 <Default>
@@ -9,7 +10,8 @@ import Button from "../components/Button.astro"
       <span style={{ color: 'var(--fg)'}}>Hack</span><span style={{ color: 'var(--ku_blue)' }}>KU</span>
       <span style={{ color: 'var(--ku_red)' }}>26</span>
     </h1>
-    <h1 id="countdown">--d --h --m --s</h1>
+    <!-- <h1 id="countdown">--d --h --m --s</h1> -->
+    <Countdown toDateStr="Apr 17, 2026 00:00:00" client:load/>
     <h2 class="important wave">coming soon!</h2>
     <p>~ April 2026</p>
     <Button link="https://docs.google.com/document/d/1i_GyIkB9uczdHhDHN21_D2YCgBVfm3W6SIrVlrtPfFA/">
@@ -51,42 +53,10 @@ div {
   transform: translateY(0);
 }
 50% {
-  transform: translateY(-8px);
+  transform: translateY(-15px);
 }
 100% {
   transform: translateY(0);
 }
 </style>
-
-<script>
-// Set the date we're counting down to
-var countDownDate = new Date("Apr 17, 2026 00:00:00").getTime();
-
-// Update the count down every 1 second
-var x = setInterval(function () {
-  // Get the current date and time
-  var now = new Date().getTime();
-
-  // Find the distance between now and the count down date
-  var distance = countDownDate - now;
-
-  // Time calculations for days, hours, minutes and seconds
-  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-  const countDown = document.getElementById("countdown")!;
-
-  // Display the result in the element with id="countdown"
-  countDown.innerText =
-    "~" + days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
-
-  // If the count down is finished, write some text
-  if (distance < 0) {
-    clearInterval(x);
-    countDown.innerText = "EXPIRED";
-  }
-}, 1000);
-</script>
 
