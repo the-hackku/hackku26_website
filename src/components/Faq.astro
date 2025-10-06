@@ -1,0 +1,67 @@
+---
+let faqItems = [
+  {
+    question: "What is HackKU?",
+    answer: "HackKU is a 36 hour hackathon held anually in the spring. It is organized by students at The University of Kansas."
+  },
+  {
+    question: "What's a hackathon?",
+    answer: "A hackathon is an event where individuals or teams come together to brainstorm, design, and build projects. It provides an environment to learn new skills, tackle real-world challenges, and create impactful solutions, with opportunities to network and compete for prizes!"
+  },
+  {
+    question: "Who can participate?",
+    answer: "Current students are welcome to participate. No prior experience is necessary! All High school students will require a chaperone.",
+  },
+  {
+    question: "Is there a cost to attend?",
+    answer: "No, HackKU is free to attend! We provide meals, swag, and resources for all participants.",
+  },
+  {
+    question: "Can I participate remotely?",
+    answer: "No, HackKU is an in-person event. We believe that the best experience comes from being on-site, collaborating with others, and engaging in the full hackathon experience!",
+  },
+];
+---
+
+<div class="container">
+  <h2 class="heading">Frequently Asked Questions</h2>
+  {faqItems.map(item => (
+    <div class="faq-item">
+      <h3 class="faq-question">Q. {item.question}</h3>
+      <p>{item.answer}</p>
+    </div>
+  ))}
+</div>
+
+<style>
+.container {
+  width: 100dvw;
+  height: 100dvh;
+
+  display: flex;
+  flex-direction: column;
+  place-content: center;
+
+  padding: 0 10rem;
+
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.5rem;
+}
+
+.faq-item {
+  margin-bottom: 40px;
+}
+
+.heading {
+  color: var(--ku_red);
+  text-align: center;
+  margin-bottom: 80px;
+  font-family: 'Jackpot', cursive;
+}
+
+.faq-question {
+  color: var(--ku_blue);
+  margin-bottom: 10px;
+}
+</style>
+
