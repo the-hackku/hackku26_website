@@ -50,7 +50,7 @@ export default function HomePage() {
   useEffect(() => {
     const sections = document.querySelectorAll("[id]");
     // const validSectionIds = ["header", "about", "faq", "sponsors", "team"];
-    const validSectionIds = ["header", "about", "faq", "team"];
+    const validSectionIds = ["header", "about", "faq", "sponsors", "team"];
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -82,7 +82,7 @@ export default function HomePage() {
     setIsMouseOver(false);
   };
 
-  const sponsorsEnabled = false;
+  const SPONSORS_ENABLED = false;
 
   const previousEvents = [
     {
@@ -572,9 +572,10 @@ export default function HomePage() {
             <AllSvg className="w-full h-full object-cover" />
           </div>
         </section>
+
         <AboutSection previousEvents={previousEvents} id="about" />
         <FAQSection faqs={faqs} id="faq" />
-        {sponsorsEnabled && (
+        {SPONSORS_ENABLED && (
           <SponsorsSection
             sponsorTiers={sponsorTiers}
             sponsors={sponsors}

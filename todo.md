@@ -1,4 +1,5 @@
 Things to change:
+- [ ] Change title to HackKU 26
 - [ ] MLH banner
 - [ ] HackKU Logo
 - [ ] Dates on homepage
