@@ -1,0 +1,261 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model User {
+  id                   String               @id @default(cuid())
+  name                 String?
+  email                String               @unique
+  role                 ROLE                 @default(HACKER)
+  emailVerified        DateTime?
+  image                String?
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+  travelReimbursementId String? 
+  travelReimbursement  TravelReimbursement? @relation(fields: [travelReimbursementId], references: [id], onDelete: SetNull, name: "travelReimbursement")
+  
+  accounts             Account[]
+  Authenticator        Authenticator[]
+  checkinsAsAdmin      Checkin[]            @relation("AdminCheckin")
+  checkinsAsUser       Checkin[]            @relation("UserCheckedIn")
+  ParticipantInfo      ParticipantInfo?
+  scansAsAdmin         Scan[]               @relation("AdminScanner")
+  scansAsUser          Scan[]               @relation("UserScanned")
+  sessions             Session[]
+
+  reimbursementInvites ReimbursementInvite[]
+
+  // References the reimbursement created by this user (if they are the leader)
+  createdReimbursement TravelReimbursement? @relation("creator")
+}
+
+
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
+model Authenticator {
+  credentialID         String  @unique
+  userId               String
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+  user                 User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, credentialID])
+}
+
+model Event {
+  id          String    @id @default(cuid())
+  name        String
+  startDate   DateTime
+  endDate     DateTime
+  location    String?
+  description String?
+  eventType   EventType @default(REQUIRED)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  checkins    Checkin[]
+  scans       Scan[]
+}
+
+model Scan {
+  id         String   @id @default(cuid())
+  userId     String
+  eventId    String
+  adminId    String
+  checkinId  String?
+  successful Boolean
+  createdAt  DateTime @default(now())
+  admin      User     @relation("AdminScanner", fields: [adminId], references: [id])
+  checkin    Checkin? @relation(fields: [checkinId], references: [id])
+  event      Event    @relation(fields: [eventId], references: [id])
+  user       User     @relation("UserScanned", fields: [userId], references: [id])
+}
+
+model Checkin {
+  id        String   @id @default(cuid())
+  userId    String
+  eventId   String
+  adminId   String
+  createdAt DateTime @default(now())
+  admin     User     @relation("AdminCheckin", fields: [adminId], references: [id])
+  event     Event    @relation(fields: [eventId], references: [id])
+  user      User     @relation("UserCheckedIn", fields: [userId], references: [id])
+  Scan      Scan[]
+}
+
+model ParticipantInfo {
+  id                    String   @id @default(cuid())
+  userId                String   @unique
+  firstName             String
+  lastName              String
+  phoneNumber           String
+  age                   Int
+  genderIdentity        String
+  race                  String
+  hispanicOrLatino      String
+  countryOfResidence    String
+  isHighSchoolStudent   Boolean
+  currentSchool         String?
+  levelOfStudy          String?
+  major                 String?
+  minor                 String?
+  previousHackathons    Int?
+  tShirtSize            String
+  dietaryRestrictions   String?
+  specialAccommodations String?
+  chaperoneFirstName    String?
+  chaperoneLastName     String?
+  chaperoneEmail        String?
+  chaperonePhoneNumber  String?
+  agreeHackKUCode       Boolean
+  agreeMLHCode          Boolean
+  shareWithMLH          Boolean
+  receiveEmails         Boolean
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  resumeUrl             String?
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model TravelReimbursement {
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  transportationMethod String
+  address              String
+  reason               String
+  distance             Float
+  estimatedCost        Float
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @default(now())
+
+  creator              User     @relation(fields: [userId], references: [id], onDelete: Cascade, name: "creator")
+  members              User[]   @relation("travelReimbursement") 
+  invites              ReimbursementInvite[]
+}
+
+model ReservationRequest {
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  teamName             String
+  memberEmails         String
+  outOfState           Boolean
+  roomAssignment       String?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @default(now())
+}
+
+model ThemedRoomReservation {
+  id           String     @id @default(cuid())
+  userId       String   @unique
+  teamName     String
+  memberEmails String
+  timeSlot     TimeSlot
+  theme        RoomTheme
+  createdAt    DateTime   @default(now())
+
+@@unique([theme, timeSlot], name: "theme_timeSlot")
+
+}
+
+
+enum TimeSlot {
+  FRI_8_11PM
+  FRI_11PM_2AM
+  SAT_2_5AM
+  SAT_5_8AM
+  SAT_8_11AM
+  SAT_11AM_2PM
+  SAT_2_5PM
+  SAT_5_8PM
+  SAT_8_11PM
+  SAT_11PM_2AM
+  SUN_2_5AM
+  SUN_5_8AM
+}
+
+enum RoomTheme {
+  DUNGEONS_AND_DRAGONS
+  HOW_TO_TRAIN_YOUR_DRAGON
+  DARK_FAIRY
+}
+
+
+
+model ReimbursementInvite {
+  id                 String   @id @default(cuid())
+  reimbursementId    String
+  userId            String
+  status            InviteStatus @default(PENDING)
+  createdAt         DateTime @default(now())
+
+  user              User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reimbursement     TravelReimbursement   @relation(fields: [reimbursementId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, reimbursementId]) // Prevents duplicate invites
+}
+
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
+
+
+enum EventType {
+  FOOD
+  REQUIRED
+  WORKSHOPS
+  SPONSOR
+  ACTIVITIES
+}
+
+enum ROLE {
+  HACKER
+  ADMIN
+  VOLUNTEER
+}
