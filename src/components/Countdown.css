@@ -1,0 +1,8 @@
+.counter-span {
+  font-size: 4rem;
+
+  /* Mobile styles */
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
+}

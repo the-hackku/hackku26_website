@@ -36,7 +36,7 @@ let faqItems = [
 <style>
 .container {
   width: 100dvw;
-  height: 100dvh;
+  min-height: 100dvh;
 
   display: flex;
   flex-direction: column;
@@ -46,6 +46,11 @@ let faqItems = [
 
   font-family: 'Roboto', sans-serif;
   font-size: 1.5rem;
+
+  /* Add responsive padding for mobile */
+  @media (max-width: 768px) {
+    padding: 0 2rem;
+  }
 }
 
 .faq-item {
@@ -57,6 +62,11 @@ let faqItems = [
   text-align: center;
   margin-bottom: 80px;
   font-family: 'Jackpot', cursive;
+
+  /* Add responsive padding for mobile */
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+  }
 }
 
 .faq-question {

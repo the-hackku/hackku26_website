@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Counter from './Counter';
+import './Countdown.css';
 
 // helper function
 function getTimeRemaining(targetDate) {
@@ -28,7 +29,7 @@ export default function Countdown({ toDateStr }) {
   }
 
   return (
-    <span style={{ fontSize: 60,  }}>
+    <span className='counter-span'>
       <Counter value={timeLeft.days} followUp='d'/>
       <Counter value={timeLeft.hours} places={[10, 1]} followUp='h'/>
       <Counter value={timeLeft.minutes} places={[10, 1]} followUp='m'/>

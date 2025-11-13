@@ -2,7 +2,6 @@ import { motion, useSpring, useTransform } from 'motion/react';
 import { useEffect } from 'react';
 
 import './Counter.css';
-import { span } from 'motion/react-client';
 
 function Number({ mv, number, height }) {
   let y = useTransform(mv, latest => {
@@ -48,7 +47,7 @@ export default function Counter({
   containerStyle,
   counterStyle,
   digitStyle,
-  gradientHeight = 16,
+  gradientHeight = 5,
   gradientFrom = 'var(--bg)',
   gradientTo = 'transparent',
   followUp = "",
@@ -57,7 +56,7 @@ export default function Counter({
 }) {
   const height = 2 * fontSize;
   const defaultCounterStyle = {
-    fontSize,
+    fontSize: 'inherit',
     gap: gap,
     borderRadius: borderRadius,
     paddingLeft: horizontalPadding,
