@@ -11,6 +11,16 @@ interface Props {
 
 const LINKS: LinkItem[] = [
   {
+    text: "home",
+    link: "https://forms.gle/pbEmYa2y9p13pJRF7",
+    newtab: true,
+  },
+  // {
+  //   text: "sponsor",
+  //   link: "/sponsor",
+  //   newtab: false,
+  // },
+  {
     text: "interest form",
     link: "https://forms.gle/pbEmYa2y9p13pJRF7",
     newtab: true,
@@ -25,10 +35,6 @@ const LINKS: LinkItem[] = [
     link: "https://www.instagram.com/thehackku/",
     newtab: true,
   },
-  {
-    text: "rules",
-    link: "/rules",
-  }
 ]
 
 const { title } = Astro.props;
@@ -42,3 +48,12 @@ const { title } = Astro.props;
     <Footer links={LINKS}  />
 	</body>
 </html>
+
+<style>
+/* Large screens: add some padding at the bottom to account for nav bar */
+@media (min-width: 768px) {
+  body {
+    padding-bottom: 5rem;
+  }
+}
+</style>

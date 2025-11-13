@@ -1,0 +1,109 @@
+---
+import Default from "../layouts/Default.astro";
+import Button from "../components/Button.astro";
+import { Image } from "astro:assets";
+import bannerImg from "../assets/DSC08918.jpg";
+---
+
+<Default>
+  <div class="container">
+    <div class="header-section">
+      <h1 class="title">Sponsoring 
+        Hack<span style={{ color: 'var(--ku_blue)' }}>K</span><span style={{ color: 'var(--ku_red)' }}>U</span>? </em>
+      </h1>
+      <p class="subtitle">What you need to know about HackKU and (potentially) sponsoring us!!</p>
+
+
+      <div class="button-container">
+        <Button link="/HACKKU ‘26 SPONSORSHIP PACKET [Dark Version].pdf">
+          Sponsorship Packet <span style={{ backgroundColor: 'var(--fg)', color: 'var(--bg)', padding: '5px', borderRadius: '5px' }}>(Dark Mode)</span>
+        </Button>
+
+        <Button link="/HACKKU ‘26 SPONSORSHIP PACKET [Light Version].pdf">
+          Sponsorship Packet <span style={{ backgroundColor: 'var(--bg)', color: 'var(--fg)', padding: '5px', borderRadius: '5px' }}>(Light Mode)</span>
+        </Button>
+      </div>
+    </div>
+
+    <Image src={bannerImg} alt="Banner Image HackKU24" class="banner-img"/>
+
+    <div class="section-1">
+      <h1 style={{ color: 'var(--fg)'}}>
+        What is 
+        <em>
+          Hack<span style={{ color: 'var(--ku_blue)' }}>K</span><span style={{ color: 'var(--ku_red)' }}>U</span>? </em>
+      </h1> 
+
+      <p>
+        Amongst all the events held at The University of Kansas (KU) School of Engineering, few are as anticipated as <b>HackKU</b>.
+      </p>
+
+      <p>
+        <b>HackKU</b> is <b>KU</b>'s annual <b>36-hour hackathon</b> where top university talent gathers to push the envelope by <b>creating innovative solutions</b> to real-world problems, <b>learning cutting-edge technical</b> skills through <b>attending workshops</b>, and <b>networking</b> with <b>industry-leading</b> companies who serve as mentors and judges.
+      </p>
+
+      <p>
+        HackKU's <b>rapid expansion</b> was formally acknowledged at <b>Major League Hacking’s 2023 HackCon</b>, where we were featured as one of the <b>network's fastest-growing events</b>. From our first HackKU in 2017 with 34 students to almost <b>1,000 students in 2025</b>, our soaring growth offers sponsors an unparalleled and ever-increasing reach to top talent.
+      </p>
+
+      <h2 style={{ color: 'var(--ku_yellow)'}}>Our Mission</h2>
+
+      <p>
+        To <b>bridge the gap</b> between <b>academic theory</b> and <b>real-world</b> practice by <b>accelerating technical proficiency</b> and fostering a <b>collaborative community</b>. Our goal is to empower students from <b>diverse backgrounds</b> with the experience to architect tomorrow's solutions, building a <b>robust talent pipeline</b> for the future.
+      </p>
+    </div>
+  </div>
+</Default>
+
+<style>
+.container {
+  color: var(--fg_gutter);
+  width: 60%;
+  margin: auto;
+  min-height: 100dvh;
+
+  display: flex;
+  flex-direction: column;
+  place-content: center;
+  text-align: left;
+  font-family: Roboto, sans-serif;
+}
+
+.banner-img {
+  width: 80%;
+  height: auto;
+
+  margin: 3rem auto;
+}
+
+.title {
+  font-family: Jackpot, cursive;
+  color: var(--fg);
+  font-size: 3rem;
+  text-align: center;
+
+  /* Mobile styles */
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
+}
+
+.subtitle {
+  font-family: Jackpot, cursive;
+  text-align: center;
+}
+
+.button-container {
+  display: flex;
+  width: 60%;
+  margin: 1rem auto;
+}
+
+p {
+  padding: 1rem 0;
+}
+
+b {
+  color: var(--ku_blue);
+}
+</style>

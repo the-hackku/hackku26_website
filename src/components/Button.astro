@@ -1,9 +1,11 @@
 ---
 interface Props {
   link: string;
+  borderColor?: string;
 }
 
-const { link } = Astro.props;
+const { link, borderColor } = Astro.props;
+const border = borderColor ?? "#252422";
 ---
 
 <button>
@@ -16,13 +18,13 @@ const { link } = Astro.props;
   </a>
 </button>
 
-<style>
+<style define:vars={{ borderColor: border }}>
 button {
   margin: 1.5rem auto;
   padding: 1rem;
 
   border-radius: 9999px; /* or 50% */
-  border: 2px solid var(--fg);
+  border: 2px solid var(--borderColor);
 
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
