@@ -1,0 +1,54 @@
+---
+interface Props {
+    name: string;
+    role: string;
+    photoUrl: string;
+}
+
+const { name, role, photoUrl } = Astro.props;
+---
+<div id="container">
+    <img src={photoUrl} alt="Team Member Photo" class="team-member-photo" />
+    <h3 class="team-member-name">{name}</h3>
+    <p class="team-member-role">{role}</p>
+</div>
+
+<style>
+.team-member-photo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1rem;
+    border: 2px solid gray;
+    margin-top: 1rem;
+    max-width: 100%;
+
+    @media (max-width: 768px) {
+        width: 100%;
+        height: auto;
+    }
+}
+.team-member-name {
+    font-size: 1.25rem;
+    margin: 0.5rem;
+}
+.team-member-role {
+    font-size: 1rem;
+    color: var(--fg_gutter);
+    margin: 0.5rem;
+}
+
+#container {;
+    align-items: center;
+    border: 2px solid var(--ku_blue);
+    border-radius: 1rem;
+    background-color: rgba(0, 0, 0, 0.08);
+    transition: all 0.2s;
+}
+
+#container:hover {
+    transform: translateY(-10px) scale(1.1);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.17);
+}
+</style>

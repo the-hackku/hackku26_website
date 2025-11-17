@@ -4,6 +4,8 @@ import Button from "../components/Button.astro"
 import Faq from "../components/Faq.astro"
 
 import Countdown from "../components/Countdown.jsx"
+
+import TeamMember from "../components/TeamMember.astro"
 ---
 
 <Default>
@@ -14,15 +16,24 @@ import Countdown from "../components/Countdown.jsx"
     </h1>
     <!-- <h1 id="countdown">--d --h --m --s</h1> -->
     <Countdown toDateStr="Apr 17, 2026 00:00:00" client:load/>
-    <h2 class="important wave">coming soon!</h2>
-    <p>~ April 2026</p>
+    <h2 class="important wave">April 17-19, 2026!</h2>
     <Button link="https://docs.google.com/forms/d/e/1FAIpQLSfg6kfJNFgHkrxn3ltZeq12VJ8ixg3biHEPKcjfUERIY-oEgQ/viewform?usp=header">
       <span style={{ color: '#2767ff'}}>
-        Register for HackKK26!!
+        Register for HackKU26!!
       </span>
     </Button>
   </div>
   <Faq />
+  <div style="justify-content: center;">
+    <h1 class="title">Meet the Team</h1>
+    <div id="members-container">
+      <TeamMember name="John Doe" role="Software Engineer" photoUrl="https://upload.wikimedia.org/wikipedia/commons/3/30/Vulpes_vulpes_ssp_fulvus.jpg" />
+      <TeamMember name="Jane Smith" role="Product Manager" photoUrl="https://upload.wikimedia.org/wikipedia/commons/3/30/Vulpes_vulpes_ssp_fulvus.jpg" />
+      <TeamMember name="Alice Johnson" role="Designer" photoUrl="https://upload.wikimedia.org/wikipedia/commons/3/30/Vulpes_vulpes_ssp_fulvus.jpg" />
+      <TeamMember name="Bob Brown" role="Marketing Specialist" photoUrl="https://upload.wikimedia.org/wikipedia/commons/3/30/Vulpes_vulpes_ssp_fulvus.jpg" />
+      <TeamMember name="Charlie Davis" role="Data Scientist" photoUrl="https://upload.wikimedia.org/wikipedia/commons/3/30/Vulpes_vulpes_ssp_fulvus.jpg" />
+    </div>
+  </div>
 </Default>
 
 <style>
@@ -46,9 +57,24 @@ div {
   }
 }
 
+#members-container {
+    min-height: 0px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2rem;
+    padding: 2rem;
+    justify-content: center;
+    place-content: center;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
 .important {
   color: #f2a900;
   animation: wave 1.5s ease-in-out infinite;
+
 }
 
 @keyframes wave {
