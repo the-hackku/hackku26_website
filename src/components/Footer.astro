@@ -3,6 +3,7 @@ export interface LinkItem {
   link: string;
   text: string;
   newtab?: boolean;
+  emphasis?: boolean;
 }
 
 interface Props {
@@ -13,108 +14,124 @@ const { links } = Astro.props;
 ---
 
 <style>
-  :root {
-    --drawer-width: 280px;
-    --duration: 220ms;
-    --easing: cubic-bezier(.2,.8,.2,1);
+:root {
+  --drawer-width: 280px;
+  --duration: 220ms;
+  --easing: cubic-bezier(.2,.8,.2,1);
+}
+
+a {
+  margin: 0 1rem;
+  transition: all 0.2s;
+
+  /* Mobile styles */
+  @media (max-width: 768px) {
+    margin: 0.5rem 0;
   }
+}
 
-  a {
-    margin: 0 1rem;
-    transition: all 0.2s;
+a:hover {
+  transform: translateY(-5px) scale(1.2);
+}
 
-    /* Mobile styles */
-    @media (max-width: 768px) {
-      margin: 0.5rem 0;
-    }
-  }
+/* Hamburger button */
+.hamburger {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 50;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+}
 
-  a:hover {
-    transform: translateY(-5px) scale(1.2);
-    color: var(--fg);
-  }
+.hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: currentColor;
+  position: relative;
+}
+.hamburger span::before,
+.hamburger span::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 22px;
+  height: 2px;
+  background: currentColor;
+}
+.hamburger span::before { top: -6px; }
+.hamburger span::after  { top:  6px; }
 
-  /* Hamburger button */
+/* Drawer */
+.drawer {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: min(100vw, var(--drawer-width));
+  background: var(--bg);
+  box-shadow: 0 10px 30px rgba(0,0,0,.2);
+  transform: translateX(-100%);
+  transition: transform var(--duration) var(--easing);
+  padding: 1rem;
+  padding-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  z-index: 40;
+}
+.drawer.open {
+  transform: translateX(0);
+}
+
+.home-link {
+  color: #0051ba;
+}
+
+/* Large screens: fixed at bottom */
+@media (min-width: 768px) {
   .hamburger {
-    position: fixed;
-    top: 0.5rem;
-    left: 0.5rem;
-    z-index: 50;
-    border: none;
-    background: transparent;
-    padding: 0;
-    cursor: pointer;
-    width: 32px;
-    height: 32px;
-    display: grid;
-    place-items: center;
+    display: none;
   }
-
-  .hamburger span {
-    display: block;
-    width: 22px;
-    height: 2px;
-    background: currentColor;
-    position: relative;
-  }
-  .hamburger span::before,
-  .hamburger span::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    width: 22px;
-    height: 2px;
-    background: currentColor;
-  }
-  .hamburger span::before { top: -6px; }
-  .hamburger span::after  { top:  6px; }
-
-  /* Drawer */
   .drawer {
-    position: fixed;
-    inset: 0 auto 0 0;
-    width: min(100vw, var(--drawer-width));
-    background: var(--bg);
-    box-shadow: 0 10px 30px rgba(0,0,0,.2);
-    transform: translateX(-100%);
-    transition: transform var(--duration) var(--easing);
-    padding: 1rem;
-    padding-top: 3rem;
-    display: flex;
-    flex-direction: column;
-    z-index: 40;
+    width: 100%;
+    height: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    transform: none;
+    flex-direction: row; /* optional: row layout on desktop */
+    justify-content: center;
+    box-shadow: 0 -4px 20px rgba(0,0,0,.1);
+    padding-top: 1rem;
   }
-  .drawer.open {
-    transform: translateX(0);
-  }
+}
 
-  .home-link {
-    color: #0051ba;
-  }
+.emphasis {
+  color: var(--ku_red);
+  display: inline-block;
+  transform-origin: 50% 50%;
+  will-change: transform;
 
-  /* Large screens: fixed at bottom */
-  @media (min-width: 768px) {
-    .hamburger {
-      display: none;
-    }
-    .drawer {
-      width: 100%;
-      height: auto;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      top: auto;
-      transform: none;
-      flex-direction: row; /* optional: row layout on desktop */
-      justify-content: center;
-      box-shadow: 0 -4px 20px rgba(0,0,0,.1);
-      padding-top: 1rem;
-    }
+  --tilt-angle: 8deg;
+  --cycle-time: 2s;   /* total duration including rest period */
 
-    .home-link {
-      display: none;
-    }
-  }
+  animation: tilt-wait var(--cycle-time) ease-in-out infinite;
+}
+
+@keyframes tilt-wait {
+  0%   { transform: rotate(0deg); }                                /* rest */
+  10%  { transform: rotate(calc(-1 * var(--tilt-angle))); }        /* start tilt */
+  20%  { transform: rotate(var(--tilt-angle)); }                   /* swing right */
+  40%  { transform: rotate(calc(-1 * var(--tilt-angle))); }        /* swing left */
+  50%  { transform: rotate(0deg); }                                /* back to neutral */
+  100% { transform: rotate(0deg); }                                /* rest period */
+}
 </style>
 
 <button
@@ -131,6 +148,7 @@ const { links } = Astro.props;
   <a href="/" class="home-link">home</a>
   {links.map(l => (
   <a 
+    class={l.emphasis ? "emphasis" : ""}
     target={l.newtab ? '_blank' : ''}
     rel={l.newtab ? 'noopener noreferrer' : ''} 
     href={l.link}

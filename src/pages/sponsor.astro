@@ -3,6 +3,34 @@ import Default from "../layouts/Default.astro";
 import Button from "../components/Button.astro";
 import { Image } from "astro:assets";
 import bannerImg from "../assets/DSC08918.jpg";
+
+
+const benefits = [
+  {
+    name: "Presenting Sponsor",
+    desc: "By becoming a presenting sponsor, you will have the chance to excite and influence hundreds of innovators by delivering a keynote speech at our opening and closing ceremonies",
+  },
+  {
+    name: "Sponsor a Track",
+    desc: "Sponsoring a track gives you the opportunity to see how fresh eyes tackle challenges in your industry. If you choose this option, you will collaborate with our team to develop a competition category or challenge centered around your organization’s values, technology, or industry. In addition, you will also provide the winners of your track with prizes",
+  },
+  {
+    name: "Sponsor a Workshop",
+    desc: "As a workshop sponsor, you can put your product directly in the hands of creators, or share your organization’s story with innovators who come from a wide variety of backgrounds and disciplines. With this option, you will work directly with our organizing team to plan and hold an hour-long workshop during HackKU.",
+  },
+  {
+    name: "Top Talent Networking Event",
+    desc: "Get direct access to our top attendees filtered by the School of Engineer’s Recruiting Pipeline based on stats like resume, GPA, and more.",
+  },
+  {
+    name: "Sponsorship Fair",
+    desc: "Engage with students at welcome to showcase your company and opportunities.",
+  },
+  {
+    name: "Talent Pipeline Access",
+    desc: "Get access to attendees emails and resumes.",
+  },
+]
 ---
 
 <Default>
@@ -22,13 +50,20 @@ import bannerImg from "../assets/DSC08918.jpg";
         <Button link="/HACKKU ‘26 SPONSORSHIP PACKET [Light Version].pdf">
           Sponsorship Packet <span style={{ backgroundColor: 'var(--bg)', color: 'var(--fg)', padding: '5px', borderRadius: '5px' }}>(Light Mode)</span>
         </Button>
+
       </div>
+
+      <div class="info">
+        Check out our sponsorship packet to get more info on sponsoring us!! 
+      </div>
+
+      
     </div>
 
     <Image src={bannerImg} alt="Banner Image HackKU24" class="banner-img"/>
 
     <div class="section-1">
-      <h1 style={{ color: 'var(--fg)'}}>
+      <h1>
         What is 
         <em>
           Hack<span style={{ color: 'var(--ku_blue)' }}>K</span><span style={{ color: 'var(--ku_red)' }}>U</span>? </em>
@@ -46,12 +81,27 @@ import bannerImg from "../assets/DSC08918.jpg";
         HackKU's <b>rapid expansion</b> was formally acknowledged at <b>Major League Hacking’s 2023 HackCon</b>, where we were featured as one of the <b>network's fastest-growing events</b>. From our first HackKU in 2017 with 34 students to almost <b>1,000 students in 2025</b>, our soaring growth offers sponsors an unparalleled and ever-increasing reach to top talent.
       </p>
 
-      <h2 style={{ color: 'var(--ku_yellow)'}}>Our Mission</h2>
+      <h2>Our Mission</h2>
 
       <p>
         To <b>bridge the gap</b> between <b>academic theory</b> and <b>real-world</b> practice by <b>accelerating technical proficiency</b> and fostering a <b>collaborative community</b>. Our goal is to empower students from <b>diverse backgrounds</b> with the experience to architect tomorrow's solutions, building a <b>robust talent pipeline</b> for the future.
       </p>
     </div>
+
+    <hr />
+
+    <div class="section-2">
+      <h1 style={{ marginBottom: "1rem" }}>Sponsor Benefits</h1>
+
+      {benefits.map(item => (
+        <h2 class="benefit-title">
+          {item.name}
+        </h2>
+        <p>{item.desc}</p>
+      ))}
+
+    </div>
+
   </div>
 </Default>
 
@@ -67,6 +117,11 @@ import bannerImg from "../assets/DSC08918.jpg";
   place-content: center;
   text-align: left;
   font-family: Roboto, sans-serif;
+
+  /* Mobile styles */
+  @media (max-width: 768px) {
+    width: 85%;
+  }
 }
 
 .banner-img {
@@ -81,10 +136,11 @@ import bannerImg from "../assets/DSC08918.jpg";
   color: var(--fg);
   font-size: 3rem;
   text-align: center;
+  margin-top: 4rem;
 
   /* Mobile styles */
   @media (max-width: 768px) {
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
 }
 
@@ -95,8 +151,41 @@ import bannerImg from "../assets/DSC08918.jpg";
 
 .button-container {
   display: flex;
-  width: 60%;
-  margin: 1rem auto;
+  flex-direction: column;
+
+  /* Desktop styles */
+  @media (min-width: 768px) {
+    flex-direction: row;
+    gap: 2rem;
+    width: fit-content;
+    margin: 0 auto;
+  }
+}
+
+.benefit-title {
+  color: var(--ku_red);
+}
+
+.benefit-title::before {
+  content: "#"
+}
+
+.info {
+  border-radius: 1rem;
+  padding: 1rem;
+  width: fit-content;
+  margin: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+  text-align: center;
+  color: var(--ku_yellow);
+}
+
+h1, h2, h3, h4 {
+  color: var(--fg);
+}
+
+hr {
+  margin: 3rem 0;
 }
 
 p {
