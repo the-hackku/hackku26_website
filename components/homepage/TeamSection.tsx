@@ -115,7 +115,7 @@ const TeamSection: React.FC<TeamSectionProps> = ({ teamMembers, id }) => {
                   onMouseLeave={() => setHoveredImage(null)}
                 >
                   <MemberImage
-                    src={member.image}
+                    src={member.image || "/images/default.webp"}
                     alt={member.name}
                     width={160}
                     height={160}
