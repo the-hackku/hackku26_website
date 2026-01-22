@@ -116,43 +116,52 @@ export default function HomePage() {
     {
       name: "Dellie Wright",
       role: "Director",
+      image: "",
     },
     {
       name: "Alivia Hanes",
       role: "Vice Director",
+      image: "",
     },
     {
       name: "Kelly Yee",
       role: "Logistics Co-Lead",
+      image: "",
     },
     {
       name: "Maral Bat",
       role: "Design Co-Lead",
+      image: "",
     },
     {
       name: "Addison Ladish",
       role: "Outreach Co-Lead",
+      image: "",
     },
     {
       name: "Lucía Ulate",
       role: "Social Media/Marketing Co-Lead",
+      image: "",
     },
     {
       name: "Muhammad Ibrahim",
       role: "Sponsorship Co-Lead",
+      image: "",
     },
     {
       name: "Josslyn T. Bui",
       role: "Sponsorship Co-Lead",
+      image: "",
     },
     {
       name: "Forest Denton",
       role: "Tech Co-Lead",
+      image: "",
     },
     {
       name: "Aniketh Aatipamula",
       role: "Tech Co-Lead",
-      // image: "/images/team/",
+      image: "",
       linkedin: "https://www.linkedin.com/in/aaatipamula/",
       website: "https://aniketh.dev",
     },

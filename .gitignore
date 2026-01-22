@@ -13,7 +13,6 @@ it didnt work:
 # db
 dev.db
 
-
 # env
 env.local
 .env
