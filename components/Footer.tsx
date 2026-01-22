@@ -44,7 +44,7 @@ export default function Footer() {
             <IconBrandLinkedin size={20} />
           </Link>
           <Link
-            href="https://github.com/the-hackku/hackku25-website"
+            href="https://github.com/the-hackku/hackku26_website"
             target="_blank"
             className="text-gray-400 hover:text-gray-900 transition-colors"
           >

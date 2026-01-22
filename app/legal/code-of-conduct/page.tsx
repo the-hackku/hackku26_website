@@ -6,7 +6,7 @@ export default function CodeOfConduct() {
       <div className="max-w-3xl bg-white p-6 rounded-lg shadow-md">
         <h1 className="text-3xl font-bold mb-4 text-center">Code of Conduct</h1>
         <p className="mb-4">
-          By attending HackKU 2025, you agree to abide by the following Code of
+          By attending HackKU 2026, you agree to abide by the following Code of
           Conduct:
         </p>
         <ul className="list-disc pl-6 space-y-3 text-lg">

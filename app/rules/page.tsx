@@ -3,7 +3,7 @@ export default async function RulesPage() {
     <div className="p-6">
       <h2 className="text-2xl font-semibold mb-4">Code of Conduct</h2>
       <p className="mb-4">
-        By attending HackKU 2025, you agree to abide by the following Code of
+        By attending HackKU 2026, you agree to abide by the following Code of
         Conduct.
       </p>
       <ul className="list-disc list-inside mb-8">

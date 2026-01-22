@@ -23,11 +23,10 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "HackKU25",
-  description:
-    "The Official Website for HackKU 2025. Join us for a weekend of innovation, coding, and creativity at the University of Kansas!",
+  title: "HackKU26",
+  description: "The Official Website for HackKU 2026. Join us for a weekend of innovation, coding, and creativity at the University of Kansas!",
   icons: {
-    icon: "/images/branding/logo_white_bg.png",
+    // icon: "/images/branding/logo_white_bg.png",
   },
 };
 

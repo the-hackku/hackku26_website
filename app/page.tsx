@@ -50,7 +50,7 @@ export default function HomePage() {
   useEffect(() => {
     const sections = document.querySelectorAll("[id]");
     // const validSectionIds = ["header", "about", "faq", "sponsors", "team"];
-    const validSectionIds = ["header", "about", "faq", "sponsors", "team"];
+    const validSectionIds = ["header", "about", "faq", "team"];
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -114,126 +114,47 @@ export default function HomePage() {
 
   const teamMembers = [
     {
-      name: "James Hurd",
+      name: "Dellie Wright",
       role: "Director",
-      image: "/images/team/james.jpeg",
-      linkedin: "https://www.linkedin.com/in/jameshurd2718/",
-      website: "https://jameshurd.net/",
     },
     {
-      name: "Joshua Lee",
+      name: "Alivia Hanes",
       role: "Vice Director",
-      image: "/images/team/joshua.jpeg",
-      linkedin: "https://www.linkedin.com/in/joshualee128/",
     },
     {
-      name: "Anh Hoang",
-      role: "Co-Director of Media & Marketing",
-      image: "/images/team/anh.png",
-      linkedin: "https://www.linkedin.com/in/anh-hoang-ku/",
+      name: "Kelly Yee",
+      role: "Logistics Co-Lead",
     },
     {
-      name: "David Westerhaus",
-      role: "Co-Director of Media & Marketing",
-      image: "/images/team/david.png",
-      linkedin: "https://www.linkedin.com/in/davidwesterhaus/",
+      name: "Maral Bat",
+      role: "Design Co-Lead",
     },
     {
-      name: "Sarah Moore",
-      role: "Media & Marketing",
-      image: "/images/team/sarah.png",
-      linkedin: "https://www.linkedin.com/in/semoore27/",
+      name: "Addison Ladish",
+      role: "Outreach Co-Lead",
     },
     {
-      name: "Katharine Swann",
-      role: "Media & Marketing",
-      image: "/images/team/katharine.png",
-      linkedin: "https://www.linkedin.com/in/katharine-swann-7379b9224/",
+      name: "Lucía Ulate",
+      role: "Social Media/Marketing Co-Lead",
     },
     {
-      name: "Achinth Ulagapperoli",
-      role: "Media & Marketing",
-      image: "/images/team/achinth.png",
-      linkedin: "https://www.linkedin.com/in/achinth-ulagapperoli-323a52204/",
+      name: "Muhammad Ibrahim",
+      role: "Sponsorship Co-Lead",
     },
     {
-      name: "Ky Le",
-      role: "Media & Marketing",
-      image: "/images/team/ky.png",
-      linkedin: "",
-    },
-
-    {
-      name: "Will Whitehead",
-      role: "Director of Technology",
-      image: "/images/team/will.jpeg",
-      linkedin: "https://l.willwhitehead.com/",
-      website: "https://willwhitehead.com/",
+      name: "Josslyn T. Bui",
+      role: "Sponsorship Co-Lead",
     },
     {
-      name: "Andrew Huang",
-      role: "Technology",
-      image: "/images/team/andrewhuang.png",
-      linkedin: "https://www.linkedin.com/in/andrew-l-huang/",
+      name: "Forest Denton",
+      role: "Tech Co-Lead",
     },
     {
-      name: "Raven Duong",
-      role: "Director of Logistics",
-      image: "/images/team/raven.png",
-      linkedin: "https://www.linkedin.com/in/raven-duong-0128h/",
-    },
-    {
-      name: "Shayna Weinstein",
-      role: "Logistics",
-      image: "/images/team/shayna.jpg",
-      linkedin: "https://www.linkedin.com/in/shayna-weinstein/",
-    },
-    {
-      name: "Sreeja Narahari",
-      role: "Logistics",
-      image: "/images/team/sreeja.png",
-      linkedin: "https://www.linkedin.com/in/sreeja-narahari/",
-    },
-    {
-      name: "Kieran Egan",
-      role: "Logistics & Director of Finance",
-      image: "/images/team/kieran.png",
-      linkedin: "https://www.linkedin.com/in/kieran-fo-egan/",
-    },
-
-    {
-      name: "Trent Gould",
-      role: "Director of Sponsorship",
-      image: "/images/team/trent.png",
-      linkedin: "https://www.linkedin.com/in/trent-gould/",
-      website: "https://www.trent-gould.com/",
-    },
-
-    {
-      name: "Drew Meyer",
-      role: "Sponsorship",
-      image: "/images/team/drew.png",
-      linkedin: "https://www.linkedin.com/in/drewmeyer28/",
-      website: "https://drewku42.github.io/AI_Dev_Portfolio/",
-    },
-    {
-      name: "Kevinh Nguyen",
-      role: "Sponsorship",
-      image: "/images/team/kevinh.png",
-      linkedin: "https://www.linkedin.com/in/kevinh-nguyen/",
-    },
-
-    {
-      name: "Arul Sethi",
-      role: "Co-Director of Nourishment",
-      image: "/images/team/arul.png",
-      linkedin: "https://www.linkedin.com/in/arul-sethi/",
-    },
-    {
-      name: "Andrew Ha",
-      role: "Co-Director of Nourishment",
-      image: "/images/team/andrewha.png",
-      linkedin: "https://www.linkedin.com/in/andrew~ha/",
+      name: "Aniketh Aatipamula",
+      role: "Tech Co-Lead",
+      // image: "/images/team/",
+      linkedin: "https://www.linkedin.com/in/aaatipamula/",
+      website: "https://aniketh.dev",
     },
   ];
 
@@ -490,7 +411,7 @@ export default function HomePage() {
               className="text-4xl md:text-2xl drop-shadow-md"
               style={{ textShadow: "1px 1px 2px rgba(0, 0, 0, 1)" }}
             >
-              APRIL 4th - 6th, 2025
+              {constants.dates}
             </motion.p>
 
             {/* Event Title */}
@@ -501,7 +422,7 @@ export default function HomePage() {
               className="text-7xl md:text-8xl font-dfvn drop-shadow-lg"
               style={{ textShadow: "1px 1px 2px rgba(0, 0, 0, 1)" }}
             >
-              HackKU25
+              {constants.hackathonName}
             </motion.h1>
 
             <motion.p
@@ -517,7 +438,7 @@ export default function HomePage() {
                 target="_blank"
                 className="hover:underline md:text-white"
               >
-                THE UNIVERSITY OF KANSAS
+                {constants.location.toUpperCase()}
               </Link>
             </motion.p>
 
@@ -539,7 +460,7 @@ export default function HomePage() {
                   </motion.button>
                 </Link>
               ) : (
-                <Link href="/register">
+                <Link href="https://docs.google.com/forms/d/e/1FAIpQLSfg6kfJNFgHkrxn3ltZeq12VJ8ixg3biHEPKcjfUERIY-oEgQ/viewform?usp=header">
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}

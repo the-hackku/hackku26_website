@@ -1,9 +1,9 @@
 // src/constants.ts
 const constants = {
-  hackathonName: "HackKU25",
-  dates: "April 4th - 6th, 2025",
+  hackathonName: "HackKU26",
+  dates: "April 17th - 19th, 2026",
   location: "The University of Kansas",
-  discordInvite: "https://discord.com/invite/AJXm3k6xWq",
+  discordInvite: "https://discord.gg/NVuCVMkq",
   instagramUrl: "https://instagram.com/hackku",
   supportEmail: "hack@ku.edu",
 };

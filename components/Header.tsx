@@ -152,15 +152,8 @@ const Header = ({ isAdmin }: { isAdmin: boolean }) => {
                   transition={{ duration: 0.25 }}
                 >
                   <Link href="/" onClick={handleLogoClick}>
-                    <motion.div className="drop-shadow-md hover:drop-shadow-lg">
-                      <Image
-                        src="/images/branding/logo_black.png"
-                        width={75}
-                        height={75}
-                        alt="HackKU Logo"
-                        className="w-auto h-12 md:h-10"
-                        priority={true}
-                      />
+                    <motion.div className="drop-shadow-md hover:drop-shadow-lg text-xl font-bold bg-white px-2 rounded">
+                      <span>HACK</span><span className="text-red-500">KU</span><span className="text-blue-500">26</span>
                     </motion.div>
                   </Link>
                 </motion.div>
