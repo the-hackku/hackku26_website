@@ -7,8 +7,8 @@ import { usePathname } from "next/navigation";
 import { Button } from "./ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  IconCalendar,
-  IconCalendarFilled,
+  // IconCalendar,
+  // IconCalendarFilled,
   IconHome2,
   IconHomeFilled,
   IconMenu2,
@@ -18,8 +18,8 @@ import {
   IconUserFilled,
   IconBolt,
   IconStar,
-  IconInfoCircle,
-  IconInfoCircleFilled,
+  // IconInfoCircle,
+  // IconInfoCircleFilled,
 } from "@tabler/icons-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
