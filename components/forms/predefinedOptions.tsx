@@ -65,6 +65,7 @@ export const predefinedSchools = [
   },
   { label: "University of Minnesota", value: "University of Minnesota" },
   { label: "University of Rochester", value: "University of Rochester" },
+  { label: "N/A", value: "N/A" },
 ];
 
 export const predefinedMajors = [

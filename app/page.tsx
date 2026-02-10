@@ -469,7 +469,7 @@ export default function HomePage() {
                   </motion.button>
                 </Link>
               ) : (
-                <Link href="https://docs.google.com/forms/d/e/1FAIpQLSfg6kfJNFgHkrxn3ltZeq12VJ8ixg3biHEPKcjfUERIY-oEgQ/viewform?usp=header">
+                <Link href="/register">
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}

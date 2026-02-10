@@ -22,15 +22,16 @@ import { RegistrationData, formSchema } from "@/app/actions/schemas";
 import { registerUser } from "@/app/actions/register";
 import constants from "@/constants";
 
+// import { predefinedSchools } from "./schools"
 import {
   predefinedCountries,
+  predefinedSchools,
   predefinedMajors,
   predefinedMinors,
-  predefinedSchools,
   raceOptions,
 } from "./predefinedOptions";
 
-const LOCAL_STORAGE_KEY = "hackku25_registration_form";
+const LOCAL_STORAGE_KEY = "hackku26_registration_form";
 
 export function RegistrationForm() {
   const [showChaperoneFields, setShowChaperoneFields] = useState(false);
@@ -270,7 +271,7 @@ export function RegistrationForm() {
       <CardHeader>
         <div className="flex justify-between items-center">
           <CardTitle className="text-center text-xl py-4">
-            HackKU25 Registration
+            {constants.hackathonName} Registration
           </CardTitle>
 
           <span className="text-sm font-medium">
@@ -280,8 +281,8 @@ export function RegistrationForm() {
         <Progress value={progress} className="w-full h-2 my-6" />
 
         <p className="pt-4 text-sm">
-          HackKU25 will be held at the University of Kansas School of
-          Engineering from April 4th - 6th, in-person. For more information,
+          {constants.hackathonName} will be held at {constants.location} School of
+          Engineering from {constants.dates}, in-person. For more information,
           reach out to{" "}
           <Link href={`mailto:${constants.supportEmail}`} className="underline">
             {constants.supportEmail}
@@ -497,7 +498,7 @@ export function RegistrationForm() {
             />
             <div>
               <p className="mb-2 text-sm">
-                When planning HackKU25, inclusivity is our top priority! How can
+                When planning HackKU26, inclusivity is our top priority! How can
                 we best accommodate you for the best hackathon experience
                 possible?
               </p>
