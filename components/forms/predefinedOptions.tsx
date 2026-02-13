@@ -15,6 +15,7 @@ export const predefinedCountries = [
   { label: "Singapore", value: "Singapore" },
   { label: "India", value: "India" },
   { label: "Singapore", value: "Singapore" },
+  { label: "Other", value: "Other" },
 ];
 
 // Predefined options
@@ -107,6 +108,7 @@ export const predefinedMajors = [
     label: "Business Administration",
     value: "Business Administration",
   },
+  { label: "Other", value: "Other" },
 ];
 
 export const predefinedMinors = [
@@ -139,6 +141,7 @@ export const predefinedMinors = [
     label: "Global & International Studies",
     value: "Global & International Studies",
   },
+  { label: "Other or N/A", value: "Other or N/A" },
 ];
 
 export const raceOptions = [
