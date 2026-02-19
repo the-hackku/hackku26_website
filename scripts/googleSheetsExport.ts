@@ -15,7 +15,7 @@ import { prisma } from "@/lib/prisma";
 dotenv.config();
 
 // Replace with your own Google Sheet ID and desired range:
-const SHEET_ID = "1Xwv7RBzU2VFX_xXCNxEpOi-StvNJV5DsiqkIYEQWQD4";
+const SHEET_ID = "1BHgfhH0E5Ro5FuzsFgvt-wtNWI9sQ4QPqdk7aNInUi0";
 
 const serviceAccountKey = process.env.GOOGLE_SERVICE_ACCOUNT_KEY;
 if (!serviceAccountKey) {

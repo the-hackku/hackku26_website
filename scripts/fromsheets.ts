@@ -1,13 +1,6 @@
-// to run: npx ts-node scripts/fromsheets.ts
+// A script to migrate users from a Google Sheets form to website registration
 
-//uncomment the following lines to run the script,
-
-// const { google } = require("googleapis");
-// const { PrismaClient } = require("@prisma/client");
-
-// const fs = require("fs");
-// const path = require("path");
-// const dotenv = require("dotenv");
+// RUN: npx ts-node scripts/fromsheets.ts
 
 import { google } from "googleapis";
 import { PrismaClient, ROLE } from "@prisma/client";
@@ -16,15 +9,16 @@ import fs from "fs";
 import path from "path";
 import dotenv from "dotenv";
 
-// COMMENT THESE LINES WHEN RUNNING LOCALLY
-// to run: npx ts-node scripts/fromsheets.ts
-
 const prisma = new PrismaClient();
 const sheets = google.sheets("v4");
 
 dotenv.config();
 
-const SHEET_ID = "1mXvz5Qc_Sb7pLFznVAisc20c0IYI--R5pThx7dvDFgQ"; // Replace with your Google Sheet ID
+// NOTE: Replace SHEET_ID with the ID of the Google Sheet which has registrant data
+//       This can be found in the URL of the sheet.
+
+// const SHEET_ID = "1mXvz5Qc_Sb7pLFznVAisc20c0IYI--R5pThx7dvDFgQ"; // HackKU25
+const SHEET_ID = "17gMULjkwKfcl30lc-adJkCzO-Yds7x0UyLfYXHs2eoI"; // HackKU26
 const RANGE = "Form Responses 1!A:AG";
 
 // Authenticate with Google Sheets API
@@ -102,24 +96,24 @@ function transformData(sheetData: string[][]): TransformedData[] {
     console.log("Level of Study:", entry["Current Level of Study"]);
 
     return {
-      email: entry["Email Address"],
+      email: entry["Email"],
       role: "HACKER",
       ParticipantInfo: {
         create: {
           firstName: entry["First Name"],
           lastName: entry["Last Name"],
-          phoneNumber: entry["Phone Number (ex. 1234567890)"],
+          phoneNumber: entry["Phone Number (EX: 9876543210)"],
           age: parseInt(entry["Age"]) || 0,
           genderIdentity: entry["Gender Identity"],
           race: entry["Race (select all that apply)"],
-          hispanicOrLatino: entry["Are you Hispanic or Latino"],
+          hispanicOrLatino: entry["Are you Hispanic or Latino?"],
           countryOfResidence: entry["Country of Residence"],
-          tShirtSize: entry["T-shirt Size (Unisex)"],
+          tShirtSize: entry["T-Shirt Size (Unisex)"],
           dietaryRestrictions:
             entry["Do you have any dietary restrictions or food allergies?"],
           specialAccommodations:
             entry[
-              "When planning HackKU25, inclusivity is our top priority! How can we best accommodate you for the best hackathon experience possible?"
+              "When planning HackKU26, inclusivity is our top priority! How can we best accommodate you for the best hackathon experience possible?"
             ],
           isHighSchoolStudent:
             entry["Are you a high school student under the age of 18?"] ===
@@ -130,28 +124,22 @@ function transformData(sheetData: string[][]): TransformedData[] {
                 /^(Secondary|Undergraduate|Graduate)/
               )?.[0] || "Unknown"
             : "Unknown",
-          major:
-            entry[
-              "Major(s), If applicable (Use semicolons to delimit multiple degrees)"
-            ],
+          major: entry["Major(s)"],
           minor:
             entry[
               "Minor(s) and/or Certificate(s), If applicable (Use semicolons to delimit multiple specializations)"
             ],
           previousHackathons:
             parseInt(
-              entry["How many hackathons have you attended previously?"]
+              entry["How many Hackathons have you attended previously?"]
             ) || 0,
           chaperoneFirstName: entry["Chaperone First Name"],
           chaperoneLastName: entry["Chaperone Last Name"],
           chaperoneEmail: entry["Chaperone Email"],
-          chaperonePhoneNumber: entry["Chaperone Phone Number (1234567890)"],
+          chaperonePhoneNumber: entry["Chaperone Phone Number (EX: 9876543210)"],
           agreeHackKUCode:
-            entry["I have read and agree to the HackKU Code of Conduct."] ===
-            "I Agree",
-          agreeMLHCode:
-            entry["I have read and agree to the MLH Code of Conduct."] ===
-            "I Agree",
+            entry["I have read and agree to the HackKU Code of Conduct."] === "I Agree" || true,
+          agreeMLHCode: entry["I have read and agree to the MLH Code of Conduct."] === "I Agree",
           shareWithMLH:
             entry[
               "I authorize you to share my application/registration information with Major League Hacking for event administration, ranking, and MLH administration in-line with the MLH Privacy Policy. I further agree to the terms of both the MLH Contest Terms and Conditions and the MLH Privacy Policy."
