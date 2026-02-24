@@ -7,10 +7,11 @@ import {
   IconWorld,
   IconChevronLeft,
   IconChevronRight,
+  IconFlower,
 } from "@tabler/icons-react";
 import { useState, useRef, useEffect } from "react";
 
-interface TeamMember {
+export interface TeamMember {
   name: string;
   role: string;
   image: string;
@@ -23,11 +24,50 @@ interface TeamSectionProps {
   id?: string;
 }
 
+function randomFlowerStyle(): string {
+  const colors = [
+    "text-red-500",
+    "text-blue-500",
+    "text-yellow-500",
+    "text-orange-500",
+  ];
+
+  const offsets = ["0", "1", "2", "3", "4"];
+
+  const rotations = [
+    "rotate-0",
+    "rotate-6",
+    "rotate-12",
+    "rotate-45",
+    "-rotate-6",
+    "-rotate-12",
+    "-rotate-45",
+  ];
+
+  const corners = [
+    (offset: string) => `top-${offset} left-${offset}`,
+    (offset: string) => `top-${offset} right-${offset}`,
+    (offset: string) => `bottom-${offset} left-${offset}`,
+    (offset: string) => `bottom-${offset} right-${offset}`,
+  ];
+
+  const randomColor = colors[Math.floor(Math.random() * colors.length)];
+  const randomOffset = offsets[Math.floor(Math.random() * offsets.length)];
+  const randomCorner = corners[Math.floor(Math.random() * corners.length)];
+  const randomRotation =
+    rotations[Math.floor(Math.random() * rotations.length)];
+
+  return `absolute z-10 ${randomCorner(randomOffset)} ${randomColor} ${randomRotation}`;
+}
+
 const TeamSection: React.FC<TeamSectionProps> = ({ teamMembers, id }) => {
   const [hoveredImage, setHoveredImage] = useState<string | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [scrollLeft, setScrollLeft] = useState(0);
   const [maxScroll, setMaxScroll] = useState(0);
+  const [flowerStyles] = useState(() => {
+    return teamMembers.map(randomFlowerStyle);
+  })
 
   const handleScroll = (direction: "left" | "right") => {
     if (scrollContainerRef.current) {
@@ -60,7 +100,7 @@ const TeamSection: React.FC<TeamSectionProps> = ({ teamMembers, id }) => {
   return (
     <section
       id={id}
-      className="w-full py-32 md:py-44 flex flex-col items-center justify-center bg-[#037EC1]"
+      className="w-full py-10 flex flex-col items-center justify-center bg-[#7a4a21]"
     >
       <motion.div
         initial={{ opacity: 0, y: 50 }}
@@ -101,7 +141,7 @@ const TeamSection: React.FC<TeamSectionProps> = ({ teamMembers, id }) => {
           onScroll={updateScrollState}
         >
           <div className="grid grid-flow-col grid-rows-2 auto-cols-min gap-x-2 gap-y-4 md:gap-x-4 py-5 w-max mx-auto">
-            {teamMembers.map((member) => (
+            {teamMembers.map((member, index) => (
               <div
                 key={member.name}
                 className="flex flex-col items-center text-center w-44 md:w-56"
@@ -114,6 +154,7 @@ const TeamSection: React.FC<TeamSectionProps> = ({ teamMembers, id }) => {
                   }
                   onMouseLeave={() => setHoveredImage(null)}
                 >
+                  <IconFlower size="3em" className={flowerStyles[index]}/>
                   <MemberImage
                     src={member.image || "/images/default.webp"}
                     alt={member.name}

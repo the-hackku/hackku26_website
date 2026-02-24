@@ -1,72 +1,26 @@
-"use client";
+"use client"
+
+import type { TeamMember } from "@/components/homepage/TeamSection";
 
 import { motion } from "framer-motion";
+import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState, useRef } from "react";
-import SponsorsSection from "@/components/homepage/SponsorsSection";
-import AboutSection from "@/components/homepage/AboutSection";
-import AllSvg from "@/components/homepage/svg/AllSvg";
-import FAQSection from "@/components/homepage/FAQSection";
-import { IconBrandDiscord } from "@tabler/icons-react";
 import constants from "@/constants";
-import TeamSection from "@/components/homepage/TeamSection";
 import { useSession } from "next-auth/react";
+import FAQSection from "@/components/homepage/FAQSection";
+import AboutSection from "@/components/homepage/AboutSection";
+import TeamSection from "@/components/homepage/TeamSection";
+// import AllSvg from "@/components/homepage/svg/AllSvg";
 
-// import TeamSection from "@/components/homepage/TeamSection";
+import { IconBrandDiscord } from "@tabler/icons-react";
+import ClickableItem from "@/components/homepage/ClickableItem";
 
 export default function HomePage() {
-  // const scrollToSection = (id: string) => {
-  //   const target = document.getElementById(id);
-  //   target?.scrollIntoView({ behavior: "smooth" });
-  // };
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [isMouseOver, setIsMouseOver] = useState(false);
-  const [activeSection, setActiveSection] = useState<string>("header");
-  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
-  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const { data: session } = useSession();
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsSidebarVisible(true);
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
-      }
-      scrollTimeoutRef.current = setTimeout(() => {
-        setIsSidebarVisible(false);
-      }, 3000);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    const sections = document.querySelectorAll("[id]");
-    // const validSectionIds = ["header", "about", "faq", "sponsors", "team"];
-    const validSectionIds = ["header", "about", "faq", "team"];
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        const id = entry.target.id;
-        if (entry.isIntersecting && validSectionIds.includes(id)) {
-          setActiveSection(id);
-        }
-      });
-      entries.forEach((entry) => {
-        console.log("Intersecting:", entry.target.id, entry.isIntersecting);
-      });
-    });
-
-    sections.forEach((section) => observer.observe(section));
-    return () => observer.disconnect();
-  }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const { clientX, clientY, currentTarget } = e;
@@ -81,91 +35,6 @@ export default function HomePage() {
     setTilt({ x: 0, y: 0 });
     setIsMouseOver(false);
   };
-
-  const SPONSORS_ENABLED = false;
-
-  const previousEvents = [
-    {
-      name: "HackKU 2021",
-      image: "/images/prev/2021.png",
-      link: "https://hackku-2021.devpost.com/",
-    },
-    {
-      name: "HackKU 2022",
-      image: "/images/prev/2022.png",
-      link: "https://hackku-2022.devpost.com/",
-    },
-    {
-      name: "HackKU 2023",
-      image: "/images/prev/2023.png",
-      link: "https://hackku-2023.devpost.com/",
-    },
-    {
-      name: "HackKU 2024",
-      image: "/images/prev/2024.png",
-      link: "https://hackku-2024.devpost.com/",
-    },
-    {
-      name: "HackKU 2025",
-      image: "/images/prev/2025.png",
-      link: "https://hackku-2025.devpost.com/",
-    },
-  ];
-
-  const teamMembers = [
-    {
-      name: "Dellie Wright",
-      role: "Director",
-      image: "",
-    },
-    {
-      name: "Alivia Hanes",
-      role: "Vice Director",
-      image: "",
-    },
-    {
-      name: "Kelly Yee",
-      role: "Logistics Co-Lead",
-      image: "",
-    },
-    {
-      name: "Maral Bat",
-      role: "Design Co-Lead",
-      image: "",
-    },
-    {
-      name: "Addison Ladish",
-      role: "Outreach Co-Lead",
-      image: "",
-    },
-    {
-      name: "Lucía Ulate",
-      role: "Social Media/Marketing Co-Lead",
-      image: "",
-    },
-    {
-      name: "Muhammad Ibrahim",
-      role: "Sponsorship Co-Lead",
-      image: "",
-    },
-    {
-      name: "Josslyn T. Bui",
-      role: "Sponsorship Co-Lead",
-      image: "",
-    },
-    {
-      name: "Forest Denton",
-      role: "Tech Co-Lead",
-      image: "",
-    },
-    {
-      name: "Aniketh Aatipamula",
-      role: "Tech Co-Lead",
-      image: "",
-      linkedin: "https://www.linkedin.com/in/aaatipamula/",
-      website: "https://aniketh.dev",
-    },
-  ];
 
   const faqs = [
     {
@@ -204,208 +73,139 @@ export default function HomePage() {
     },
   ];
 
-  const sponsorTiers = ["Tera", "Giga", "Mega", "Kila", "Partner"];
-  const sponsors = [
+  const previousEvents = [
     {
-      name: "Everly",
-      logo: "/images/sponsors/everly.svg",
-      website: "https://www.everlylife.com/",
-      tier: "Tera",
+      name: "HackKU 2021",
+      image: "/images/prev/2021.png",
+      link: "https://hackku-2021.devpost.com/",
     },
     {
-      name: "Security Benefit",
-      logo: "/images/sponsors/security.png",
-      website: "https://www.securitybenefit.com",
-      tier: "Tera",
+      name: "HackKU 2022",
+      image: "/images/prev/2022.png",
+      link: "https://hackku-2022.devpost.com/",
     },
     {
-      name: "Pella",
-      logo: "/images/sponsors/pella.png",
-      website: "https://www.pella.com/",
-      tier: "Giga",
+      name: "HackKU 2023",
+      image: "/images/prev/2023.png",
+      link: "https://hackku-2023.devpost.com/",
     },
     {
-      name: "Ripple",
-      logo: "/images/sponsors/ripple.png",
-      website: "https://ripple.com/",
-      tier: "Giga",
+      name: "HackKU 2024",
+      image: "/images/prev/2024.png",
+      link: "https://hackku-2024.devpost.com/",
     },
     {
-      name: "Garmin",
-      logo: "/images/sponsors/garmin.svg",
-      website: "https://www.garmin.com/en-US/",
-      tier: "Mega",
+      name: "HackKU 2025",
+      image: "/images/prev/2025.png",
+      link: "https://hackku-2025.devpost.com/",
+    },
+  ];
+
+  const teamMembers: TeamMember[] = [
+    {
+      name: "Delroy (Dellie) Cassell Wright III",
+      role: "Director",
+      linkedin: "https://www.linkedin.com/in/delroy-wright-440b35210/",
+      website: "https://d3llie.tech",
+      image: ""
     },
     {
-      name: "H&R Block",
-      logo: "/images/sponsors/hrblock.png",
-      website: "https://www.hrblock.com/",
-      tier: "Mega",
+      name: "Alivia Hanes",
+      role: "Vice Director",
+      linkedin: "https://www.linkedin.com/in/alivia-hanes",
+      image: "",
     },
     {
-      name: "Payit",
-      logo: "/images/sponsors/payit.png",
-      website: "https://payitgov.com/",
-      tier: "Mega",
+      name: "Aiden Burke",
+      role: "Logistics Co-Lead",
+      linkedin: "https://www.linkedin.com/in/aidenhburke/",
+      image: "",
     },
     {
-      name: "Patient Safety",
-      logo: "/images/sponsors/patient.png",
-      website: "https://www.patientsafetytech.com/",
-      tier: "Mega",
+      name: "Kelly Yee",
+      role: "Logistics Co-Lead",
+      linkedin: "http://linkedin.com/in/jiakyee",
+      image: "",
     },
     {
-      name: "KU School of business",
-      logo: "/images/sponsors/bschool.png",
-      website: "https://business.ku.edu/",
-      tier: "Kila",
+      name: "Maral Bat",
+      role: "Design Co-Lead",
+      image: "",
     },
     {
-      name: "Niantic 8th Wall",
-      logo: "/images/sponsors/niantic.svg",
-      website: "https://www.8thwall.com/niantic",
-      tier: "Kila",
+      name: "Addison Ladish",
+      role: "Marketing Co-Lead",
+      image: "",
     },
     {
-      name: "Peak Performance IT",
-      logo: "/images/sponsors/peakperformance.png",
-      website: "https://www.peakperformanceit.com/",
-      tier: "Kila",
+      name: "Lucía Ulate",
+      role: "Outreach Co-Lead",
+      linkedin: "https://www.linkedin.com/in/lucia-ulate-centeno",
+      image: "",
     },
     {
-      name: "Pinnacle Technology",
-      logo: "/images/sponsors/pinnacle.png",
-      website: "https://pinnaclet.com/",
-      tier: "Kila",
+      name: "Muhammad Ibrahim",
+      role: "Sponsorship Co-Lead",
+      linkedin: "https://www.linkedin.com/in/ibrahi12/",
+      website: "https://www.ibrahim-muhm.com/",
+      image: "",
     },
     {
-      name: "Tradebot",
-      logo: "/images/sponsors/tradebot.webp",
-      website: "https://www.tradebot.com",
-      tier: "Kila",
+      name: "Kenny Hong",
+      role: "Sponsorship Co-Lead",
+      linkedin: "https://www.linkedin.com/in/kennyhongcs/",
+      image: "",
     },
     {
-      name: "Stand Out Stickers",
-      logo: "/images/sponsors/sos.png",
-      website: "http://hackp.ac/mlh-StandOutStickers-hackathons",
-      tier: "Partner",
+      name: "Josslyn T. Bui",
+      role: "Sponsorship Co-Lead",
+      image: "",
     },
     {
-      name: "Redbull",
-      logo: "/images/sponsors/redbull.svg",
-      website: "https://www.redbull.com/us-en",
-      tier: "Partner",
+      name: "Kevinh Nguyen",
+      role: "Food Lead",
+      linkedin: "http://linkedin.com/in/kevinh-nguyen/",
+      image: "",
     },
     {
-      name: "McClains",
-      logo: "/images/sponsors/mcclains.png",
-      website: "https://www.mclainskc.com/lawrence-iowast",
-      tier: "Partner",
+      name: "Mark Horvath",
+      role: "Interdisciplinary Involvement Co-Lead",
+      linkedin: "https://www.linkedin.com/in/markandrewhorvath/",
+      image: "",
     },
     {
-      name: "Globe Indian",
-      logo: "/images/sponsors/globeindian.png",
-      website: "https://www.globelawrence.com/",
-      tier: "Partner",
+      name: "Forest Denton",
+      role: "Tech Co-Lead",
+      linkedin: "https://www.linkedin.com/in/forest-denton-9076b2251/",
+      image: ""
     },
     {
-      name: "Red Pepper",
-      logo: "/images/sponsors/redpepper.png",
-      website: "https://www.redpepperlawrenceks.com/",
-      tier: "Partner",
-    },
-    {
-      name: "La Estrella",
-      logo: "/images/sponsors/laestrella.png",
-      website: "https://laestrellamexicana.com/",
-      tier: "Partner",
-    },
-    {
-      name: "Eileens",
-      logo: "/images/sponsors/eileens.jpg",
-      website: "https://www.eileenscookies.com/store/lawrence/",
-      tier: "Partner",
-    },
-    {
-      name: "Wheatfields",
-      logo: "/images/sponsors/wheatfields.png",
-      website: "https://wheatfieldsbakery.com/",
-      tier: "Partner",
-    },
-    {
-      name: "Bubble Box",
-      logo: "/images/sponsors/bubblebox.png",
-      website: "https://www.instagram.com/bubbleboxlawrence/",
-      tier: "Partner",
+      name: "Aniketh Aatipamula",
+      role: "Tech Co-Lead",
+      linkedin: "https://www.linkedin.com/in/aaatipamula/",
+      website: "https://aniketh.dev",
+      image: "",
     },
   ];
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.8, ease: "easeInOut" }}
-    >
-      <div
-        onMouseEnter={() => {
-          setIsSidebarVisible(true);
-          if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
-        }}
-        onMouseLeave={() => {
-          if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
-          scrollTimeoutRef.current = setTimeout(() => {
-            setIsSidebarVisible(false);
-          }, 3000);
-        }}
-        className={`fixed top-1/2 left-4 -translate-y-1/2 z-50 hidden md:flex flex-col space-y-4 transition-opacity duration-500 ${
-          isSidebarVisible ? "opacity-100" : "opacity-0"
-        }`}
-      >
-        {[
-          { id: "header", label: "Home" },
-          { id: "about", label: "About" },
-          { id: "faq", label: "FAQ" },
-          // { id: "sponsors", label: "Sponsors" },
-          { id: "team", label: "Team" },
-        ].map(({ id, label }) => (
-          <Link
-            key={id}
-            href={`#${id}`}
-            className="flex items-center space-x-2 group"
-          >
-            <div
-              className={`transition-all duration-500 ease-in-out rounded-full
-        ${
-          activeSection === id
-            ? "bg-yellow-400 w-3 h-14"
-            : "bg-gray-400 w-1 h-10"
-        }
-        group-hover:w-2 group-hover:bg-yellow-300`}
-            />
-            <span
-              className={`text-sm px-2 py-1 rounded-md text-black transition-all duration-300
-    ${
-      activeSection === id
-        ? "opacity-100 bg-yellow-400"
-        : "opacity-0 group-hover:opacity-100 bg-gray-300"
-    }`}
-            >
-              {label}
-            </span>
-          </Link>
-        ))}
-      </div>
-
-      <div className="w-full min-h-screen overflow-x-hidden text-white font-agency">
-        {/* Header Section */}
+    <div className="relative">
+      <Image
+        className="md:object-cover h-full"
+        width={6000}
+        height={12000}
+        src="/images/homepage/nature.png"
+        alt="nature-bg"
+      />
+      <div className="absolute top-32 right-1/2 translate-x-1/2 text-white w-full lg:w-2/3">
         <section
           id="header"
-          className="relative w-full h-screen flex items-center justify-center text-center md:justify-start md:text-left overflow-hidden pb-40 pt-32 md:pb-96 md:pt-48 md:px-40"
+          className="flex flex-col items-center justify-center text-center overflow-hidden"
           onMouseMove={handleMouseMove}
           onMouseLeave={resetTilt}
         >
           <motion.div
-            className="z-10 max-w-[80%] text-center md:text-left md:max-w-[60%]"
+            className="z-10 max-w-[80%] text-center md:max-w-[60%]"
             style={{
               transform: `perspective(1000px) rotateX(${tilt.y}deg) rotateY(${tilt.x}deg)`,
               transition: isMouseOver
@@ -456,7 +256,7 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.3 }}
-              className="mt-6 flex flex-row justify-center md:justify-start gap-2"
+              className="mt-6 flex flex-row justify-center gap-2"
             >
               {session ? (
                 <Link href="/schedule">
@@ -469,16 +269,16 @@ export default function HomePage() {
                   </motion.button>
                 </Link>
               ) : (
-                <Link href="/register">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="px-4 py-3 bg-yellow-500 rounded-full text-2xl text-black font-agency"
-                  >
-                    Register Now
-                  </motion.button>
-                </Link>
-              )}
+                  <Link href="/register">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-3 bg-yellow-500 rounded-full text-2xl text-black font-agency"
+                    >
+                      Register Now
+                    </motion.button>
+                  </Link>
+                )}
 
               <Link
                 href={constants.discordInvite}
@@ -496,24 +296,62 @@ export default function HomePage() {
               </Link>
             </motion.div>
           </motion.div>
-
-          {/* Background SVG */}
-          <div className="absolute bottom-0 left-[32%] transform -translate-x-[32%] z-0 w-full h-full">
-            <AllSvg className="w-full h-full object-cover" />
-          </div>
+          <span className="hidden lg:inline text-gray-500 pt-10">Click the signs and stands to learn more about {constants.hackathonName}!</span>
         </section>
-
-        <AboutSection previousEvents={previousEvents} id="about" />
-        <FAQSection faqs={faqs} id="faq" />
-        {SPONSORS_ENABLED && (
-          <SponsorsSection
-            sponsorTiers={sponsorTiers}
-            sponsors={sponsors}
-            id="sponsors"
-          />
-        )}
-        <TeamSection teamMembers={teamMembers} id="team" />
       </div>
-    </motion.div>
+      <ClickableItem 
+        top={20}
+        left={60}
+        size={18}
+        img="/images/homepage/sign.png"
+      >
+        <div className="-z-10 hidden lg:block absolute w-14 h-screen bg-[#79441d]"></div>
+        <div
+          className="
+          w-full h-full bg-[#d2b891] overflow-y-clip
+          lg:[clip-path:polygon(0%_0%,3%_19%,1%_34%,5%_53%,0%_64%,3%_83%,0%_100%,100%_100%,98%_85%,100%_68%,98%_54%,100%_38%,98%_20%,100%_0%)]
+          "
+        >
+          <AboutSection previousEvents={previousEvents} id="about" />
+        </div>
+      </ClickableItem>
+
+
+      <ClickableItem 
+        top={39}
+        left={9}
+        size={30}
+        img="/images/homepage/food_stall.png"
+        disabled
+      >
+      </ClickableItem>
+
+      <ClickableItem 
+        top={47}
+        left={22}
+        size={14}
+        img="/images/homepage/menu.png"
+      >
+        <div 
+          style={{ border: "1rem solid #2e1708" }}
+          className="w-full h-full bg-[#08301a] text-white lg:overflow-y-auto lg:overscroll-contain"
+        >
+          <FAQSection faqs={faqs} id="faq" />
+        </div>
+      </ClickableItem>
+
+      <ClickableItem 
+        top={51}
+        right={0}
+        size={27}
+        img="/images/homepage/flower_bed.png"
+      >
+        <div 
+          className="w-full h-full overflow-y-auto overscroll-contain"
+        >
+          <TeamSection teamMembers={teamMembers} id="team" />
+        </div>
+      </ClickableItem>
+    </div>
   );
 }
