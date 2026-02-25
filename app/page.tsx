@@ -189,14 +189,25 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="relative">
+    <div className="relative pt-[25em] bg-[#c1e3fe] lg:pt-0">
+      {/* Desktop image */}
       <Image
-        className="md:object-cover h-full"
+        className="hidden lg:block lg:object-cover h-full"
         width={6000}
         height={12000}
         src="/images/homepage/nature.png"
         alt="nature-bg"
       />
+
+      {/* Desktop image */}
+      <Image
+        className="lg:hidden object-cover h-full"
+        width={6000}
+        height={12000}
+        src="/images/homepage/full_image.png"
+        alt="nature-bg"
+      />
+
       <div className="absolute top-32 right-1/2 translate-x-1/2 text-white w-full lg:w-2/3">
         <section
           id="header"
@@ -228,10 +239,14 @@ export default function HomePage() {
               initial={{ opacity: 0, y: -50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7 }}
-              className="text-7xl md:text-8xl font-dfvn drop-shadow-lg"
               style={{ textShadow: "1px 1px 2px rgba(0, 0, 0, 1)" }}
             >
-              {constants.hackathonName}
+              <Image
+                width={3228}
+                height={1469}
+                src="/images/homepage/cloud_logo.png"
+                alt="cloud-logo"
+              />
             </motion.h1>
 
             <motion.p
