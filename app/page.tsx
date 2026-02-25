@@ -304,6 +304,7 @@ export default function HomePage() {
         left={60}
         size={18}
         img="/images/homepage/sign.png"
+        id="about"
       >
         <div className="-z-10 hidden lg:block absolute w-14 h-screen bg-[#79441d]"></div>
         <div
@@ -312,7 +313,7 @@ export default function HomePage() {
           lg:[clip-path:polygon(0%_0%,3%_19%,1%_34%,5%_53%,0%_64%,3%_83%,0%_100%,100%_100%,98%_85%,100%_68%,98%_54%,100%_38%,98%_20%,100%_0%)]
           "
         >
-          <AboutSection previousEvents={previousEvents} id="about" />
+          <AboutSection previousEvents={previousEvents} />
         </div>
       </ClickableItem>
 
@@ -322,6 +323,7 @@ export default function HomePage() {
         left={9}
         size={30}
         img="/images/homepage/food_stall.png"
+        id="#"
         disabled
       >
       </ClickableItem>
@@ -331,12 +333,13 @@ export default function HomePage() {
         left={22}
         size={14}
         img="/images/homepage/menu.png"
+        id="faq"
       >
         <div 
           style={{ border: "1rem solid #2e1708" }}
           className="w-full h-full bg-[#08301a] text-white lg:overflow-y-auto lg:overscroll-contain"
         >
-          <FAQSection faqs={faqs} id="faq" />
+          <FAQSection faqs={faqs} />
         </div>
       </ClickableItem>
 
@@ -345,11 +348,13 @@ export default function HomePage() {
         right={0}
         size={27}
         img="/images/homepage/flower_bed.png"
+        id="team"
       >
         <div 
-          className="w-full h-full overflow-y-auto overscroll-contain"
+          style={{ border: '1rem solid #b54938' }}
+          className="w-full h-full lg:overflow-y-clip lg:overscroll-contain"
         >
-          <TeamSection teamMembers={teamMembers} id="team" />
+          <TeamSection teamMembers={teamMembers} />
         </div>
       </ClickableItem>
     </div>

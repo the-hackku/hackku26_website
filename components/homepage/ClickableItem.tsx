@@ -1,10 +1,11 @@
-"use client"
+"use client";
 
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { useBreakpoint } from "@/hooks/useMediaQuery";
 import { IconX } from "@tabler/icons-react";
 import { motion } from "framer-motion";
+import { useHash } from "@/hooks/useURLHash";
 
 interface ClickableItemProps {
   top?: number;
@@ -13,12 +14,24 @@ interface ClickableItemProps {
   bottom?: number;
   img: string;
   size: number;
+  id: string;
   disabled?: boolean;
   children?: React.ReactNode;
 };
 
-const ClickableItem: React.FC<ClickableItemProps> = ({ children, top, left, right, bottom, size, img, disabled = false }) => {
-  const [showModal, setShowModal] = useState(false);
+const ClickableItem: React.FC<ClickableItemProps> = ({
+  children,
+  top, 
+  left, 
+  right, 
+  bottom, 
+  size, 
+  img, 
+  id,
+  disabled = false 
+}) => {
+  const urlId = useHash();
+  const [showModal, setShowModal] = useState(false || urlId === id);
   const { isMobile, isTablet } = useBreakpoint();
 
   function handleModalClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
@@ -40,6 +53,10 @@ const ClickableItem: React.FC<ClickableItemProps> = ({ children, top, left, righ
   }
 
   useEffect(() => {
+    if (urlId === id) setShowModal(true);
+  }, [urlId, id])
+
+  useEffect(() => {
     if (showModal) {
       window.addEventListener("keydown", handleESC);
     }
@@ -47,22 +64,32 @@ const ClickableItem: React.FC<ClickableItemProps> = ({ children, top, left, righ
     return () => window.removeEventListener("keydown", handleESC);
   }, [showModal]);
 
-  if (isMobile || isTablet) return children;
+  // Return only the children and and id
+  if (isMobile || isTablet) {
+    return (
+      <>
+        <span className="invisible absolute" id={id}></span>
+        {children}
+      </>
+    );
+  }
 
   return (
     <>
-      <div 
-        className={`${showModal ? "" : "hidden"} z-10 fixed top-0 bottom-0 left-0 right-0 bg-opacity-50 bg-black flex flex-col justify-center items-center pt-20 pb-10 px-10`}
-        onClick={handleModalClick}
-      >
-        <div className="w-full p-2">
-          <IconX
-            onClick={() => setShowModal(false)}
-            className="text-white cursor-pointer hidden lg:block float-end"
-          />
+      {showModal && (
+        <div 
+          className="z-10 fixed top-0 bottom-0 left-0 right-0 bg-opacity-50 bg-black flex flex-col justify-center items-center pt-20 pb-10 px-10"
+          onClick={handleModalClick}
+        >
+          <div className="w-full p-2">
+            <IconX
+              onClick={() => setShowModal(false)}
+              className="text-white cursor-pointer hidden lg:block float-end"
+            />
+          </div>
+          {children}
         </div>
-        {children}
-      </div>
+      )}
       <motion.div 
         whileHover={{ scale: disabled ? 1 : 1.1 }}
         whileTap={{ scale: disabled ? 1 : 0.98 }}
