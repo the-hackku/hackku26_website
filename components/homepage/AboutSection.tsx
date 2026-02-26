@@ -19,7 +19,7 @@ const AboutSection: React.FC<AboutSectionProps> = ({ previousEvents, id }) => {
   return (
     <section
       id={id}
-      className="w-full py-32 md:py-44 flex items-center justify-center bg-[#F0E9DF]"
+      className="w-full py-10 flex items-center justify-center"
     >
       <motion.div
         initial={{ opacity: 0, y: 50 }}
@@ -52,7 +52,7 @@ const AboutSection: React.FC<AboutSectionProps> = ({ previousEvents, id }) => {
         <h2 className="text-lg md:text-xl mt-12 mb-8 text-center text-gray-800">
           Check out our previous events:
         </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 sm:gap-24 md:gap-52 px-4 md:px-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 sm:gap-24 md:gap-36 px-4 md:px-8">
           {previousEvents.map((event) => (
             <motion.div
               key={event.name}
@@ -76,7 +76,7 @@ const AboutSection: React.FC<AboutSectionProps> = ({ previousEvents, id }) => {
                     alt={event.name}
                     width={140}
                     height={140}
-                    className="rounded-md object-cover shadow-lg cursor-pointer"
+                    className="rounded-md object-cover shadow-lg cursor-pointer bg-zinc-100"
                   />
                 </a>
               </motion.div>

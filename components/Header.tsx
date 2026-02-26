@@ -152,9 +152,13 @@ const Header = ({ isAdmin }: { isAdmin: boolean }) => {
                   transition={{ duration: 0.25 }}
                 >
                   <Link href="/" onClick={handleLogoClick}>
-                    <motion.div className="drop-shadow-md hover:drop-shadow-lg text-xl font-bold bg-white px-2 rounded">
-                      <span>HACK</span><span className="text-red-500">KU</span><span className="text-blue-500">26</span>
-                    </motion.div>
+                    <Image
+                      src="/images/branding/logo_color.png"
+                      width={60}
+                      height={60}
+                      alt="HackKU Logo"
+                      className="h-15 w-auto rounded-md"
+                    />
                   </Link>
                 </motion.div>
               )}
@@ -167,11 +171,11 @@ const Header = ({ isAdmin }: { isAdmin: boolean }) => {
                 <div className="flex justify-start">
                   <Link href="/" onClick={handleLogoClick}>
                     <Image
-                      src="/images/branding/logo_black.png"
+                      src="/images/branding/logo_color.png"
                       width={60}
                       height={60}
                       alt="HackKU Logo"
-                      className="h-10 w-auto"
+                      className="h-15 w-auto rounded-md"
                     />
                   </Link>
                 </div>
@@ -356,7 +360,7 @@ const Header = ({ isAdmin }: { isAdmin: boolean }) => {
                   {/* MLH Badge */}
                   <div className="absolute -top-10 z-50">
                     <Link
-                      href="https://mlh.io/seasons/2025/events"
+                      href="https://mlh.io/seasons/2026/events"
                       target="_blank"
                       passHref
                       className="drop-shadow-lg" // Apply drop shadow
