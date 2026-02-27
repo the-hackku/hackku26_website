@@ -100,7 +100,7 @@ const TeamSection: React.FC<TeamSectionProps> = ({ teamMembers, id }) => {
   return (
     <section
       id={id}
-      className="w-full py-16 flex flex-col items-center justify-center bg-[#7a4a21]"
+      className="w-full h-full py-16 flex flex-col items-center justify-center bg-[#7a4a21]"
     >
       <motion.div
         initial={{ opacity: 0, y: 50 }}

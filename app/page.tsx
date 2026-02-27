@@ -189,7 +189,7 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="relative pt-[25em] bg-[#c1e3fe] lg:pt-0">
+    <div className="relative pt-[25em] lg:pt-0 bg-[#c1e3fe]">
       {/* Desktop image */}
       <Image
         className="hidden lg:block lg:object-cover h-full"
@@ -199,12 +199,12 @@ export default function HomePage() {
         alt="nature-bg"
       />
 
-      {/* Desktop image */}
+      {/* Mobile image */}
       <Image
         className="lg:hidden object-cover h-full"
         width={6000}
         height={12000}
-        src="/images/homepage/full_image.png"
+        src="/images/homepage/nature_full.png"
         alt="nature-bg"
       />
 
@@ -314,9 +314,11 @@ export default function HomePage() {
           <span className="hidden lg:inline text-gray-500 pt-10">Click the signs and stands to learn more about {constants.hackathonName}!</span>
         </section>
       </div>
+
+      {/* Sign */}
       <ClickableItem 
-        top={20}
-        left={60}
+        top={27}
+        right={20}
         size={18}
         img="/images/homepage/sign.png"
         id="about"
@@ -324,7 +326,7 @@ export default function HomePage() {
         <div className="-z-10 hidden lg:block absolute w-14 h-screen bg-[#79441d]"></div>
         <div
           className="
-          w-full h-full bg-[#d2b891] overflow-y-clip
+          w-full h-full bg-[#d2b891] lg:overflow-y-auto lg:overscroll-contain
           lg:[clip-path:polygon(0%_0%,3%_19%,1%_34%,5%_53%,0%_64%,3%_83%,0%_100%,100%_100%,98%_85%,100%_68%,98%_54%,100%_38%,98%_20%,100%_0%)]
           "
         >
@@ -333,20 +335,22 @@ export default function HomePage() {
       </ClickableItem>
 
 
+      {/* Food Stall */}
       <ClickableItem 
-        top={39}
-        left={9}
-        size={30}
+        top={45}
+        left={7}
+        size={32}
         img="/images/homepage/food_stall.png"
         id="#"
         disabled
       >
       </ClickableItem>
 
+      {/* Chalkboard menu */}
       <ClickableItem 
-        top={47}
+        top={52}
         left={22}
-        size={14}
+        size={16}
         img="/images/homepage/menu.png"
         id="faq"
       >
@@ -358,8 +362,9 @@ export default function HomePage() {
         </div>
       </ClickableItem>
 
+      {/* Flower bed */}
       <ClickableItem 
-        top={51}
+        top={57}
         right={0}
         size={27}
         img="/images/homepage/flower_bed.png"
@@ -367,7 +372,7 @@ export default function HomePage() {
       >
         <div 
           style={{ border: '1rem solid #b54938' }}
-          className="w-full h-full lg:overflow-y-clip lg:overscroll-contain"
+          className="w-full h-full lg:overflow-y-auto lg:overscroll-contain"
         >
           <TeamSection teamMembers={teamMembers} />
         </div>
