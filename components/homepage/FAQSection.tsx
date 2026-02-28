@@ -24,7 +24,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({ faqs, id }) => {
   return (
     <section
       id={id}
-      className="w-full py-10 flex flex-col items-center justify-start text-white"
+      className="w-full py-16 flex flex-col items-center justify-start text-white"
     >
       <motion.div
         initial={{ opacity: 0, y: 50 }}

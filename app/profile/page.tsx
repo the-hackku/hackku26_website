@@ -117,12 +117,12 @@ export default async function ProfilePage() {
 
   const leaderboard = topUsers.map((u, index) => {
     const userInfo = topUserDetails.find((info) => info.id === u.id);
-    const name = userInfo?.ParticipantInfo
-      ? `${userInfo.ParticipantInfo.firstName} ${userInfo.ParticipantInfo.lastName}`
-      : userInfo?.email ?? "Anonymous";
+    const participantName = userInfo?.ParticipantInfo
+      ? `${userInfo.ParticipantInfo.firstName} ${userInfo.ParticipantInfo.lastName}` : null;
+    const backupName = userInfo?.email ? "Unregiststered User" : "Anonymous User";
     return {
       rank: index + 1,
-      name,
+      name: participantName ?? backupName,
       checkins: u.checkinCount,
     };
   });

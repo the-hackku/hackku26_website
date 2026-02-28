@@ -181,7 +181,7 @@ export function RegistrationForm() {
 
   // Clear localStorage on successful submission
   const onSubmit = async (data: RegistrationData) => {
-    await toast.promise(
+    toast.promise(
       (async () => {
         const file = fileInputRef.current?.files?.[0];
         let resumeUrl = null;
@@ -209,7 +209,7 @@ export function RegistrationForm() {
       })(),
       {
         loading: "Submitting registration...",
-        success: "Registration successful!",
+        success: <div>Registration successful! Please join our discord <a className="text-blue-500 font-bold" href={constants.discordInvite}>here</a>!</div>,
         error: "Registration failed. Please try again.",
       }
     );

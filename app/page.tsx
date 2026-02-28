@@ -315,12 +315,22 @@ export default function HomePage() {
         </section>
       </div>
 
+      {/* Mascot */}
+      <ClickableItem
+        top={25}
+        left={44}
+        size={11}
+        img="/images/homepage/mascot.png"
+        id="mascot"
+        disabled
+      />
+
       {/* Sign */}
       <ClickableItem 
-        top={27}
-        right={20}
+        top={25}
+        left={61}
         size={18}
-        img="/images/homepage/sign.png"
+        img="/images/homepage/sign_text.png"
         id="about"
       >
         <div className="-z-10 hidden lg:block absolute w-14 h-screen bg-[#79441d]"></div>
@@ -346,17 +356,17 @@ export default function HomePage() {
       >
       </ClickableItem>
 
-      {/* Chalkboard menu */}
+      {/* Chalkboard Menu */}
       <ClickableItem 
         top={52}
         left={22}
         size={16}
-        img="/images/homepage/menu.png"
+        img="/images/homepage/menu_unreadable.png"
         id="faq"
       >
         <div 
           style={{ border: "1rem solid #2e1708" }}
-          className="w-full h-full bg-[#08301a] text-white lg:overflow-y-auto lg:overscroll-contain"
+          className="w-full h-full text-white lg:overflow-y-auto lg:overscroll-contain bg-[#08301a]"
         >
           <FAQSection faqs={faqs} />
         </div>
@@ -372,7 +382,7 @@ export default function HomePage() {
       >
         <div 
           style={{ border: '1rem solid #b54938' }}
-          className="w-full h-full lg:overflow-y-auto lg:overscroll-contain"
+          className="w-full h-full lg:overflow-y-auto lg:overscroll-contain pt-10 bg-[#7a4a21]"
         >
           <TeamSection teamMembers={teamMembers} />
         </div>
