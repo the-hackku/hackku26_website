@@ -2,6 +2,7 @@ import ScheduleGrid from "@/components/ScheduleGrid";
 // import BeginnerWorkshops from "@/components/BeginnerWorkshops";
 import { prisma } from "@/lib/prisma";
 import { Event } from "@prisma/client";
+import constants from "@/constants";
 
 /**
  * Fetch events from your database
@@ -34,8 +35,7 @@ export default async function SchedulePage() {
   }));
 
   // Decide how to identify "beginner workshops" vs. "normal" events.
-  // For example, let's assume anything before April 4, 2025 is "beginner" content:
-  const cutoffDate = new Date("2025-04-04T00:00:00.000Z");
+  const cutoffDate = new Date(constants.cutoffDate);
 
   // Filter out beginner workshops
   // const beginnerWorkshops = formattedEvents.filter(
@@ -58,12 +58,6 @@ export default async function SchedulePage() {
       {/* Pass only the main schedule events to the big schedule */}
       {/* <BeginnerWorkshops schedule={beginnerWorkshops} /> */}
       {/* <hr className="my-8" /> */}
-      <div className="flex items-center justify-center mb-4 bg-yellow-100">
-        <p>
-          HackKU25 has ended! Stay tuned for details on <b>HackKU26</b>!
-        </p>
-      </div>
-
       <ScheduleGrid schedule={mainScheduleEvents} />
       {/* Pass only the "beginner" events to the simpler layout */}
     </div>
