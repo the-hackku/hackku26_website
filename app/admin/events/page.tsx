@@ -6,6 +6,7 @@ import ScheduleGrid from "@/components/ScheduleGrid";
 import { prisma } from "@/lib/prisma";
 import { Event } from "@prisma/client";
 import Link from "next/link";
+import constants from "@/constants";
 
 // Server-side function to fetch events data
 async function getEvents(): Promise<Event[]> {
@@ -39,7 +40,7 @@ export default async function SchedulePage() {
 
   // Decide how to identify "beginner workshops" vs. "normal" events.
   // For example, let's assume anything before April 4, 2025 is "beginner" content:
-  const cutoffDate = new Date("2025-04-04T00:00:00.000Z");
+  const cutoffDate = new Date(constants.cutoffDate);
 
   // Filter out beginner workshops
 

@@ -6,6 +6,8 @@ const constants = {
   discordInvite: "https://discord.gg/Gcf6nmBwT8",
   instagramUrl: "https://instagram.com/hackku",
   supportEmail: "hack@ku.edu",
+  dateRanges: ["2026-04-17", "2026-04-17", "2026-04-17"],
+  cutoffDate: "2026-04-17T00:00:00.000Z"
 };
 
 export default constants;

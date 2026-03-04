@@ -17,6 +17,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { TimeInput } from "../customui/TimeInput";
 import { createEvent } from "@/app/actions/admin";
 import { useRouter } from "next/navigation";
+import constants from "@/constants"; 
 
 type FormData = z.infer<typeof formSchema>;
 
@@ -25,7 +26,7 @@ const formSchema = z.object({
   name: z
     .string()
     .min(2, { message: "Event name must be at least 2 characters." }),
-  date: z.enum(["2025-04-04", "2025-04-05", "2025-04-06"]),
+  date: z.enum(["2026-04-17", "2026-04-17", "2026-04-17"]),
   startTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/),
   duration: z.coerce.number().min(0.5).max(12),
   location: z.string().optional(),
@@ -40,7 +41,7 @@ export function EventForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      date: "2025-04-04",
+      date: "2026-04-17",
       startTime: "12:00",
       duration: 1,
       location: "",
@@ -190,26 +191,26 @@ export function EventForm() {
                       >
                         <FormItem>
                           <FormControl>
-                            <RadioGroupItem value="2025-04-04" id="friday" />
+                            <RadioGroupItem value="2026-04-17" id="friday" />
                           </FormControl>
                           <FormLabel htmlFor="friday" className="text-sm">
-                            Friday, 4th
+                            Friday, 17th
                           </FormLabel>
                         </FormItem>
                         <FormItem>
                           <FormControl>
-                            <RadioGroupItem value="2025-04-05" id="saturday" />
+                            <RadioGroupItem value="2026-04-18" id="saturday" />
                           </FormControl>
                           <FormLabel htmlFor="saturday" className="text-sm">
-                            Saturday, 5th
+                            Saturday, 18th
                           </FormLabel>
                         </FormItem>
                         <FormItem>
                           <FormControl>
-                            <RadioGroupItem value="2025-04-06" id="sunday" />
+                            <RadioGroupItem value="2026-04-19" id="sunday" />
                           </FormControl>
                           <FormLabel htmlFor="sunday" className="text-sm">
-                            Sunday, 6th
+                            Sunday, 19th
                           </FormLabel>
                         </FormItem>
                       </RadioGroup>
