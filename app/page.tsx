@@ -16,6 +16,14 @@ import TeamSection from "@/components/homepage/TeamSection";
 import { IconBrandDiscord } from "@tabler/icons-react";
 import ClickableItem from "@/components/homepage/ClickableItem";
 
+import nature from "@/assets/images/homepage/nature.png";
+import natureFull from "@/assets/images/homepage/nature_full.png";
+import mascot from "@/assets/images/homepage/mascot.png";
+import signText from "@/assets/images/homepage/sign_text.png";
+import foodStall from "@/assets/images/homepage/food_stall.png";
+import menuUnreadable from "@/assets/images/homepage/menu_unreadable.png";
+import flowerBed from "@/assets/images/homepage/flower_bed.png";
+
 export default function HomePage() {
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [isMouseOver, setIsMouseOver] = useState(false);
@@ -193,18 +201,14 @@ export default function HomePage() {
       {/* Desktop image */}
       <Image
         className="hidden lg:block lg:object-cover h-full"
-        width={6000}
-        height={12000}
-        src="/images/homepage/nature.png"
+        src={nature}
         alt="nature-bg"
       />
 
       {/* Mobile image */}
       <Image
         className="lg:hidden object-cover h-full"
-        width={6000}
-        height={12000}
-        src="/images/homepage/nature_full.png"
+        src={natureFull}
         alt="nature-bg"
       />
 
@@ -320,7 +324,7 @@ export default function HomePage() {
         top={25}
         left={44}
         size={11}
-        img="/images/homepage/mascot.png"
+        img={mascot}
         id="mascot"
         disabled
       />
@@ -330,7 +334,7 @@ export default function HomePage() {
         top={25}
         left={61}
         size={18}
-        img="/images/homepage/sign_text.png"
+        img={signText}
         id="about"
       >
         <div className="-z-10 hidden lg:block absolute w-14 h-screen bg-[#79441d]"></div>
@@ -350,7 +354,7 @@ export default function HomePage() {
         top={45}
         left={7}
         size={32}
-        img="/images/homepage/food_stall.png"
+        img={foodStall}
         id="#"
         disabled
       >
@@ -361,7 +365,7 @@ export default function HomePage() {
         top={52}
         left={22}
         size={16}
-        img="/images/homepage/menu_unreadable.png"
+        img={menuUnreadable}
         id="faq"
       >
         <div 
@@ -377,7 +381,7 @@ export default function HomePage() {
         top={57}
         right={0}
         size={27}
-        img="/images/homepage/flower_bed.png"
+        img={flowerBed}
         id="team"
       >
         <div 

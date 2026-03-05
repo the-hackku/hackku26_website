@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import React, { useState, useEffect } from "react";
 import { useBreakpoint } from "@/hooks/useMediaQuery";
 import { IconX } from "@tabler/icons-react";
@@ -12,7 +12,7 @@ interface ClickableItemProps {
   left?: number;
   right?: number;
   bottom?: number;
-  img: string;
+  img: StaticImageData;
   size: number;
   id: string;
   disabled?: boolean;
