@@ -26,7 +26,7 @@ const formSchema = z.object({
   name: z
     .string()
     .min(2, { message: "Event name must be at least 2 characters." }),
-  date: z.enum(["2026-04-17", "2026-04-17", "2026-04-17"]),
+  date: z.enum(["2026-04-17", "2026-04-18", "2026-04-19"]),
   startTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/),
   duration: z.coerce.number().min(0.5).max(12),
   location: z.string().optional(),
