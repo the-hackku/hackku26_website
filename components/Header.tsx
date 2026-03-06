@@ -7,8 +7,8 @@ import { usePathname } from "next/navigation";
 import { Button } from "./ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  // IconCalendar,
-  // IconCalendarFilled,
+  IconCalendar,
+  IconCalendarFilled,
   IconHome2,
   IconHomeFilled,
   IconMenu2,
@@ -203,8 +203,6 @@ const Header = ({ isAdmin }: { isAdmin: boolean }) => {
                             </span>
                           </SheetClose>
                         </Link>
-
-                        {/*
                         <Link href="/schedule" passHref>
                           <SheetClose asChild>
                             <span className="flex items-center text-xl">
@@ -213,6 +211,7 @@ const Header = ({ isAdmin }: { isAdmin: boolean }) => {
                             </span>
                           </SheetClose>
                         </Link>
+                        {/*
                         <Link href="/info" passHref>
                           <SheetClose asChild>
                             <span className="flex items-center text-xl">
@@ -222,7 +221,6 @@ const Header = ({ isAdmin }: { isAdmin: boolean }) => {
                           </SheetClose>
                         </Link>
                         */}
-
                         <Link href="/profile" passHref>
                           <SheetClose asChild>
                             <span className="flex items-center text-xl">
@@ -288,8 +286,6 @@ const Header = ({ isAdmin }: { isAdmin: boolean }) => {
                       Home
                     </Link>
                   </TabsTrigger>
-
-                  {/*
                   <TabsTrigger value="schedule" asChild>
                     <Link
                       href="/schedule"
@@ -303,6 +299,7 @@ const Header = ({ isAdmin }: { isAdmin: boolean }) => {
                       Schedule
                     </Link>
                   </TabsTrigger>
+                  {/*
                   <TabsTrigger value="info" asChild>
                     <Link
                       href="/info"
@@ -317,7 +314,6 @@ const Header = ({ isAdmin }: { isAdmin: boolean }) => {
                     </Link>
                   </TabsTrigger>
                   */}
-
                   <TabsTrigger value="profile" asChild>
                     <Link href="/profile">
                       {currentTab === "profile" ? (

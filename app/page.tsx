@@ -11,7 +11,6 @@ import { useSession } from "next-auth/react";
 import FAQSection from "@/components/homepage/FAQSection";
 import AboutSection from "@/components/homepage/AboutSection";
 import TeamSection from "@/components/homepage/TeamSection";
-// import AllSvg from "@/components/homepage/svg/AllSvg";
 
 import { IconBrandDiscord } from "@tabler/icons-react";
 import ClickableItem from "@/components/homepage/ClickableItem";
@@ -71,14 +70,19 @@ export default function HomePage() {
       answer:
         "No, HackKU is an in-person event. We believe that the best experience comes from being on-site, collaborating with others, and engaging in the full hackathon experience.",
     },
+    // {
+    //   question: "Do you offer travel reimbursements?",
+    //   answer: (
+    //     <>
+    //       Yes! We offer travel reimbursements for participants who are traveling
+    //       from outside of Lawrence, KS.
+    //     </>
+    //   ),
+    // },
     {
-      question: "Do you offer travel reimbursements?",
-      answer: (
-        <>
-          Yes! We offer travel reimbursements for participants who are traveling
-          from outside of Lawrence, KS.
-        </>
-      ),
+      question: "When do you send out acceptance letters?",
+      answer:
+        "We don't send out any, If you register for HackKU you can attend!",
     },
   ];
 
