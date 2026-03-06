@@ -23,6 +23,7 @@ import signText from "@/assets/images/homepage/sign_text.png";
 import foodStall from "@/assets/images/homepage/food_stall.png";
 import menuUnreadable from "@/assets/images/homepage/menu_unreadable.png";
 import flowerBed from "@/assets/images/homepage/flower_bed.png";
+import cloudLogo from "@/assets/images/homepage/cloud_logo.png"
 
 export default function HomePage() {
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
@@ -246,9 +247,7 @@ export default function HomePage() {
               style={{ textShadow: "1px 1px 2px rgba(0, 0, 0, 1)" }}
             >
               <Image
-                width={3228}
-                height={1469}
-                src="/images/homepage/cloud_logo.png"
+                src={cloudLogo}
                 alt="cloud-logo"
               />
             </motion.h1>
