@@ -84,6 +84,11 @@ export default function HomePage() {
       answer:
         "We don't send out any, If you register for HackKU you can attend!",
     },
+    {
+      question: "Will food be provided?",
+      answer:
+        "Yes! We make sure our hackers don't go hungry 😋",
+    },
   ];
 
   const previousEvents = [
