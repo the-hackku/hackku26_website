@@ -202,7 +202,7 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="relative pt-[25em] lg:pt-0 bg-[#c1e3fe]">
+    <div className="relative pt-[25em] lg:pt-[10em] bg-[#c1e3fe]">
       {/* Desktop image */}
       <Image
         className="hidden lg:block lg:object-cover h-full"

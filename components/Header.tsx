@@ -157,7 +157,7 @@ const Header = ({ isAdmin }: { isAdmin: boolean }) => {
                       width={60}
                       height={60}
                       alt="HackKU Logo"
-                      className="h-15 w-auto rounded-md"
+                      className="h-15 w-auto rounded-md drop-shadow-md"
                     />
                   </Link>
                 </motion.div>
@@ -259,9 +259,7 @@ const Header = ({ isAdmin }: { isAdmin: boolean }) => {
 
             {/* Center Tabs (Always Visible) (Desktop Only) */}
             <motion.div
-              className={`hidden lg:flex justify-center flex-1 ${
-                isHomePage ? "drop-shadow-lg" : "drop-shadow-md"
-              }`}
+              className="hidden lg:flex justify-center flex-1 drop-shadow-md"
               initial={{ flex: 1, scale: 1 }}
               animate={{
                 scale: scale,
