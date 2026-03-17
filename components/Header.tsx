@@ -18,8 +18,8 @@ import {
   IconUserFilled,
   IconBolt,
   IconStar,
-  // IconInfoCircle,
-  // IconInfoCircleFilled,
+  IconInfoCircle,
+  IconInfoCircleFilled,
 } from "@tabler/icons-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -211,7 +211,6 @@ const Header = ({ isAdmin }: { isAdmin: boolean }) => {
                             </span>
                           </SheetClose>
                         </Link>
-                        {/*
                         <Link href="/info" passHref>
                           <SheetClose asChild>
                             <span className="flex items-center text-xl">
@@ -220,7 +219,6 @@ const Header = ({ isAdmin }: { isAdmin: boolean }) => {
                             </span>
                           </SheetClose>
                         </Link>
-                        */}
                         <Link href="/profile" passHref>
                           <SheetClose asChild>
                             <span className="flex items-center text-xl">
@@ -297,7 +295,6 @@ const Header = ({ isAdmin }: { isAdmin: boolean }) => {
                       Schedule
                     </Link>
                   </TabsTrigger>
-                  {/*
                   <TabsTrigger value="info" asChild>
                     <Link
                       href="/info"
@@ -311,7 +308,6 @@ const Header = ({ isAdmin }: { isAdmin: boolean }) => {
                       Info
                     </Link>
                   </TabsTrigger>
-                  */}
                   <TabsTrigger value="profile" asChild>
                     <Link href="/profile">
                       {currentTab === "profile" ? (
