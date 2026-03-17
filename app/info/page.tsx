@@ -1,7 +1,7 @@
 import { NotionAPI } from "notion-client";
 import NotionPage from "@/components/NotionPage";
 
-const PAGE_ID = "HackerDoc-HackKU-2024-a878deccbb114cb6846253137c85ee74";
+const PAGE_ID = "HackerDoc-HackKU-26-2be9e50fddb580418f10d4c9ba1b14e1";
 const notion = new NotionAPI();
 
 export default async function TestPage() {
