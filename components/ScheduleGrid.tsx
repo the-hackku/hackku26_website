@@ -19,6 +19,16 @@ import { Checkbox } from "./ui/checkbox";
 import { AnimatePresence, motion } from "framer-motion";
 import { EventType } from "@prisma/client";
 import { Input } from "./ui/input";
+import Image, { StaticImageData } from "next/image";
+
+
+import activityBg from "@/assets/images/schedule/activities.png";
+import foodBg from "@/assets/images/schedule/food.png";
+import dawnBg from "@/assets/images/schedule/required dawn.png";
+import duskBg from "@/assets/images/schedule/required dusk.png";
+import sponsorBg from "@/assets/images/schedule/sponsor.png";
+import workshopBg from "@/assets/images/schedule/workshop.png";
+
 
 type ScheduleEvent = {
   id: string;
@@ -34,22 +44,37 @@ type ScheduleGridProps = {
   schedule: ScheduleEvent[];
 };
 
+const eventTypeBackground: Partial<Record<EventType, StaticImageData>> = {
+  FOOD: foodBg,
+  WORKSHOPS: workshopBg,
+  SPONSOR: sponsorBg,
+  ACTIVITIES: activityBg,
+};
+
 // Helper function to map an eventType to a specific color
 const eventTypeColors: Record<EventType, string> = {
-  FOOD: "bg-orange-400",
-  REQUIRED: "bg-red-400",
-  WORKSHOPS: "bg-green-500",
-  SPONSOR: "bg-blue-400",
-  ACTIVITIES: "bg-purple-400",
+  FOOD: "bg-black",
+  REQUIRED: "bg-black",
+  WORKSHOPS: "bg-black",
+  SPONSOR: "bg-black",
+  ACTIVITIES: "bg-black",
 };
 
 const eventTypeDarkerColors: Record<EventType, string> = {
-  FOOD: "#f97316", // darker than bg-orange-400
-  REQUIRED: "#ef4444", // darker than bg-red-400
-  WORKSHOPS: "#16a34a", // darker than bg-green-500
-  SPONSOR: "#3b82f6", // darker than bg-blue-400
+  FOOD: "#ef4444", // darker than bg-red-400
+  REQUIRED: "#f97316", // darker than bg-orange-400
+  WORKSHOPS: "#3b82f6", // darker than bg-blue-400
+  SPONSOR: "#16a34a", // darker than bg-green-500
   ACTIVITIES: "#8b5cf6", // darker than bg-purple-400
 };
+
+const defaultImageBg = (eventTime: string) => {
+  const startDatetime = new Date(eventTime);
+  if (startDatetime.getHours() < 12) {
+    return dawnBg;
+  }
+  return duskBg;
+}
 
 // Helper function to map slot index to a readable time format (e.g., "7:00 AM", "7:30 AM", etc.)
 const formatTime = (
@@ -396,6 +421,8 @@ const ScheduleGrid = ({ schedule }: ScheduleGridProps) => {
   const [timezoneMode, setTimezoneMode] = useState<"local" | "central">(
     "central"
   );
+
+  const [popoverOpen, setPopoverOpen] = useState(false);
 
   const scheduleGridRef = useRef<HTMLDivElement | null>(null);
 
@@ -799,7 +826,9 @@ const ScheduleGrid = ({ schedule }: ScheduleGridProps) => {
                             const colorClass = event.eventType
                               ? eventTypeColors[event.eventType]
                               : "bg-gray-400";
-
+                            const backgroundImage = event.eventType
+                              ? eventTypeBackground[event.eventType] ?? defaultImageBg(event.startDate)
+                              : defaultImageBg(event.startDate);
                             // Look up this event's overlap info
                             const overlapInfo = dayOverlapMap?.get(event.id);
                             let overlapStyle: React.CSSProperties = {};
@@ -817,9 +846,19 @@ const ScheduleGrid = ({ schedule }: ScheduleGridProps) => {
                             return (
                               <div
                                 key={event.id}
+                                title={event.eventType === "REQUIRED" ? "This is an event you are REQUIRED to attend!" : ""}
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  setSelectedEvent(isSelected ? null : event);
+                                  // Logic to open and close the event viewer
+                                  setSelectedEvent(currEvent => {
+                                    if (currEvent === event) {
+                                      setCollapsed(true);
+                                    } else if (collapsed) {
+                                      setCollapsed(false);
+                                    }
+
+                                    return isSelected ? null : event
+                                  });
                                 }}
                                 className={`absolute inset-0 z-10 rounded-md p-1 overflow-hidden cursor-pointer text-white
                                 ${colorClass}
@@ -828,26 +867,22 @@ const ScheduleGrid = ({ schedule }: ScheduleGridProps) => {
                                     ? "ring-2 ring-white/80 shadow-xl after:absolute after:inset-0 after:bg-black after:opacity-5"
                                     : ""
                                 }
-                                
-                              `}
+                                `}
                                 style={{
+                                  ...overlapStyle,
+                                  textShadow: "0 1px 3px #000",
                                   gridRow: `span ${rowSpan}`,
                                   height: `${rowSpan * 3}rem`, // for h-12
                                   position: "absolute",
-                                  ...overlapStyle,
-                                  boxShadow: isSelected
-                                    ? `inset 0 0 0 2px ${
-                                        eventTypeDarkerColors[
-                                          event.eventType
-                                        ] || "black"
-                                      }`
-                                    : `inset 0 0 0 0.5px ${
-                                        eventTypeDarkerColors[
-                                          event.eventType
-                                        ] || "black"
-                                      }`,
+                                  opacity: isSelected ? "0.8" : "1",
                                 }}
                               >
+                                <Image
+                                  src={backgroundImage}
+                                  alt="background-image"
+                                  className="absolute -z-10 opacity-70"
+                                  fill
+                                />
                                 {/* Event content */}
                                 <span
                                   className={`inline-flex flex-wrap items-start text-left ${
@@ -859,6 +894,9 @@ const ScheduleGrid = ({ schedule }: ScheduleGridProps) => {
                                   }`}
                                 >
                                   <p className="text-sm font-bold whitespace-normal break-words mr-1">
+                                    {event.eventType === "REQUIRED" && 
+                                      <span className="text-red-500" title="Required Event" >*</span>
+                                    }
                                     {event.name}
                                   </p>
                                   <div className="text-xs text-white/90 whitespace-nowrap">

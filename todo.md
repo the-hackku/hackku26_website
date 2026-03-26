@@ -1,11 +1,9 @@
-Things to change:
-- [ ] Change title to HackKU 26
-- [ ] MLH banner
-- [ ] HackKU Logo
-- [ ] Dates on homepage
-- [ ] Hackathon name on homepage
-- [ ] Discord link
-- [ ] Add image previous hackku (HackKU 25)
-- [ ] Update meet the team (info for now)
-- [ ] Footer links (github, team info, discord)
+# Website ToDo
+
+- [x] Update banner to non-grainy
+- [x] Update schedule with cool backgrounds
+- [x] Add info page (Waiting on Andrew and Maral)
+- [ ] Add fishies to homepage (team lead section - start adding headshots)
+- [ ] Add sponsors (waiting for fishies)
+- [ ] Discord OAuth
 

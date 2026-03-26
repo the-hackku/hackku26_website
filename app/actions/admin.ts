@@ -721,6 +721,7 @@ export async function getTotalRegistrationNumber() {
   const totalRegistrations = await prisma.participantInfo.count();
   return totalRegistrations;
 }
+
 export async function getHackathonCheckinCount(eventId: string) {
   await isAdmin();
 
