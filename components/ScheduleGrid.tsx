@@ -422,8 +422,6 @@ const ScheduleGrid = ({ schedule }: ScheduleGridProps) => {
     "central"
   );
 
-  const [popoverOpen, setPopoverOpen] = useState(false);
-
   const scheduleGridRef = useRef<HTMLDivElement | null>(null);
 
   // Group events by date
