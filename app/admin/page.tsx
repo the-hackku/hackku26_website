@@ -26,6 +26,7 @@ import { Button } from "@/components/ui/button";
 import AnalyticsChart from "@/components/admin/charts/AnalyticsChart";
 import CombinedDashboard from "@/components/admin/charts/combinedDashboard";
 import { exportEmails, exportParticipantEmails } from "@/scripts/emailExporter";
+import { toast } from "sonner";
 
 // Extend the User type to include relations or additional fields
 interface ExtendedUser extends User {
@@ -75,7 +76,12 @@ interface Checkin {
 }
 
 const handleBackup = async () => {
-  backupRegistrationScript();
+  const res = await backupRegistrationScript();
+  if (!res.success) {
+    toast.error("Failed to backup registration");
+    return;
+  }
+  toast.success("Backed up to Google Sheet")
 };
 
 const downloadFile = (fileName: string, content: string) => {
@@ -321,7 +327,7 @@ export default function AdminTabsPage() {
           </TabsList>
           <div className="flex flex-row gap-2">
             <Link
-              href="https://docs.google.com/spreadsheets/d/1Xwv7RBzU2VFX_xXCNxEpOi-StvNJV5DsiqkIYEQWQD4/edit?gid=0#gid=0"
+              href="https://docs.google.com/spreadsheets/d/1BHgfhH0E5Ro5FuzsFgvt-wtNWI9sQ4QPqdk7aNInUi0/edit?gid=0#gid=0"
               target="_blank"
             >
               <Button className="bg-green-600 mb-4">Go to Google Sheet</Button>

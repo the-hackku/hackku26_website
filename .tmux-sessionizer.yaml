@@ -1,0 +1,3 @@
+windows:
+  - server: npm run dev
+  - bare: 

@@ -73,13 +73,40 @@ export async function exportRegistrationToGoogleSheet(
 ) {
   try {
     const sheetsApi = google.sheets({ version: "v4", auth });
+    const sheetTitle = "Live Registration Data";
+
+    // Check if the sheet exists, create it if not
+    const sheetMetadata = await sheetsApi.spreadsheets.get({
+      spreadsheetId: SHEET_ID,
+    });
+
+    const existingSheets = sheetMetadata.data.sheets?.map(
+      (sheet) => sheet.properties?.title
+    );
+
+    if (!existingSheets?.includes(sheetTitle)) {
+      await sheetsApi.spreadsheets.batchUpdate({
+        spreadsheetId: SHEET_ID,
+        requestBody: {
+          requests: [
+            {
+              addSheet: {
+                properties: { title: sheetTitle },
+              },
+            },
+          ],
+        },
+      });
+
+      console.log(`Created new sheet: ${sheetTitle}`);
+    }
 
     const rowValues = transformUserData(user);
 
     // Append data to the Google Sheet, starting at the correct position
     await sheetsApi.spreadsheets.values.append({
       spreadsheetId: SHEET_ID,
-      range: "Live Registration Data!A1", // Refers to the entire sheet, starting from the first available row
+      range: `${sheetTitle}!A1`, // Refers to the entire sheet, starting from the first available row
       valueInputOption: "RAW",
       insertDataOption: "INSERT_ROWS", // Ensures rows are inserted correctly
       requestBody: {
@@ -218,6 +245,8 @@ export async function batchBackupRegistration() {
     console.log(
       `Batch backup of registrations completed successfully in ${newSheetTitle}!`
     );
+    const sheetUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit#gid=0`;
+    console.log(`Sheet URL: ${sheetUrl}`);
   } catch (error) {
     console.error("Error during batch backup:", error);
   } finally {
