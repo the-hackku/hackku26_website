@@ -28,7 +28,7 @@ const ClickableItem: React.FC<ClickableItemProps> = ({
   size, 
   img, 
   id,
-  disabled = false 
+  disabled = false,
 }) => {
   const urlId = useHash();
   const [showModal, setShowModal] = useState(false || urlId === id);
@@ -93,14 +93,21 @@ const ClickableItem: React.FC<ClickableItemProps> = ({
       <motion.div 
         whileHover={{ scale: disabled ? 1 : 1.1 }}
         whileTap={{ scale: disabled ? 1 : 0.98 }}
-        style={{ top: `${top}%`, left: `${left}%`, right: `${right}%`, bottom: `${bottom}%`, width: `${size}%`}}
+        style={{ 
+          top: `${top}%`,
+          left: `${left}%`, 
+          right: `${right}%`, 
+          bottom: `${bottom}%`, 
+          width: `${size}%`,
+        }}
         className="absolute h-auto cursor-pointer hidden lg:block"
       >
-        <Image 
-          width={1111}
+        <Image
+          width={2000}
           height={1090}
           src={img}
           alt=""
+          className="w-full h-auto"
           onClick={handleImageClick}
         />
       </motion.div> 
