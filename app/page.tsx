@@ -1,19 +1,26 @@
 "use client"
 
-import type { TeamMember } from "@/components/homepage/TeamSection";
-
-import { motion } from "framer-motion";
-import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
+import { useState } from "react";
 import constants from "@/constants";
 import { useSession } from "next-auth/react";
 import FAQSection from "@/components/homepage/FAQSection";
 import AboutSection from "@/components/homepage/AboutSection";
 import TeamSection from "@/components/homepage/TeamSection";
+import SponsorsSection from "@/components/homepage/SponsorsSection";
 
 import { IconBrandDiscord } from "@tabler/icons-react";
 import ClickableItem from "@/components/homepage/ClickableItem";
+
+import { 
+  faqs,
+  teamMembers, 
+  previousEvents,
+  sponsorTiers,
+  sponsors,
+} from "@/data/homepage";
 
 import nature from "@/assets/images/homepage/nature.png";
 import natureFull from "@/assets/images/homepage/nature_full.png";
@@ -23,6 +30,7 @@ import foodStall from "@/assets/images/homepage/food_stall.png";
 import menuUnreadable from "@/assets/images/homepage/menu_unreadable.png";
 import flowerBed from "@/assets/images/homepage/flower_bed.png";
 import cloudLogo from "@/assets/images/homepage/cloud_logo.png"
+import fishComposite from "@/assets/images/fish/composite.svg";
 
 export default function HomePage() {
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
@@ -43,168 +51,6 @@ export default function HomePage() {
     setTilt({ x: 0, y: 0 });
     setIsMouseOver(false);
   };
-
-  const faqs = [
-    {
-      question: "What's a hackathon?",
-      answer:
-        "A hackathon is an event where individuals or teams come together to brainstorm, design, and build projects. It provides an environment to learn new skills, tackle real-world challenges, and create impactful solutions, with opportunities to network and compete for prizes!",
-    },
-    {
-      question: "What should I bring?",
-      answer:
-        "Bring a laptop, charger, and any hardware you plan to use. We also recommend bringing a change of clothes and toiletries.",
-    },
-    {
-      question: "Who can participate?",
-      answer:
-        "Current students are welcome to participate. No prior experience is necessary! All High school students will require a chaperone.",
-    },
-    {
-      question: "Is there a cost to attend?",
-      answer:
-        "No, HackKU is free to attend! We provide meals, swag, and resources for all participants.",
-    },
-    {
-      question: "Can I participate remotely?",
-      answer:
-        "No, HackKU is an in-person event. We believe that the best experience comes from being on-site, collaborating with others, and engaging in the full hackathon experience.",
-    },
-    // {
-    //   question: "Do you offer travel reimbursements?",
-    //   answer: (
-    //     <>
-    //       Yes! We offer travel reimbursements for participants who are traveling
-    //       from outside of Lawrence, KS.
-    //     </>
-    //   ),
-    // },
-    {
-      question: "When do you send out acceptance letters?",
-      answer:
-        "We don't send out any, If you register for HackKU you can attend!",
-    },
-    {
-      question: "Will food be provided?",
-      answer:
-        "Yes! We make sure our hackers don't go hungry 😋",
-    },
-  ];
-
-  const previousEvents = [
-    {
-      name: "HackKU 2021",
-      image: "/images/prev/2021.png",
-      link: "https://hackku-2021.devpost.com/",
-    },
-    {
-      name: "HackKU 2022",
-      image: "/images/prev/2022.png",
-      link: "https://hackku-2022.devpost.com/",
-    },
-    {
-      name: "HackKU 2023",
-      image: "/images/prev/2023.png",
-      link: "https://hackku-2023.devpost.com/",
-    },
-    {
-      name: "HackKU 2024",
-      image: "/images/prev/2024.png",
-      link: "https://hackku-2024.devpost.com/",
-    },
-    {
-      name: "HackKU 2025",
-      image: "/images/prev/2025.png",
-      link: "https://hackku-2025.devpost.com/",
-    },
-  ];
-
-  const teamMembers: TeamMember[] = [
-    {
-      name: "Delroy (Dellie) Cassell Wright III",
-      role: "Director",
-      linkedin: "https://www.linkedin.com/in/delroy-wright-440b35210/",
-      website: "https://d3llie.tech",
-      image: ""
-    },
-    {
-      name: "Alivia Hanes",
-      role: "Vice Director",
-      linkedin: "https://www.linkedin.com/in/alivia-hanes",
-      image: "",
-    },
-    {
-      name: "Aiden Burke",
-      role: "Logistics Co-Lead",
-      linkedin: "https://www.linkedin.com/in/aidenhburke/",
-      image: "",
-    },
-    {
-      name: "Kelly Yee",
-      role: "Logistics Co-Lead",
-      linkedin: "http://linkedin.com/in/jiakyee",
-      image: "",
-    },
-    {
-      name: "Maral Bat",
-      role: "Design Co-Lead",
-      image: "",
-    },
-    {
-      name: "Addison Ladish",
-      role: "Marketing Co-Lead",
-      image: "",
-    },
-    {
-      name: "Lucía Ulate",
-      role: "Outreach Co-Lead",
-      linkedin: "https://www.linkedin.com/in/lucia-ulate-centeno",
-      image: "",
-    },
-    {
-      name: "Muhammad Ibrahim",
-      role: "Sponsorship Co-Lead",
-      linkedin: "https://www.linkedin.com/in/ibrahi12/",
-      website: "https://www.ibrahim-muhm.com/",
-      image: "",
-    },
-    {
-      name: "Kenny Hong",
-      role: "Sponsorship Co-Lead",
-      linkedin: "https://www.linkedin.com/in/kennyhongcs/",
-      image: "",
-    },
-    {
-      name: "Josslyn T. Bui",
-      role: "Sponsorship Co-Lead",
-      image: "",
-    },
-    {
-      name: "Kevinh Nguyen",
-      role: "Food Lead",
-      linkedin: "http://linkedin.com/in/kevinh-nguyen/",
-      image: "",
-    },
-    {
-      name: "Mark Horvath",
-      role: "Interdisciplinary Involvement Co-Lead",
-      linkedin: "https://www.linkedin.com/in/markandrewhorvath/",
-      image: "",
-    },
-    {
-      name: "Forest Denton",
-      role: "Tech Co-Lead",
-      linkedin: "https://www.linkedin.com/in/forest-denton-9076b2251/",
-      image: ""
-    },
-    {
-      name: "Aniketh Aatipamula",
-      role: "Tech Co-Lead",
-      linkedin: "https://www.linkedin.com/in/aaatipamula/",
-      website: "https://aniketh.dev",
-      image: "",
-    },
-  ];
 
   return (
     <div className="relative pt-[25em] lg:pt-[10em] bg-[#c1e3fe]">
@@ -390,13 +236,37 @@ export default function HomePage() {
         right={0}
         size={27}
         img={flowerBed}
-        id="team"
+        id="sponsors"
       >
         <div 
           style={{ border: '1rem solid #b54938' }}
           className="w-full h-full lg:overflow-y-auto lg:overscroll-contain pt-10 bg-[#7a4a21]"
         >
-          <TeamSection teamMembers={teamMembers} />
+          <SponsorsSection sponsors={sponsors} sponsorTiers={sponsorTiers} />
+        </div>
+      </ClickableItem>
+
+      {/* Fishes */}
+      <ClickableItem 
+        bottom={0}
+        size={100}
+        img={fishComposite}
+        id="team"
+      >
+        <div className="w-full h-full flex flex-col">
+          <svg
+            className="hidden lg:block w-full flex-shrink-0 h-14"
+            viewBox="0 0 1200 56"
+            preserveAspectRatio="none"
+          >
+            <path
+              d="M0,56 C200,8 400,56 600,8 C800,56 1000,8 1200,56 L1200,56 L0,56 Z"
+              fill="#5176ab"
+            />
+          </svg>
+          <div className="w-full flex-1 lg:overflow-y-auto lg:overscroll-contain pt-10 bg-[#5176ab]">
+            <TeamSection teamMembers={teamMembers} />
+          </div>
         </div>
       </ClickableItem>
     </div>

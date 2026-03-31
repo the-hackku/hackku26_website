@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import constants from "@/constants";
 
 interface Sponsor {
   name: string;
@@ -40,7 +41,7 @@ const SponsorsSection: React.FC<SponsorsSectionProps> = ({
   return (
     <section
       id={id}
-      className="w-full py-32 md:py-44 flex flex-col items-center justify-center bg-gray-50 text-black"
+      className="w-full flex flex-col items-center justify-center text-white"
     >
       <motion.div
         initial={{ opacity: 0, y: 50 }}
@@ -49,7 +50,7 @@ const SponsorsSection: React.FC<SponsorsSectionProps> = ({
         className="max-w-2xl text-center mb-8 md:mb-12 px-4 md:px-0"
       >
         <h2 className="text-5xl md:text-7xl font-bold mb-2 font-dfvn">
-          2025 Sponsors
+          {constants.hackathonName} Sponsors
         </h2>
         <p className="text-lg md:text-2xl">
           HackKU is supported by an incredible group of sponsors who make this

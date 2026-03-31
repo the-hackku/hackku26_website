@@ -2,19 +2,62 @@
 
 import { motion } from "framer-motion";
 import MemberImage from "./MemberImage";
+import Image, { StaticImageData } from "next/image";
 import {
   IconBrandLinkedin,
   IconWorld,
   IconChevronLeft,
   IconChevronRight,
-  IconFlower,
 } from "@tabler/icons-react";
 import { useState, useRef, useEffect } from "react";
+
+import aliviaSvg from "@/assets/images/fish/alivia.svg";
+import luciaSvg from "@/assets/images/fish/lucia.svg";
+import forestSvg from "@/assets/images/fish/forest.svg";
+import aidenSvg from "@/assets/images/fish/aiden.svg";
+import dellieSvg from "@/assets/images/fish/dellie.svg";
+import kellySvg from "@/assets/images/fish/kelly.svg";
+import anikethSvg from "@/assets/images/fish/aniketh.svg";
+import adwaithSvg from "@/assets/images/fish/adwaith.svg";
+import ibrahimSvg from "@/assets/images/fish/ibrahim.svg";
+import addisonSvg from "@/assets/images/fish/addison.svg";
+import richardSvg from "@/assets/images/fish/richard.svg";
+import markSvg from "@/assets/images/fish/mark.svg";
+import maralSvg from "@/assets/images/fish/maral.svg";
+import kennySvg from "@/assets/images/fish/kenny.svg";
+
+const fishMap: Record<string, StaticImageData> = {
+  "alivia.svg": aliviaSvg,
+  "lucia.svg": luciaSvg,
+  "forest.svg": forestSvg,
+  "aiden.svg": aidenSvg,
+  "dellie.svg": dellieSvg,
+  "kelly.svg": kellySvg,
+  "aniketh.svg": anikethSvg,
+  "adwaith.svg": adwaithSvg,
+  "ibrahim.svg": ibrahimSvg,
+  "addison.svg": addisonSvg,
+  "richard.svg": richardSvg,
+  "mark.svg": markSvg,
+  "maral.svg": maralSvg,
+  "kenny.svg": kennySvg,
+};
+
+const ANGLES = [-45, -30, -15, 15, 30, 45];
+
+function getFishAngle(name: string): number {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = (hash * 31 + name.charCodeAt(i)) & 0x7fffffff;
+  }
+  return ANGLES[hash % ANGLES.length];
+}
 
 export interface TeamMember {
   name: string;
   role: string;
   image: string;
+  fish?: string;
   linkedin?: string;
   website?: string;
 }
@@ -24,50 +67,11 @@ interface TeamSectionProps {
   id?: string;
 }
 
-function randomFlowerStyle(): string {
-  const colors = [
-    "text-red-500",
-    "text-blue-500",
-    "text-yellow-500",
-    "text-orange-500",
-  ];
-
-  const offsets = ["0", "1", "2", "3", "4"];
-
-  const rotations = [
-    "rotate-0",
-    "rotate-6",
-    "rotate-12",
-    "rotate-45",
-    "-rotate-6",
-    "-rotate-12",
-    "-rotate-45",
-  ];
-
-  const corners = [
-    (offset: string) => `top-${offset} left-${offset}`,
-    (offset: string) => `top-${offset} right-${offset}`,
-    (offset: string) => `bottom-${offset} left-${offset}`,
-    (offset: string) => `bottom-${offset} right-${offset}`,
-  ];
-
-  const randomColor = colors[Math.floor(Math.random() * colors.length)];
-  const randomOffset = offsets[Math.floor(Math.random() * offsets.length)];
-  const randomCorner = corners[Math.floor(Math.random() * corners.length)];
-  const randomRotation =
-    rotations[Math.floor(Math.random() * rotations.length)];
-
-  return `absolute z-10 ${randomCorner(randomOffset)} ${randomColor} ${randomRotation}`;
-}
-
 const TeamSection: React.FC<TeamSectionProps> = ({ teamMembers, id }) => {
   const [hoveredImage, setHoveredImage] = useState<string | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [scrollLeft, setScrollLeft] = useState(0);
   const [maxScroll, setMaxScroll] = useState(0);
-  const [flowerStyles] = useState(() => {
-    return teamMembers.map(randomFlowerStyle);
-  })
 
   const handleScroll = (direction: "left" | "right") => {
     if (scrollContainerRef.current) {
@@ -141,11 +145,21 @@ const TeamSection: React.FC<TeamSectionProps> = ({ teamMembers, id }) => {
           onScroll={updateScrollState}
         >
           <div className="grid grid-flow-col grid-rows-2 auto-cols-min gap-x-2 gap-y-4 md:gap-x-4 py-5 w-max mx-auto">
-            {teamMembers.map((member, index) => (
+            {teamMembers.map(member => (
               <div
                 key={member.name}
-                className="flex flex-col items-center text-center w-44 md:w-56"
+                className="relative flex flex-col items-center text-center w-44 md:w-56"
               >
+                {member.fish && fishMap[member.fish] && (
+                  <Image
+                    src={fishMap[member.fish]}
+                    alt=""
+                    width={48}
+                    height={36}
+                    className="absolute top-0 right-0 w-12 h-auto z-10 pointer-events-none"
+                    style={{ transform: `rotate(${getFishAngle(member.name)}deg)` }}
+                  />
+                )}
                 <motion.div
                   className="w-32 h-32 md:w-40 md:h-40 mb-4 relative"
                   onMouseEnter={() =>
@@ -154,7 +168,6 @@ const TeamSection: React.FC<TeamSectionProps> = ({ teamMembers, id }) => {
                   }
                   onMouseLeave={() => setHoveredImage(null)}
                 >
-                  <IconFlower size="3em" className={flowerStyles[index]}/>
                   <MemberImage
                     src={member.image || "/images/default.webp"}
                     alt={member.name}
