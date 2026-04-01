@@ -81,7 +81,7 @@ export const teamMembers: TeamMember[] = [
     role: "Director",
     linkedin: "https://www.linkedin.com/in/delroy-wright-440b35210/",
     website: "https://d3llie.tech",
-    image: "/images/team/dellie.jpg",
+    image: "/images/team/dellie.png",
     fish: "dellie.svg",
   },
   {
@@ -129,24 +129,25 @@ export const teamMembers: TeamMember[] = [
     role: "Sponsorship Co-Lead",
     linkedin: "https://www.linkedin.com/in/ibrahi12/",
     website: "https://www.ibrahim-muhm.com/",
-    image: "/images/team/ibrahim.jpg",
+    image: "/images/team/ibrahim.png",
     fish: "ibrahim.svg",
   },
   {
     name: "Kenny Hong",
     role: "Sponsorship Co-Lead",
     linkedin: "https://www.linkedin.com/in/kennyhongcs/",
-    image: "",
-    fish: "kenny.svg"
+    image: "/images/team/kenny.png",
+    fish: "kenny.svg",
   },
   {
     name: "Josslyn T. Bui",
     role: "Sponsorship Co-Lead",
     image: "/images/team/joss.png",
+    fish: "joss.svg",
   },
   {
     name: "Richard",
-    role: "Finance",
+    role: "Finance Lead",
     image: "",
     fish: "richard.svg"
   },
@@ -155,6 +156,7 @@ export const teamMembers: TeamMember[] = [
     role: "Food Lead",
     linkedin: "http://linkedin.com/in/kevinh-nguyen/",
     image: "/images/team/kevinh.png",
+    fish: "kevinh.svg"
   },
   {
     name: "Mark Horvath",

@@ -25,6 +25,8 @@ import richardSvg from "@/assets/images/fish/richard.svg";
 import markSvg from "@/assets/images/fish/mark.svg";
 import maralSvg from "@/assets/images/fish/maral.svg";
 import kennySvg from "@/assets/images/fish/kenny.svg";
+import jossSvg from "@/assets/images/fish/josselyn.svg";
+import kevinhSvg from "@/assets/images/fish/kevinh.svg";
 
 const fishMap: Record<string, StaticImageData> = {
   "alivia.svg": aliviaSvg,
@@ -41,6 +43,8 @@ const fishMap: Record<string, StaticImageData> = {
   "mark.svg": markSvg,
   "maral.svg": maralSvg,
   "kenny.svg": kennySvg,
+  "joss.svg": jossSvg,
+  "kevinh.svg": kevinhSvg,
 };
 
 const ANGLES = [-45, -30, -15, 15, 30, 45];

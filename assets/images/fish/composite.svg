@@ -79,4 +79,12 @@
   <use href="#fish" x="-100" y="-37.5" width="200" height="75"
        style="--body:rgb(255,77,0);--detail:rgb(0,1,102);"
        transform="translate(1760,650) rotate(58)"/>
+  <!-- kevinh -->
+  <use href="#fish" x="-100" y="-37.5" width="200" height="75"
+       style="--body:rgb(127,79,174);--detail:rgb(29,0,84);"
+       transform="translate(200,445) rotate(-68)"/>
+  <!-- josselyn -->
+  <use href="#fish" x="-100" y="-37.5" width="200" height="75"
+       style="--body:rgb(218,105,151);--detail:rgb(177,58,74);"
+       transform="translate(1300,890) rotate(73)"/>
 </svg>
