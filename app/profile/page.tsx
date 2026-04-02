@@ -84,6 +84,7 @@ export default async function ProfilePage() {
 
   const reservationRequest = await prisma.reservationRequest.findUnique({
     where: { userId: userSession.id },
+    include: { themedRoom: true },
   });
 
   const themedRoomReservation = await prisma.themedRoomReservation.findUnique({
@@ -396,16 +397,16 @@ export default async function ProfilePage() {
                           </Link>
                         </div>
                       )}
-                    {reservationRequest?.roomAssignment && (
+                    {reservationRequest?.themedRoom && (
                       <div className="p-4 mt-4 border-l-4 border-indigo-400 bg-indigo-50">
                         <h3 className="text-md font-semibold">
                           Weekend Room Reservation
                         </h3>
                         <p>
                           <span className="font-medium">Room:</span>{" "}
-                          {reservationRequest.roomAssignment}
+                          {reservationRequest.themedRoom.name} —{" "}
+                          {reservationRequest.themedRoom.location}
                         </p>
-
                         <p>
                           <span className="font-medium">Team Name:</span>{" "}
                           {reservationRequest.teamName}

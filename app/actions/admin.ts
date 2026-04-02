@@ -10,6 +10,24 @@ import {
   TravelReimbursement,
   User,
 } from "@prisma/client";
+
+export type AdminThemedRoom = {
+  id: string;
+  name: string;
+  location: string;
+};
+
+export type AdminReservationRequest = {
+  id: string;
+  teamName: string;
+  userEmail: string;
+  memberEmails: string;
+  outOfState: boolean;
+  themedRoomId: string | null;
+  themedRoomName: string | null;
+  themedRoomLocation: string | null;
+  createdAt: Date;
+};
 import { batchBackupRegistration } from "@/scripts/googleSheetsExport";
 
 // Type for the Event data used in creating or updating events// Type for the Event data used in creating or updating events
@@ -774,4 +792,94 @@ export async function searchUsers(searchQuery: string) {
     firstName: user.ParticipantInfo?.firstName ?? "",
     lastName: user.ParticipantInfo?.lastName ?? "",
   }));
+}
+
+export async function getReservationRequests(
+  page: number = 1,
+  pageSize: number = 10,
+  searchQuery: string = ""
+): Promise<{ requests: AdminReservationRequest[]; total: number }> {
+  await isAdmin();
+  const skip = (page - 1) * pageSize;
+  const where = searchQuery
+    ? {
+        OR: [
+          { teamName: { contains: searchQuery, mode: "insensitive" as const } },
+          { memberEmails: { contains: searchQuery, mode: "insensitive" as const } },
+        ],
+      }
+    : {};
+
+  const rawRequests = await prisma.reservationRequest.findMany({
+    where,
+    include: { themedRoom: true },
+    skip,
+    take: pageSize,
+    orderBy: { createdAt: "desc" },
+  });
+  const total = await prisma.reservationRequest.count({ where });
+
+  const userIds = rawRequests.map((r) => r.userId);
+  const users = await prisma.user.findMany({
+    where: { id: { in: userIds } },
+    select: { id: true, email: true },
+  });
+  const emailMap = Object.fromEntries(users.map((u) => [u.id, u.email]));
+
+  return {
+    requests: rawRequests.map((r) => ({
+      id: r.id,
+      teamName: r.teamName,
+      userEmail: emailMap[r.userId] ?? "N/A",
+      memberEmails: r.memberEmails,
+      outOfState: r.outOfState,
+      themedRoomId: r.themedRoomId,
+      themedRoomName: r.themedRoom?.name ?? null,
+      themedRoomLocation: r.themedRoom?.location ?? null,
+      createdAt: r.createdAt,
+    })),
+    total,
+  };
+}
+
+export async function assignRoomToRequest(
+  requestId: string,
+  themedRoomId: string | null
+): Promise<void> {
+  await isAdmin();
+  await prisma.reservationRequest.update({
+    where: { id: requestId },
+    data: { themedRoomId },
+  });
+}
+
+export async function deleteReservationRequest(requestId: string): Promise<void> {
+  await isAdmin();
+  await prisma.reservationRequest.delete({ where: { id: requestId } });
+}
+
+export async function getThemedRooms(): Promise<AdminThemedRoom[]> {
+  await isAdmin();
+  return prisma.themedRoom.findMany({ orderBy: { name: "asc" } });
+}
+
+export async function createThemedRoom(data: {
+  name: string;
+  location: string;
+}): Promise<void> {
+  await isAdmin();
+  await prisma.themedRoom.create({ data });
+}
+
+export async function updateAdminThemedRoom(
+  id: string,
+  data: { name?: string; location?: string }
+): Promise<void> {
+  await isAdmin();
+  await prisma.themedRoom.update({ where: { id }, data });
+}
+
+export async function deleteAdminThemedRoom(id: string): Promise<void> {
+  await isAdmin();
+  await prisma.themedRoom.delete({ where: { id } });
 }

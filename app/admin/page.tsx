@@ -25,6 +25,7 @@ import { IconArrowUpRight } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import AnalyticsChart from "@/components/admin/charts/AnalyticsChart";
 import CombinedDashboard from "@/components/admin/charts/combinedDashboard";
+import { RoomReservationsTab } from "@/components/admin/RoomReservationsTab";
 import { exportEmails, exportParticipantEmails } from "@/scripts/emailExporter";
 import { toast } from "sonner";
 
@@ -311,20 +312,22 @@ export default function AdminTabsPage() {
       />
 
       <Tabs defaultValue="analytics">
-        <div className="flex flex-col md:flex-row items-start gap-2">
-          <TabsList className="mb-4">
-            <TabsTrigger value="users">Users</TabsTrigger>
-            <TabsTrigger value="analytics">Analytics</TabsTrigger>
-
-            <TabsTrigger value="checkins">Check-ins</TabsTrigger>
-          </TabsList>
-          <TabsList className="mb-4">
-            <TabsTrigger value="reimbursements">Reimbursements</TabsTrigger>
-            <Link href="/admin/events">
-              <TabsTrigger value="events">Manage Events</TabsTrigger>
-            </Link>
-            <TabsTrigger value="actions">Admin Actions</TabsTrigger>
-          </TabsList>
+        <div className="flex flex-col items-start gap-2">
+          <div className="flex flex-row gap-2">
+            <TabsList className="mb-4">
+              <TabsTrigger value="users">Users</TabsTrigger>
+              <TabsTrigger value="analytics">Analytics</TabsTrigger>
+              <TabsTrigger value="checkins">Check-ins</TabsTrigger>
+            </TabsList>
+            <TabsList className="mb-4 hidden md:block">
+              <TabsTrigger value="reimbursements">Reimbursements</TabsTrigger>
+              <Link href="/admin/events">
+                <TabsTrigger value="events">Manage Events</TabsTrigger>
+              </Link>
+              <TabsTrigger value="rooms">Room Reservations</TabsTrigger>
+              <TabsTrigger value="actions">Admin Actions</TabsTrigger>
+            </TabsList>
+          </div>
           <div className="flex flex-row gap-2">
             <Link
               href="https://docs.google.com/spreadsheets/d/1BHgfhH0E5Ro5FuzsFgvt-wtNWI9sQ4QPqdk7aNInUi0/edit?gid=0#gid=0"
@@ -416,6 +419,10 @@ export default function AdminTabsPage() {
             columns={reimbursementColumns}
             debounceTime={250}
           />
+        </TabsContent>
+
+        <TabsContent value="rooms">
+          <RoomReservationsTab />
         </TabsContent>
 
         <TabsContent value="scanner">
