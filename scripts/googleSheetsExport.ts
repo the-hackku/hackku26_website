@@ -96,8 +96,9 @@ export async function exportRegistrationToGoogleSheet(
 ) {
   try {
     const sheetsApi = google.sheets({ version: "v4", auth });
+    const sheetTitle = "Live Registration Data";
 
-    await ensureSheetExists(sheetsApi, "Live Registration Data");
+    await ensureSheetExists(sheetsApi, sheetTitle);
 
     const rowValues = transformUserData(user);
 
