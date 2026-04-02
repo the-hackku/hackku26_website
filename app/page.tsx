@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import constants from "@/constants";
 import { useSession } from "next-auth/react";
 import FAQSection from "@/components/homepage/FAQSection";
@@ -35,22 +35,31 @@ import fishComposite from "@/assets/images/fish/composite.svg";
 export default function HomePage() {
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [isMouseOver, setIsMouseOver] = useState(false);
+  const rafRef = useRef<number | null>(null);
 
   const { data: session } = useSession();
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (rafRef.current !== null) return;
     const { clientX, clientY, currentTarget } = e;
     const { width, height, left, top } = currentTarget.getBoundingClientRect();
-    const x = ((clientX - left) / width - 0.5) * 15; // Adjust tilt sensitivity
-    const y = ((clientY - top) / height - 0.5) * -15; // Adjust tilt sensitivity
-    setTilt({ x, y });
-    setIsMouseOver(true);
-  };
+    rafRef.current = requestAnimationFrame(() => {
+      const x = ((clientX - left) / width - 0.5) * 15;
+      const y = ((clientY - top) / height - 0.5) * -15;
+      setTilt({ x, y });
+      setIsMouseOver(true);
+      rafRef.current = null;
+    });
+  }, []);
 
-  const resetTilt = () => {
+  const resetTilt = useCallback(() => {
+    if (rafRef.current !== null) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
     setTilt({ x: 0, y: 0 });
     setIsMouseOver(false);
-  };
+  }, []);
 
   return (
     <div className="relative pt-[25em] lg:pt-[10em] bg-[#c1e3fe]">

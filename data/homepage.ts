@@ -183,7 +183,7 @@ export const teamMembers: TeamMember[] = [
     role: "Tech Co-Lead",
     linkedin: "https://www.linkedin.com/in/aaatipamula/",
     website: "https://aniketh.dev",
-    image: "/images/team/aniketh.jpg",
+    image: "/images/team/aniketh.png",
     fish: "aniketh.svg"
   },
 ];
