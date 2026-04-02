@@ -1,5 +1,6 @@
 "use client";
 
+import constants from "@/constants";
 import { motion } from "framer-motion";
 import MemberImage from "./MemberImage";
 import Image, { StaticImageData } from "next/image";
@@ -120,7 +121,7 @@ const TeamSection: React.FC<TeamSectionProps> = ({ teamMembers, id }) => {
           Meet the Team
         </h2>
         <p className="text-lg md:text-2xl text-white">
-          The passionate individuals driving HackKU25 forward. Our team is
+          The passionate individuals driving {constants.hackathonName} forward. Our team is
           dedicated to creating an unforgettable hackathon experience for all
           participants.
         </p>

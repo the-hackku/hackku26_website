@@ -1,11 +1,8 @@
 "use server";
 
-import { PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authoptions";
-import { exportReimbursementToGoogleSheet } from "@/scripts/googleSheetsExport";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
 
 /**
  * Fetch users by email for group leader to add members.
@@ -20,31 +17,35 @@ export async function searchUsersByEmail(emailQuery: string) {
   const session = await getServerSession(authOptions);
   const userEmail = session?.user?.email; // Current user's email
 
-  const users = await prisma.user.findMany({
-    where: {
-      email: {
-        contains: emailQuery,
-        mode: "insensitive",
-        not: userEmail, // Exclude the current user from search results
+  try {
+    const users = await prisma.user.findMany({
+      where: {
+        email: {
+          contains: emailQuery,
+          mode: "insensitive",
+          not: userEmail ?? undefined, // Exclude the current user from search results
+        },
+        ParticipantInfo: {
+          isNot: null, // Ensure the user has completed registration
+        },
       },
-      ParticipantInfo: {
-        isNot: null, // Ensure the user has completed registration
+      include: {
+        ParticipantInfo: true, // Include participant details
       },
-    },
-    include: {
-      ParticipantInfo: true, // Include participant details
-    },
-    take: 10, // Limit results
-  });
+      take: 10, // Limit results
+    });
 
-  return users.map((user) => ({
-    id: user.id,
-    email: user.email,
-    name: `${user.ParticipantInfo?.firstName ?? ""} ${
-      user.ParticipantInfo?.lastName ?? ""
-    }`,
-    school: user.ParticipantInfo?.currentSchool ?? "Unknown",
-  }));
+    return users.map((user) => ({
+      id: user.id,
+      email: user.email ?? "",
+      name: `${user.ParticipantInfo?.firstName ?? ""} ${
+        user.ParticipantInfo?.lastName ?? ""
+      }`,
+      school: user.ParticipantInfo?.currentSchool ?? "Unknown",
+    }));
+  } catch (err) {
+    throw new Error(err instanceof Error ? err.message : "Search failed");
+  }
 }
 
 /**
@@ -99,6 +100,7 @@ export async function submitTravelReimbursement({
       data: { travelReimbursementId: reimbursement.id },
     });
 
+    const { exportReimbursementToGoogleSheet } = await import("@/scripts/googleSheetsExport");
     await exportReimbursementToGoogleSheet(reimbursement);
 
     revalidatePath("/profile");
@@ -161,6 +163,7 @@ export async function submitTravelReimbursement({
 
       await prisma.reimbursementInvite.createMany({ data: invites });
 
+      const { exportReimbursementToGoogleSheet } = await import("@/scripts/googleSheetsExport");
       await exportReimbursementToGoogleSheet(reimbursement);
 
       return { success: true, reimbursement };

@@ -34,6 +34,29 @@ const auth = new google.auth.GoogleAuth({
   scopes: ["https://www.googleapis.com/auth/spreadsheets"],
 });
 
+async function ensureSheetExists(
+  sheetsApi: ReturnType<typeof google.sheets>,
+  sheetTitle: string
+) {
+  const sheetMetadata = await sheetsApi.spreadsheets.get({
+    spreadsheetId: SHEET_ID,
+  });
+
+  const existingSheets = sheetMetadata.data.sheets?.map(
+    (sheet) => sheet.properties?.title
+  );
+
+  if (!existingSheets?.includes(sheetTitle)) {
+    await sheetsApi.spreadsheets.batchUpdate({
+      spreadsheetId: SHEET_ID,
+      requestBody: {
+        requests: [{ addSheet: { properties: { title: sheetTitle } } }],
+      },
+    });
+    console.log(`Created new sheet: ${sheetTitle}`);
+  }
+}
+
 function transformUserData(user: UserWithParticipantInfo): string[] {
   // Return the data as strings, ready for appending to Google Sheets
   return [
@@ -73,33 +96,8 @@ export async function exportRegistrationToGoogleSheet(
 ) {
   try {
     const sheetsApi = google.sheets({ version: "v4", auth });
-    const sheetTitle = "Live Registration Data";
 
-    // Check if the sheet exists, create it if not
-    const sheetMetadata = await sheetsApi.spreadsheets.get({
-      spreadsheetId: SHEET_ID,
-    });
-
-    const existingSheets = sheetMetadata.data.sheets?.map(
-      (sheet) => sheet.properties?.title
-    );
-
-    if (!existingSheets?.includes(sheetTitle)) {
-      await sheetsApi.spreadsheets.batchUpdate({
-        spreadsheetId: SHEET_ID,
-        requestBody: {
-          requests: [
-            {
-              addSheet: {
-                properties: { title: sheetTitle },
-              },
-            },
-          ],
-        },
-      });
-
-      console.log(`Created new sheet: ${sheetTitle}`);
-    }
+    await ensureSheetExists(sheetsApi, "Live Registration Data");
 
     const rowValues = transformUserData(user);
 
@@ -139,6 +137,8 @@ export async function exportReimbursementToGoogleSheet(reimbursement: {
     });
 
     const email = creator?.email ?? "N/A"; // Default to "N/A" if not found
+
+    await ensureSheetExists(sheetsApi, "Reimbursement");
 
     // ✅ Transform data into a format suitable for Google Sheets
     const reimbursementData = [
@@ -202,34 +202,7 @@ export async function batchBackupRegistration() {
       return;
     }
 
-    // Check if the sheet already exists
-    const sheetMetadata = await sheetsApi.spreadsheets.get({
-      spreadsheetId: SHEET_ID,
-    });
-
-    const existingSheets = sheetMetadata.data.sheets?.map(
-      (sheet) => sheet.properties?.title
-    );
-
-    // If the sheet does not exist, create it
-    if (!existingSheets?.includes(newSheetTitle)) {
-      await sheetsApi.spreadsheets.batchUpdate({
-        spreadsheetId: SHEET_ID,
-        requestBody: {
-          requests: [
-            {
-              addSheet: {
-                properties: {
-                  title: newSheetTitle,
-                },
-              },
-            },
-          ],
-        },
-      });
-
-      console.log(`Created new sheet: ${newSheetTitle}`);
-    }
+    await ensureSheetExists(sheetsApi, newSheetTitle);
 
     // Append data to the new sheet
     await sheetsApi.spreadsheets.values.append({
@@ -266,6 +239,8 @@ export async function exportReservationRequestToGoogleSheet(
       select: { email: true },
     });
     const email = user?.email ?? "N/A";
+
+    await ensureSheetExists(sheetsApi, "ReservationRequests");
 
     // 2) Build an array of data you want to store in the sheet
     const reservationData = [
@@ -305,6 +280,8 @@ export async function exportThemedRoomReservationToGoogleSheet(
       select: { email: true },
     });
     const email = user?.email ?? "N/A";
+
+    await ensureSheetExists(sheetsApi, "ThemedRoomReservations");
 
     // 2) Format reservation data for the sheet
     const row = [
