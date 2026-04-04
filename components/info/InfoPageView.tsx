@@ -215,7 +215,7 @@ export default function InfoPageView({ initialData, isAdmin }: Props) {
 
             {/* Logo upload */}
             <div>
-              <Label>Logo image</Label>
+              <Label>Logo Image</Label>
               <div className="flex items-center gap-4 mt-1">
                 {draft.logoUrl && (
                   <div className="relative w-16 h-16">
@@ -250,7 +250,7 @@ export default function InfoPageView({ initialData, isAdmin }: Props) {
 
             {/* Title image upload */}
             <div>
-              <Label>Title / cover image</Label>
+              <Label>Title / Banner Image</Label>
               <div className="flex items-center gap-4 mt-1">
                 {draft.titleImageUrl && (
                   <div className="relative w-32 h-20">
