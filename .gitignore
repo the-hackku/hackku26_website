@@ -1,4 +1,3 @@
-it didnt work:
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
@@ -43,5 +42,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 
-dev.db is still included
-failed_entries.log
+# log files
+*.log

@@ -7,7 +7,9 @@ const constants = {
   instagramUrl: "https://instagram.com/hackku",
   supportEmail: "hack@ku.edu",
   dateRanges: ["2026-04-17", "2026-04-17", "2026-04-17"],
-  cutoffDate: "2026-04-17T00:00:00.000Z"
+  cutoffDate: "2026-04-17T00:00:00.000Z",
+  startDate: "2026-04-17T22:00:00.000Z", // 5 PM CDT Friday (check-in open)
+  endDate: "2026-04-19T20:00:00.000Z",   // 3 PM CDT Sunday (closing ceremony end)
 };
 
 export default constants;

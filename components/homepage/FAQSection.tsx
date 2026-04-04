@@ -58,7 +58,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({ faqs, id }) => {
         </div>
 
         <p className="text-lg md:text-xl text-white">
-          Have more questions? {/* View our <Link href="/info" className="underline"> Info Page </Link>{" "} */}
+          Have more questions? View our <Link href="/info" className="underline"> Info Page </Link>{" "}
           Join our{" "}
           <Link href={constants.discordInvite} className="underline">
             Discord
