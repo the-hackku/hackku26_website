@@ -26,7 +26,7 @@ import { Button } from "@/components/ui/button";
 import AnalyticsChart from "@/components/admin/charts/AnalyticsChart";
 import CombinedDashboard from "@/components/admin/charts/combinedDashboard";
 import { RoomReservationsTab } from "@/components/admin/RoomReservationsTab";
-import { exportEmails, exportParticipantEmails } from "@/scripts/emailExporter";
+import { exportEmails, exportParticipantEmails, exportUnregisteredEmails } from "@/scripts/emailExporter";
 import { toast } from "sonner";
 
 // Extend the User type to include relations or additional fields
@@ -105,6 +105,11 @@ const handleDownloadUserEmails = async () => {
 const handleDownloadRegistrantEmails = async () => {
   const emails = await exportParticipantEmails();
   downloadFile("participant_emails.txt", emails);
+};
+
+const handleDownloadUnregisteredEmails = async () => {
+  const emails = await exportUnregisteredEmails();
+  downloadFile("unregistered_emails.txt", emails);
 };
 
 export default function AdminTabsPage() {
@@ -445,6 +450,9 @@ export default function AdminTabsPage() {
             </Button>
             <Button onClick={handleDownloadRegistrantEmails}>
               Download Registrant Emails
+            </Button>
+            <Button onClick={handleDownloadUnregisteredEmails}>
+              Download Unregistered Emails
             </Button>
           </div>
         </TabsContent>
