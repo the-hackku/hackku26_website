@@ -6,6 +6,7 @@ const notion = new NotionAPI();
 
 export default async function TestPage() {
   const recordMap = await notion.getPage(PAGE_ID);
+  console.log(recordMap);
   return (
     <div className="py-8">
       <NotionPage recordMap={recordMap} />

@@ -232,8 +232,6 @@ enum RoomTheme {
   DARK_FAIRY
 }
 
-
-
 model ReimbursementInvite {
   id                 String   @id @default(cuid())
   reimbursementId    String
@@ -253,8 +251,6 @@ enum InviteStatus {
   DECLINED
 }
 
-
-
 enum EventType {
   FOOD
   REQUIRED
@@ -267,4 +263,13 @@ enum ROLE {
   HACKER
   ADMIN
   VOLUNTEER
+}
+
+model InfoPageContent {
+  id            String   @id @default("singleton")
+  title         String   @default("HackKU Hacker Doc")
+  content       String   @default("")
+  titleImageUrl String?
+  logoUrl       String?
+  updatedAt     DateTime @updatedAt
 }
