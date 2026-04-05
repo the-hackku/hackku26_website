@@ -44,3 +44,6 @@ yarn-error.log*
 
 # log files
 *.log
+
+# personal
+todo.md

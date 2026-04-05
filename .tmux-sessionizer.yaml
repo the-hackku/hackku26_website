@@ -1,3 +1,6 @@
+name: hack
+pre_start: npm run db:up
 windows:
-  - server: npm run dev
-  - bare: 
+  - server: nvm use 20 && npm run dev
+  - nvim: 
+  - claude: jai claude
