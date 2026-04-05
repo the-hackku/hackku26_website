@@ -254,10 +254,68 @@ const SignInPage = () => {
               We have sent a magic link to <strong>{email}</strong>.
             </p>
             <p className="text-center text-gray-600 mt-2 text-sm sm:text-base">
-              Please check your inbox and click the link to sign in. Emails sent
-              to <b>@ku.edu</b> may be marked as spam,
-              please add <b>info@hackku.org</b> to your Safe Senders list!
+              Please check your inbox and click the link to sign in. 
             </p>
+            <p className="text-center text-gray-600 mt-2 text-sm sm:text-base p-2 bg-indigo-50 rounded">
+              Emails sent to <b>@ku.edu</b> or any other <b>institutional email</b>{" "} 
+              may be marked as spam — please add <b>auth@hackku.org</b>{" "}
+              to your safe senders list, or{" "}
+              <b>sign in with an OAuth provider below instead</b>.
+            </p>
+
+            <div className="flex flex-col gap-3 mt-4">
+              <Button
+                onClick={handleGoogleSignIn}
+                className="w-full flex items-center justify-center gap-2 py-3 text-sm sm:text-base bg-[#4285F4] text-white rounded-md transition hover:brightness-90"
+                style={{ backgroundColor: "#4285F4" }}
+              >
+                {activeLoadingButton === "google" ? (
+                  <IconLoader className="animate-spin h-5 w-5" />
+                ) : (
+                  <IconBrandGoogleFilled className="h-5 w-5" />
+                )}
+                {activeLoadingButton === "google"
+                  ? "Loading..."
+                  : "Continue with Google"}
+              </Button>
+
+              <Button
+                onClick={handleDiscordSignIn}
+                className="w-full flex items-center justify-center gap-2 py-3 text-sm sm:text-base text-white rounded-md transition hover:brightness-90"
+                style={{ backgroundColor: "#5865F2" }}
+              >
+                {activeLoadingButton === "discord" ? (
+                  <IconLoader className="animate-spin h-5 w-5" />
+                ) : (
+                  <IconBrandDiscordFilled className="h-5 w-5" />
+                )}
+                {activeLoadingButton === "discord"
+                  ? "Loading..."
+                  : "Continue with Discord"}
+              </Button>
+
+              <Button
+                onClick={handleGitHubSignIn}
+                className="w-full flex items-center justify-center gap-2 py-3 text-sm sm:text-base text-white rounded-md transition hover:brightness-80"
+                style={{ backgroundColor: "#24292E" }}
+              >
+                {activeLoadingButton === "github" ? (
+                  <IconLoader className="animate-spin h-5 w-5" />
+                ) : (
+                  <IconBrandGithubFilled className="h-5 w-5" />
+                )}
+                {activeLoadingButton === "github"
+                  ? "Loading..."
+                  : "Continue with GitHub"}
+              </Button>
+            </div>
+
+            <div className="flex items-center justify-center my-4">
+              <hr className="w-1/3 border-gray-300" />
+              <p className="mx-2 text-gray-400 text-sm">or</p>
+              <hr className="w-1/3 border-gray-300" />
+            </div>
+
             <div className="flex justify-center mt-6 gap-4">
               <Button
                 onClick={handleResend}
