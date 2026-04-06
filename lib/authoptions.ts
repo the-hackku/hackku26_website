@@ -141,7 +141,12 @@ export const authOptions: NextAuthOptions = {
     },
   },
 
-  adapter: PrismaAdapter(prisma),
+  adapter: {
+    ...PrismaAdapter(prisma),
+    deleteSession: async (sessionToken: string) => {
+      await prisma.session.deleteMany({ where: { sessionToken } });
+    },
+  },
 
   pages: {
     signIn: "/signin",
