@@ -27,7 +27,7 @@ export default async function HeaderWrapper() {
   // 5. Show alert if they’re logged in but not registered
   return (
     <>
-      {!isRegistered && (!isAdminUser || !isVolunteerUser)  && <RegisterAlert />}
+      {!isRegistered && !isAdminUser && !isVolunteerUser && <RegisterAlert />}
       <Header isAdmin={isAdminUser} isVolunteer={isVolunteerUser} />
     </>
   );
