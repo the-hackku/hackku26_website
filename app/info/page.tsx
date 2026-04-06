@@ -1,15 +1,15 @@
-import { NotionAPI } from "notion-client";
-import NotionPage from "@/components/NotionPage";
+import { getInfoPage } from "@/app/actions/infoPage";
+import InfoPageView from "@/components/info/InfoPageView";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/authoptions";
 
-const PAGE_ID = "HackerDoc-HackKU-26-2be9e50fddb580418f10d4c9ba1b14e1";
-const notion = new NotionAPI();
+export default async function EditableInfoPage() {
+  const [data, session] = await Promise.all([
+    getInfoPage(),
+    getServerSession(authOptions),
+  ]);
 
-export default async function TestPage() {
-  const recordMap = await notion.getPage(PAGE_ID);
-  console.log(recordMap);
-  return (
-    <div className="py-8">
-      <NotionPage recordMap={recordMap} />
-    </div>
-  )
+  const isAdmin = session?.user?.role === "ADMIN";
+
+  return <InfoPageView initialData={data} isAdmin={isAdmin} />;
 }
