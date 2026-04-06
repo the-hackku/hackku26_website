@@ -30,7 +30,12 @@ import {
 } from "@/components/ui/sheet";
 import { useSession } from "next-auth/react";
 
-const Header = ({ isAdmin }: { isAdmin: boolean }) => {
+interface Props {
+  isAdmin: boolean;
+  isVolunteer: boolean;
+}
+
+const Header = ({ isAdmin, isVolunteer }: Props) => {
   const [scrollDirection, setScrollDirection] = useState<"up" | "down">("up");
   const [hasLoaded, setHasLoaded] = useState(false);
   const { status } = useSession();
@@ -229,24 +234,24 @@ const Header = ({ isAdmin }: { isAdmin: boolean }) => {
                         </Link>
                         <hr className="my-4" />
                         {isAdmin && (
-                          <>
-                            <Link href="/admin" passHref>
-                              <SheetClose asChild>
-                                <span className="flex items-center text-xl">
-                                  <IconStar size={24} className="mr-2" />
-                                  Admin Panel
-                                </span>
-                              </SheetClose>
-                            </Link>
-                            <Link href="/admin/scanner" passHref>
-                              <SheetClose asChild>
-                                <span className="flex items-center text-xl">
-                                  <IconScan size={24} className="mr-2" />
-                                  Scan Hackers
-                                </span>
-                              </SheetClose>
-                            </Link>
-                          </>
+                          <Link href="/admin" passHref>
+                            <SheetClose asChild>
+                              <span className="flex items-center text-xl">
+                                <IconStar size={24} className="mr-2" />
+                                Admin Panel
+                              </span>
+                            </SheetClose>
+                          </Link>
+                        )}
+                        {isAdmin || isVolunteer && (
+                          <Link href="/scanner" passHref>
+                            <SheetClose asChild>
+                              <span className="flex items-center text-xl">
+                                <IconScan size={24} className="mr-2" />
+                                Scan Hackers
+                              </span>
+                            </SheetClose>
+                          </Link>
                         )}
                       </nav>
                     </SheetContent>

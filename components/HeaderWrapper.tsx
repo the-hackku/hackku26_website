@@ -10,7 +10,7 @@ export default async function HeaderWrapper() {
 
   if (!session) {
     // 2. If user is NOT logged in, no alert, just the basic Header
-    return <Header isAdmin={false} />;
+    return <Header isAdmin={false} isVolunteer={false} />;
   }
 
   // 3. If user is logged in, find them in the DB
@@ -21,13 +21,14 @@ export default async function HeaderWrapper() {
 
   // 4. Determine if they’re an admin & if they’re registered
   const isAdminUser = user?.role === "ADMIN";
+  const isVolunteerUser = user?.role === "VOLUNTEER";
   const isRegistered = Boolean(user?.ParticipantInfo);
 
   // 5. Show alert if they’re logged in but not registered
   return (
     <>
       {!isRegistered && !isAdminUser && <RegisterAlert />}
-      <Header isAdmin={isAdminUser} />
+      <Header isAdmin={isAdminUser} isVolunteer={isVolunteerUser} />
     </>
   );
 }

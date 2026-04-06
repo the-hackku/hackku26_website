@@ -340,7 +340,7 @@ export default function AdminTabsPage() {
             >
               <Button className="bg-green-600 mb-4">Go to Google Sheet</Button>
             </Link>
-            <Link href="/admin/scanner">
+            <Link href="/scanner">
               <Button className="bg-blue-400 mb-4">Scan In Hackers</Button>
             </Link>
           </div>
@@ -435,7 +435,7 @@ export default function AdminTabsPage() {
             <p className="text-sm text-muted-foreground">
               Use our QR Code scanner to check participants in:
             </p>
-            <Link href="/admin/scanner" className="underline text-blue-600">
+            <Link href="/scanner" className="underline text-blue-600">
               Go to Scanner
             </Link>
           </div>

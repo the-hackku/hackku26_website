@@ -496,7 +496,7 @@ export async function manualCheckIn(
 }
 
 export async function fetchScanHistory() {
-  isAdmin(); // Ensure only admins can access
+  await isAdminOrVolunteer();
   const history = await prisma.scan.findMany({
     include: {
       user: {
