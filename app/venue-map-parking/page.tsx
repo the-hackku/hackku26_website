@@ -1,7 +1,7 @@
 import { NotionAPI } from "notion-client";
 import NotionPage from "@/components/NotionPage";
 
-const PAGE_ID = "HackerDoc-HackKU-26-2be9e50fddb580418f10d4c9ba1b14e1";
+const PAGE_ID = "Venue-Map-Parking-33a9e50fddb580a79f8cef6a95035858";
 const notion = new NotionAPI();
 
 export default async function TestPage() {
@@ -12,3 +12,4 @@ export default async function TestPage() {
     </div>
   )
 }
+
