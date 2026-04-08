@@ -15,6 +15,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Checkbox } from "./ui/checkbox";
 import { AnimatePresence, motion } from "framer-motion";
 import { EventType } from "@prisma/client";
@@ -53,11 +59,11 @@ const eventTypeBackground: Partial<Record<EventType, StaticImageData>> = {
 
 // Helper function to map an eventType to a specific color
 const eventTypeColors: Record<EventType, string> = {
-  FOOD: "bg-black",
-  REQUIRED: "bg-black",
-  WORKSHOPS: "bg-black",
-  SPONSOR: "bg-black",
-  ACTIVITIES: "bg-black",
+  FOOD: "bg-red-400",
+  REQUIRED: "bg-orange-400",
+  WORKSHOPS: "bg-blue-400",
+  SPONSOR: "bg-green-500",
+  ACTIVITIES: "bg-purple-400",
 };
 
 const eventTypeDarkerColors: Record<EventType, string> = {
@@ -339,6 +345,8 @@ const MobileEventDrawer = ({
 }) => {
   if (!event) return null;
 
+  const selectedEventBg = eventTypeBackground[event.eventType] ?? defaultImageBg(event.startDate);
+
   return (
     <AnimatePresence>
       <motion.div
@@ -361,6 +369,12 @@ const MobileEventDrawer = ({
             }`,
           }}
         >
+          <Image
+            src={selectedEventBg}
+            alt="event background"
+            className="absolute inset-0 object-cover opacity-30 z-0"
+            fill
+          />
           <div className="flex justify-between items-center mb-2">
             <h2 className="text-lg font-bold">{event.name}</h2>
             <button onClick={onClose}>
@@ -573,6 +587,10 @@ const ScheduleGrid = ({ schedule }: ScheduleGridProps) => {
     });
   };
 
+  const selectedEventBg = selectedEvent
+    ? eventTypeBackground[selectedEvent.eventType] ?? defaultImageBg(selectedEvent.startDate)
+    : null;
+
   return (
     <div className="flex flex-col md:flex-row sm:gap-1 md:gap-3 p-2 h-[calc(100vh-6rem)]">
       <div
@@ -753,7 +771,7 @@ const ScheduleGrid = ({ schedule }: ScheduleGridProps) => {
           {/* Container for Tabs and Filter */}
 
           {/* Schedule Grid Table */}
-
+          <TooltipProvider delayDuration={300}>
           <table className="table-fixed w-full border-collapse h-full">
             <thead className="sticky top-0 bg-gray-100 z-50 border-b">
               <tr>
@@ -824,9 +842,6 @@ const ScheduleGrid = ({ schedule }: ScheduleGridProps) => {
                             const colorClass = event.eventType
                               ? eventTypeColors[event.eventType]
                               : "bg-gray-400";
-                            const backgroundImage = event.eventType
-                              ? eventTypeBackground[event.eventType] ?? defaultImageBg(event.startDate)
-                              : defaultImageBg(event.startDate);
                             // Look up this event's overlap info
                             const overlapInfo = dayOverlapMap?.get(event.id);
                             let overlapStyle: React.CSSProperties = {};
@@ -841,20 +856,18 @@ const ScheduleGrid = ({ schedule }: ScheduleGridProps) => {
                               overlapStyle = { left: "0%", width: "100%" };
                             }
 
-                            return (
+                            const isCramped = rowSpan <= 1 || (overlapInfo !== undefined && overlapInfo.groupSize > 1);
+
+                            const gridItemContent = (
                               <div
-                                key={event.id}
-                                title={event.eventType === "REQUIRED" ? "This is an event you are REQUIRED to attend!" : ""}
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  // Logic to open and close the event viewer
                                   setSelectedEvent(currEvent => {
                                     if (currEvent === event) {
                                       setCollapsed(true);
                                     } else if (collapsed) {
                                       setCollapsed(false);
                                     }
-
                                     return isSelected ? null : event
                                   });
                                 }}
@@ -875,12 +888,6 @@ const ScheduleGrid = ({ schedule }: ScheduleGridProps) => {
                                   opacity: isSelected ? "0.8" : "1",
                                 }}
                               >
-                                <Image
-                                  src={backgroundImage}
-                                  alt="background-image"
-                                  className="absolute -z-10 opacity-70"
-                                  fill
-                                />
                                 {/* Event content */}
                                 <span
                                   className={`inline-flex flex-wrap items-start text-left ${
@@ -897,25 +904,29 @@ const ScheduleGrid = ({ schedule }: ScheduleGridProps) => {
                                     }
                                     {event.name}
                                   </p>
-                                  <div className="text-xs text-white/90 whitespace-nowrap">
-                                    {formatTimeForSlot(
-                                      event.startDate,
-                                      event.endDate,
-                                      timezoneMode
-                                    )}
-                                  </div>
+                                  {isCramped && (
+                                    <div className="text-xs text-white/90 whitespace-nowrap">
+                                      {formatTimeForSlot(
+                                        event.startDate,
+                                        event.endDate,
+                                        timezoneMode
+                                      )}
+                                    </div>
+                                  )}
                                 </span>
 
-                                <div className="text-xs flex items-start">
-                                  <IconMapPin
-                                    size={12}
-                                    className="mr-1 flex-shrink-0 mt-0.5"
-                                  />
-                                  <span className="truncate">
-                                    {event.location || "TBA"}
-                                  </span>
-                                </div>
-                                {duration > 30 && event.description && (
+                                {!isCramped && (
+                                  <div className="text-xs flex items-start">
+                                    <IconMapPin
+                                      size={12}
+                                      className="mr-1 flex-shrink-0 mt-0.5"
+                                    />
+                                    <span className="truncate">
+                                      {event.location || "TBA"}
+                                    </span>
+                                  </div>
+                                )}
+                                {!isCramped && duration > 30 && event.description && (
                                   <div className="text-xs flex items-start">
                                     <IconInfoCircle
                                       size={12}
@@ -935,6 +946,27 @@ const ScheduleGrid = ({ schedule }: ScheduleGridProps) => {
                                 )}
                               </div>
                             );
+
+                            return isCramped ? (
+                              <Tooltip key={event.id}>
+                                <TooltipTrigger asChild>
+                                  {gridItemContent}
+                                </TooltipTrigger>
+                                <TooltipContent side="right" className="max-w-xs">
+                                  <p className="font-bold">{event.name}</p>
+                                  <p className="text-xs text-muted-foreground">
+                                    {formatTimeForSlot(event.startDate, event.endDate, timezoneMode)}
+                                  </p>
+                                  {event.location && (
+                                    <p className="text-xs">{event.location}</p>
+                                  )}
+                                </TooltipContent>
+                              </Tooltip>
+                            ) : (
+                              <React.Fragment key={event.id}>
+                                {gridItemContent}
+                              </React.Fragment>
+                            );
                           })}
                       </td>
                     );
@@ -943,6 +975,7 @@ const ScheduleGrid = ({ schedule }: ScheduleGridProps) => {
               ))}
             </tbody>
           </table>
+          </TooltipProvider>
         </motion.div>
       </div>
       {/* Draggable Divider */}
@@ -1009,19 +1042,25 @@ const ScheduleGrid = ({ schedule }: ScheduleGridProps) => {
         >
           {selectedEvent && (
             <div
-              className="p-4 w-full rounded-lg shadow-sm border md:h-full flex flex-col justify-between"
+              className="relative p-4 w-full rounded-lg shadow-sm border md:h-full flex flex-col justify-between overflow-hidden"
               style={{
                 borderColor: selectedEvent.eventType
                   ? eventTypeDarkerColors[selectedEvent.eventType]
                   : "#e5e7eb",
                 borderWidth: "2px",
-                backgroundColor: selectedEvent.eventType
-                  ? `${eventTypeDarkerColors[selectedEvent.eventType]}1A` // 1A = 10% alpha in hex
-                  : "white",
+                backgroundColor: "white",
               }}
             >
+              {selectedEventBg && (
+                <Image
+                  src={selectedEventBg}
+                  alt="event background"
+                  className="absolute inset-0 object-cover opacity-30 z-0"
+                  fill
+                />
+              )}
               {/* Top Section: Event Details */}
-              <div>
+              <div className="relative z-10">
                 <h2 className="text-xl font-bold flex justify-between">
                   {selectedEvent.name}
                   <span className="flex items-center gap-2">
@@ -1094,7 +1133,7 @@ const ScheduleGrid = ({ schedule }: ScheduleGridProps) => {
 
               {/* Bottom Section: Previous/Next Buttons */}
               {!isMobile && (
-                <div className="flex justify-between items-center mt-6 pt-4 border-t">
+                <div className="relative z-10 flex justify-between items-center mt-6 pt-4 border-t">
                   <button
                     onClick={() => {
                       if (getPreviousEvent(selectedEvent)) {
