@@ -871,7 +871,7 @@ const ScheduleGrid = ({ schedule }: ScheduleGridProps) => {
                                     return isSelected ? null : event
                                   });
                                 }}
-                                className={`absolute inset-0 z-10 rounded-md p-1 overflow-hidden cursor-pointer text-white
+                                className={`absolute inset-y-0.5 z-10 rounded-md p-1 overflow-hidden cursor-pointer text-white
                                 ${colorClass}
                                 ${
                                   isSelected
@@ -881,9 +881,11 @@ const ScheduleGrid = ({ schedule }: ScheduleGridProps) => {
                                 `}
                                 style={{
                                   ...overlapStyle,
+                                  left: `calc(${overlapStyle.left} + 2px)`,
+                                  width: `calc(${overlapStyle.width} - 4px)`,
                                   textShadow: "0 1px 3px #000",
                                   gridRow: `span ${rowSpan}`,
-                                  height: `${rowSpan * 3}rem`, // for h-12
+                                  height: `calc(${rowSpan * 3}rem - 4px)`,
                                   position: "absolute",
                                   opacity: isSelected ? "0.8" : "1",
                                 }}
