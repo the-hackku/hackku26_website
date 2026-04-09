@@ -972,22 +972,41 @@ export async function setFoodGroupConfig(numGroups: number): Promise<void> {
   });
 }
 
-export async function getFoodGroupStats(): Promise<{ group: number; count: number }[]> {
+export async function getFoodGroupStats(): Promise<{ group: number; count: number; name: string | null }[]> {
   await isAdminOrVolunteer();
-  const config = await prisma.foodGroupConfig.upsert({
-    where: { id: "singleton" },
-    create: { numGroups: 4 },
-    update: {},
-  });
-  const groupCounts = await prisma.participantInfo.groupBy({
-    by: ["foodGroup"],
-    where: { foodGroup: { not: null } },
-    _count: { foodGroup: true },
-    orderBy: { foodGroup: "asc" },
-  });
+  const [config, groupCounts, aliases] = await Promise.all([
+    prisma.foodGroupConfig.upsert({
+      where: { id: "singleton" },
+      create: { numGroups: 4 },
+      update: {},
+    }),
+    prisma.participantInfo.groupBy({
+      by: ["foodGroup"],
+      where: { foodGroup: { not: null } },
+      _count: { foodGroup: true },
+      orderBy: { foodGroup: "asc" },
+    }),
+    prisma.foodGroupAlias.findMany(),
+  ]);
   const countMap = new Map(groupCounts.map((g) => [g.foodGroup, g._count.foodGroup]));
+  const aliasMap = new Map(aliases.map((a) => [a.group, a.name]));
   return Array.from({ length: config.numGroups }, (_, i) => ({
     group: i + 1,
     count: countMap.get(i + 1) ?? 0,
+    name: aliasMap.get(i + 1) ?? null,
   }));
+}
+
+export async function setFoodGroupAlias(group: number, name: string): Promise<void> {
+  await isAdmin();
+  const trimmed = name.trim();
+  if (!trimmed) {
+    await prisma.foodGroupAlias.deleteMany({ where: { group } });
+  } else {
+    await prisma.foodGroupAlias.upsert({
+      where: { group },
+      create: { group, name: trimmed },
+      update: { name: trimmed },
+    });
+  }
 }

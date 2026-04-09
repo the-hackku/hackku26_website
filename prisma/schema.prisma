@@ -217,6 +217,11 @@ model FoodGroupConfig {
   numGroups Int    @default(4)
 }
 
+model FoodGroupAlias {
+  group Int    @id
+  name  String
+}
+
 enum TimeSlot {
   FRI_8_11PM
   FRI_11PM_2AM

@@ -88,6 +88,11 @@ export default async function ProfilePage() {
     include: { themedRoom: true },
   });
 
+  const participant = userSession.ParticipantInfo;
+  const foodGroupAlias = participant?.foodGroup
+    ? await prisma.foodGroupAlias.findUnique({ where: { group: participant.foodGroup } })
+    : null;
+
   // Get top 10 users by check-in count
   const topUsers = allUserCheckins
     .map((u) => ({
@@ -120,7 +125,6 @@ export default async function ProfilePage() {
   });
 
   // Participant info
-  const participant = userSession.ParticipantInfo;
   const fullName = participant
     ? `${participant.firstName} ${participant.lastName}`
     : null;
@@ -288,7 +292,7 @@ export default async function ProfilePage() {
                       {participant && participant.foodGroup && (
                         <div className="flex items-center space-x-2">
                           <IconToolsKitchen2 className="text-primary" size={20} />
-                          <p>Food Group: {participant.foodGroup}</p>
+                          <p>Food Group: {foodGroupAlias?.name ?? `Group ${participant.foodGroup}`}</p>
                         </div>
                       )}
 
@@ -396,7 +400,7 @@ export default async function ProfilePage() {
                     )}
 
                     {reservationRequest && (
-                      <div className={`p-4 mt-4 border-l-4 ${reservationRequest.themedRoom ? "border-indigo-400 bg-indigo-50" : "border-yellow-400 bg-yellow-50"}`}>
+                      <div className={`rounded p-4 mt-4 border-l-4 ${reservationRequest.themedRoom ? "border-indigo-400 bg-indigo-50" : "border-yellow-400 bg-yellow-50"}`}>
                         <h3 className="text-md font-semibold mb-1">
                           Room Reservation Request
                         </h3>

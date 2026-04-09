@@ -1,3 +1,5 @@
+# Refer to https://github.com/aaatipamula/dotfiles/blob/master/scripts/tmux-sessionizer
+
 name: hack
 pre_start: npm run db:up
 windows:
