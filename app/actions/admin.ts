@@ -47,6 +47,7 @@ type ValidateQrCodeResult =
       id: string;
       name: string;
       message: string;
+      foodGroup: number | null;
       isHighSchoolStudent: boolean;
       chaperoneInfo?: {
         chaperoneName: string;
@@ -259,6 +260,49 @@ export async function deleteEvent(eventId: string) {
   });
 }
 
+async function assignFoodGroup(
+  userId: string,
+  tx: Parameters<Parameters<typeof prisma.$transaction>[0]>[0]
+): Promise<number | null> {
+  const config = await tx.foodGroupConfig.upsert({
+    where: { id: "singleton" },
+    create: { numGroups: 4 },
+    update: {},
+  });
+
+  const participant = await tx.participantInfo.findUnique({
+    where: { userId },
+    select: { foodGroup: true },
+  });
+
+  if (!participant) return null;
+  if (participant.foodGroup !== null && participant.foodGroup !== undefined) {
+    return participant.foodGroup; // Already assigned, idempotent
+  }
+
+  // Count members per group
+  const groupCounts = await tx.participantInfo.groupBy({
+    by: ["foodGroup"],
+    where: { foodGroup: { not: null } },
+    _count: { foodGroup: true },
+  });
+
+  const counts = new Array(config.numGroups).fill(0) as number[];
+  for (const g of groupCounts) {
+    if (g.foodGroup !== null && g.foodGroup >= 1 && g.foodGroup <= config.numGroups) {
+      counts[g.foodGroup - 1] = g._count.foodGroup;
+    }
+  }
+  const minGroup = counts.indexOf(Math.min(...counts)) + 1;
+
+  await tx.participantInfo.update({
+    where: { userId },
+    data: { foodGroup: minGroup },
+  });
+
+  return minGroup;
+}
+
 export async function validateQrCode(
   scannedCode: string,
   eventId: string
@@ -332,23 +376,24 @@ export async function validateQrCode(
   }
 
   // If user exists and hasn't checked in, create a check-in + successful scan
-  await prisma.$transaction([
-    prisma.checkin.create({
+  const foodGroup = await prisma.$transaction(async (tx) => {
+    await tx.checkin.create({
       data: {
         userId: user.id,
         adminId: admin.id,
         eventId: eventId,
       },
-    }),
-    prisma.scan.create({
+    });
+    await tx.scan.create({
       data: {
         userId: user.id,
         adminId: admin.id,
         eventId: eventId,
         successful: true,
       },
-    }),
-  ]);
+    });
+    return assignFoodGroup(user.id, tx);
+  });
 
   const fullName = user.ParticipantInfo
     ? `${user.ParticipantInfo.firstName} ${user.ParticipantInfo.lastName}`
@@ -370,6 +415,7 @@ export async function validateQrCode(
     id: user.id,
     name: fullName,
     message: "User successfully checked in.",
+    foodGroup,
     isHighSchoolStudent,
     chaperoneInfo,
   };
@@ -388,6 +434,7 @@ export async function manualCheckIn(
   message: string;
   isHighSchoolStudent?: boolean;
   name?: string;
+  foodGroup?: number | null;
   chaperoneInfo?: {
     chaperoneName: string;
     chaperoneEmail: string;
@@ -450,23 +497,24 @@ export async function manualCheckIn(
   }
 
   // If not checked in yet, proceed with a check-in
-  await prisma.$transaction([
-    prisma.checkin.create({
+  const foodGroup = await prisma.$transaction(async (tx) => {
+    await tx.checkin.create({
       data: {
         userId: user.id,
         adminId: admin.id,
         eventId: eventId,
       },
-    }),
-    prisma.scan.create({
+    });
+    await tx.scan.create({
       data: {
         userId: user.id,
         adminId: admin.id,
         eventId: eventId,
         successful: true,
       },
-    }),
-  ]);
+    });
+    return assignFoodGroup(user.id, tx);
+  });
 
   const fullName = user.ParticipantInfo
     ? `${user.ParticipantInfo.firstName} ${user.ParticipantInfo.lastName}`.trim()
@@ -490,6 +538,7 @@ export async function manualCheckIn(
     success: true,
     message: `Successfully checked in ${fullName}`,
     name: fullName,
+    foodGroup,
     isHighSchoolStudent,
     chaperoneInfo,
   };
@@ -882,4 +931,63 @@ export async function updateAdminThemedRoom(
 export async function deleteAdminThemedRoom(id: string): Promise<void> {
   await isAdmin();
   await prisma.themedRoom.delete({ where: { id } });
+}
+
+export async function getFoodGroupConfig(): Promise<{ numGroups: number }> {
+  await isAdminOrVolunteer();
+  const config = await prisma.foodGroupConfig.upsert({
+    where: { id: "singleton" },
+    create: { numGroups: 4 },
+    update: {},
+  });
+  return { numGroups: config.numGroups };
+}
+
+export async function setFoodGroupConfig(numGroups: number): Promise<void> {
+  await isAdmin();
+  if (numGroups < 1) throw new Error("numGroups must be at least 1");
+
+  await prisma.$transaction(async (tx) => {
+    await tx.foodGroupConfig.upsert({
+      where: { id: "singleton" },
+      create: { numGroups },
+      update: { numGroups },
+    });
+
+    // Reassign all checked-in participants round-robin to rebalance across new group count
+    const assigned = await tx.participantInfo.findMany({
+      where: { foodGroup: { not: null } },
+      select: { userId: true },
+      orderBy: { userId: "asc" },
+    });
+
+    await Promise.all(
+      assigned.map((p, i) =>
+        tx.participantInfo.update({
+          where: { userId: p.userId },
+          data: { foodGroup: (i % numGroups) + 1 },
+        })
+      )
+    );
+  });
+}
+
+export async function getFoodGroupStats(): Promise<{ group: number; count: number }[]> {
+  await isAdminOrVolunteer();
+  const config = await prisma.foodGroupConfig.upsert({
+    where: { id: "singleton" },
+    create: { numGroups: 4 },
+    update: {},
+  });
+  const groupCounts = await prisma.participantInfo.groupBy({
+    by: ["foodGroup"],
+    where: { foodGroup: { not: null } },
+    _count: { foodGroup: true },
+    orderBy: { foodGroup: "asc" },
+  });
+  const countMap = new Map(groupCounts.map((g) => [g.foodGroup, g._count.foodGroup]));
+  return Array.from({ length: config.numGroups }, (_, i) => ({
+    group: i + 1,
+    count: countMap.get(i + 1) ?? 0,
+  }));
 }

@@ -13,6 +13,9 @@ import {
   backupRegistrationScript,
   getTotalRegistrationNumber,
   getHackathonCheckinCount,
+  getFoodGroupConfig,
+  setFoodGroupConfig,
+  getFoodGroupStats,
 } from "@/app/actions/admin";
 import { ColumnDef } from "@tanstack/react-table";
 import { ROLE, TravelReimbursement } from "@prisma/client";
@@ -121,6 +124,10 @@ export default function AdminTabsPage() {
   const [hackathonCheckinCount, setHackathonCheckinCount] = useState<
     number | null
   >(null);
+  const [numGroups, setNumGroups] = useState<number>(4);
+  const [numGroupsInput, setNumGroupsInput] = useState<string>("4");
+  const [groupStats, setGroupStats] = useState<{ group: number; count: number }[]>([]);
+  const [isSavingGroupConfig, setIsSavingGroupConfig] = useState(false);
 
   useEffect(() => {
     const fetchCheckinCount = async () => {
@@ -149,6 +156,40 @@ export default function AdminTabsPage() {
 
     fetchTotalRegistrations();
   }, []);
+
+  useEffect(() => {
+    const loadFoodGroupData = async () => {
+      try {
+        const [config, stats] = await Promise.all([getFoodGroupConfig(), getFoodGroupStats()]);
+        setNumGroups(config.numGroups);
+        setNumGroupsInput(String(config.numGroups));
+        setGroupStats(stats);
+      } catch (error) {
+        console.error("Failed to load food group data:", error);
+      }
+    };
+    loadFoodGroupData();
+  }, []);
+
+  const handleSaveFoodGroupConfig = async () => {
+    const n = parseInt(numGroupsInput, 10);
+    if (isNaN(n) || n < 1) {
+      toast.error("Number of groups must be at least 1");
+      return;
+    }
+    setIsSavingGroupConfig(true);
+    try {
+      await setFoodGroupConfig(n);
+      setNumGroups(n);
+      const stats = await getFoodGroupStats();
+      setGroupStats(stats);
+      toast.success(`Food groups updated to ${n}`);
+    } catch {
+      toast.error("Failed to save food group config");
+    } finally {
+      setIsSavingGroupConfig(false);
+    }
+  };
 
   const userColumns: ColumnDef<ExtendedUser>[] = [
     {
@@ -441,7 +482,40 @@ export default function AdminTabsPage() {
           </div>
         </TabsContent>
         <TabsContent value="actions">
-          <div className="flex flex-col items-start space-y-2">
+          <div className="flex flex-col items-start space-y-4">
+            {/* Food Group Configuration */}
+            <div className="w-full p-4 border rounded-lg space-y-3">
+              <h3 className="font-semibold text-lg">Food Group Configuration</h3>
+              <p className="text-sm text-muted-foreground">
+                Hackers are automatically assigned to a food group at check-in. Groups are kept balanced.
+              </p>
+              <div className="border-l-4 border-yellow-500 bg-yellow-50 p-2">
+                <strong>WARNING</strong>: Changing the number of groups will reassign everyone to a new food group!
+              </div>
+              <div className="flex items-center gap-2">
+                <label className="text-sm font-medium">Number of groups:</label>
+                <input
+                  type="number"
+                  min={1}
+                  value={numGroupsInput}
+                  onChange={(e) => setNumGroupsInput(e.target.value)}
+                  className="border rounded px-2 py-1 w-20 text-sm"
+                />
+                <Button onClick={handleSaveFoodGroupConfig} disabled={isSavingGroupConfig} size="sm">
+                  {isSavingGroupConfig ? "Saving..." : "Save"}
+                </Button>
+              </div>
+              {groupStats.length > 0 && (
+                <div className="grid grid-cols-4 gap-2">
+                  {groupStats.map(({ group, count }) => (
+                    <div key={group} className="p-2 border rounded text-center text-sm">
+                      <div className="font-semibold">Group {group}</div>
+                      <div className="text-muted-foreground">{count} hackers</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
             <Button onClick={handleBackup}>
               Batch Backup Registration Data
             </Button>

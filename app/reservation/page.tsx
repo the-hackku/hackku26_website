@@ -2,6 +2,7 @@
 
 import constants from "@/constants";
 import React, { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -50,6 +51,7 @@ const reservationSchema = z.object({
 type ReservationFormData = z.infer<typeof reservationSchema>;
 
 export default function RoomReservationForm() {
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // For searching + storing group members
@@ -151,9 +153,7 @@ export default function RoomReservationForm() {
     const teamMembersList = data.groupMembers.map((m) => m.id).join(", ");
 
     try {
-      // We'll store the combined emails in `memberEmails`
-      // and the list of group member IDs in `teamMembers`.
-      toast.promise(
+      await toast.promise(
         createReservationRequest({
           teamName: data.teamName,
           memberEmails: finalEmailString,
@@ -167,7 +167,7 @@ export default function RoomReservationForm() {
         }
       );
 
-      form.reset();
+      router.push("/profile");
     } catch (error) {
       console.error(error);
       toast.error("Something went wrong. Please try again.");
@@ -285,7 +285,7 @@ export default function RoomReservationForm() {
                 {groupMembers.map((member) => (
                   <div
                     key={member.id}
-                    className="flex items-center justify-between sm:justify-start py-1"
+                    className="flex items-center justify-between py-1"
                   >
                     <span>
                       {member.name} ({member.email})

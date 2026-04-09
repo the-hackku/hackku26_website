@@ -10,6 +10,7 @@ import {
   fetchScanHistory,
   searchUsers,
   manualCheckIn,
+  getFoodGroupStats,
 } from "@/app/actions/admin";
 import { fetchEvents } from "@/app/actions/events";
 
@@ -136,7 +137,7 @@ export default function ScannerPage() {
           } else {
             setBackgroundColor("green");
             successSound.current?.play();
-            setValidationResult(`Welcome ${result.name}!`);
+            setValidationResult(`Welcome ${result.name}!${result.foodGroup != null ? ` Food Group: ${result.foodGroup}` : ""}`);
 
             // Update local scan history
             setScanHistory((prevHistory) => [
@@ -204,11 +205,13 @@ export default function ScannerPage() {
 
     startManualCheckInTransition(async () => {
       try {
-        await toast.promise(manualCheckIn(selectedUserId, eventId), {
-          loading: "Checking user in...",
-          success: "Check-in successful!",
-          error: "Manual check-in failed.",
-        });
+        const result = await manualCheckIn(selectedUserId, eventId);
+        if (result.success) {
+          const groupMsg = result.foodGroup != null ? ` Food Group: ${result.foodGroup}` : "";
+          toast.success(`Check-in successful!${groupMsg}`);
+        } else {
+          toast.error(result.message || "Manual check-in failed.");
+        }
         // Reset relevant states
         setSelectedUserId("");
         setSearchQuery("");

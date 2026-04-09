@@ -158,6 +158,7 @@ model ParticipantInfo {
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
   resumeUrl             String?
+  foodGroup             Int?
   user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
@@ -210,6 +211,11 @@ model ThemedRoomReservation {
 
 }
 
+
+model FoodGroupConfig {
+  id        String @id @default("singleton")
+  numGroups Int    @default(4)
+}
 
 enum TimeSlot {
   FRI_8_11PM
