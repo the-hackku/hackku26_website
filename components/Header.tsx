@@ -243,7 +243,7 @@ const Header = ({ isAdmin, isVolunteer }: Props) => {
                             </SheetClose>
                           </Link>
                         )}
-                        {isAdmin || isVolunteer && (
+                        {(isAdmin || isVolunteer) && (
                           <Link href="/scanner" passHref>
                             <SheetClose asChild>
                               <span className="flex items-center text-xl">

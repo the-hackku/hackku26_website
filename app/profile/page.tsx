@@ -11,9 +11,10 @@ import {
   IconUser,
   IconLogout,
   IconUserFilled,
+  IconToolsKitchen2,
+  IconLock,
   // IconHistory,
   // IconCheck,
-  IconLock,
   // IconEdit,
 } from "@tabler/icons-react";
 
@@ -87,15 +88,10 @@ export default async function ProfilePage() {
     include: { themedRoom: true },
   });
 
-  const themedRoomReservation = await prisma.themedRoomReservation.findUnique({
-    where: { userId: userSession.id },
-  });
-
-  const themeRoomMap: Record<string, string> = {
-    DUNGEONS_AND_DRAGONS: "LEEP2 Room 2324 🐉",
-    HOW_TO_TRAIN_YOUR_DRAGON: "LEEP2 Room 2326 🐲",
-    DARK_FAIRY: "LEEP2 Room 2328 🧚",
-  };
+  const participant = userSession.ParticipantInfo;
+  const foodGroupAlias = participant?.foodGroup
+    ? await prisma.foodGroupAlias.findUnique({ where: { group: participant.foodGroup } })
+    : null;
 
   // Get top 10 users by check-in count
   const topUsers = allUserCheckins
@@ -129,7 +125,6 @@ export default async function ProfilePage() {
   });
 
   // Participant info
-  const participant = userSession.ParticipantInfo;
   const fullName = participant
     ? `${participant.firstName} ${participant.lastName}`
     : null;
@@ -294,6 +289,12 @@ export default async function ProfilePage() {
                         <IconMail className="text-primary" size={20} />
                         <p>{userSession.email}</p>
                       </div>
+                      {participant && participant.foodGroup && (
+                        <div className="flex items-center space-x-2">
+                          <IconToolsKitchen2 className="text-primary" size={20} />
+                          <p>Food Group: {foodGroupAlias?.name ?? `Group ${participant.foodGroup}`}</p>
+                        </div>
+                      )}
 
                       <hr className="my-4 border-gray-200" />
 
@@ -377,69 +378,47 @@ export default async function ProfilePage() {
                         ))}
                       </div>
                     )}
-                    {/* [NEW] Show reimbursement group if user accepted an invite */}
-                    {userSession.travelReimbursement &&
-                      !userSession.createdReimbursement && (
-                        <div className="p-4 mt-4 border-l-4 border-green-400 bg-green-50 space-x-2">
-                          <h3 className="text-md font-semibold mb-2">
-                            Reimbursement Group
-                          </h3>
-                          <p>
-                            <span className="font-medium">Group Leader:</span>{" "}
-                            {userSession.travelReimbursement.creator?.email ||
-                              "Unknown"}
-                          </p>
-                          <Link
-                            href="/reimbursement/edit"
-                            className="text-blue-600 underline text-sm mt-2 block"
-                          >
-                            View Reimbursement Details
-                          </Link>
-                        </div>
-                      )}
-                    {reservationRequest?.themedRoom && (
-                      <div className="p-4 mt-4 border-l-4 border-indigo-400 bg-indigo-50">
-                        <h3 className="text-md font-semibold">
-                          Weekend Room Reservation
+
+                    {/* Show reimbursement group if user accepted an invite */}
+                    {userSession.travelReimbursement && !userSession.createdReimbursement && (
+                      <div className="p-4 mt-4 border-l-4 border-green-400 bg-green-50 space-x-2">
+                        <h3 className="text-md font-semibold mb-2">
+                          Reimbursement Group
                         </h3>
                         <p>
-                          <span className="font-medium">Room:</span>{" "}
-                          {reservationRequest.themedRoom.name} —{" "}
-                          {reservationRequest.themedRoom.location}
+                          <span className="font-medium">Group Leader:</span>{" "}
+                          {userSession.travelReimbursement.creator?.email ||
+                            "Unknown"}
                         </p>
+                        <Link
+                          href="/reimbursement/edit"
+                          className="text-blue-600 underline text-sm mt-2 block"
+                        >
+                          View Reimbursement Details
+                        </Link>
+                      </div>
+                    )}
+
+                    {reservationRequest && (
+                      <div className={`rounded p-4 mt-4 border-l-4 ${reservationRequest.themedRoom ? "border-indigo-400 bg-indigo-50" : "border-yellow-400 bg-yellow-50"}`}>
+                        <h3 className="text-md font-semibold mb-1">
+                          Room Reservation Request
+                        </h3>
+                        {reservationRequest.themedRoom ? (
+                          <>
+                            <p className="text-sm text-green-700 font-medium mb-1">Room assigned</p>
+                            <p>
+                              <span className="font-medium">Room:</span>{" "}
+                              {reservationRequest.themedRoom.name} —{" "}
+                              {reservationRequest.themedRoom.location}
+                            </p>
+                          </>
+                        ) : (
+                          <p className="text-sm text-yellow-700 font-medium mb-1">Pending — a room will be assigned by the organizers</p>
+                        )}
                         <p>
                           <span className="font-medium">Team Name:</span>{" "}
                           {reservationRequest.teamName}
-                        </p>
-                      </div>
-                    )}
-                    {themedRoomReservation && (
-                      <div className="p-4 mt-4 border-l-4 border-pink-400 bg-pink-50">
-                        <h3 className="text-md font-semibold mb-2">
-                          Themed Room Reservation
-                        </h3>
-                        <p>
-                          <span className="font-medium">Room:</span>{" "}
-                          <span>
-                            {themeRoomMap[themedRoomReservation.theme]}
-                          </span>
-                        </p>
-
-                        <p>
-                          <span className="font-medium">Time Slot:</span>{" "}
-                          {themedRoomReservation.timeSlot
-                            .replace(/_/g, " ")
-                            .replace(
-                              /(\w+)\s(\d+)\s(\d+)(AM|PM)/,
-                              (_, day, start, end, period) =>
-                                `${day.charAt(0)}${day
-                                  .slice(1)
-                                  .toLowerCase()} ${start} - ${end}${period}`
-                            )}
-                        </p>
-                        <p>
-                          <span className="font-medium">Team Name:</span>{" "}
-                          {themedRoomReservation.teamName}
                         </p>
                       </div>
                     )}

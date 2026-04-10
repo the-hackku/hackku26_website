@@ -13,6 +13,10 @@ import {
   backupRegistrationScript,
   getTotalRegistrationNumber,
   getHackathonCheckinCount,
+  getFoodGroupConfig,
+  setFoodGroupConfig,
+  getFoodGroupStats,
+  setFoodGroupAlias,
 } from "@/app/actions/admin";
 import { ColumnDef } from "@tanstack/react-table";
 import { ROLE, TravelReimbursement } from "@prisma/client";
@@ -121,13 +125,16 @@ export default function AdminTabsPage() {
   const [hackathonCheckinCount, setHackathonCheckinCount] = useState<
     number | null
   >(null);
+  const [numGroupsInput, setNumGroupsInput] = useState<string>("4");
+  const [groupStats, setGroupStats] = useState<{ group: number; count: number; name: string | null }[]>([]);
+  const [aliasEdits, setAliasEdits] = useState<Record<number, string>>({});
+  const [savingAlias, setSavingAlias] = useState<Record<number, boolean>>({});
+  const [isSavingGroupConfig, setIsSavingGroupConfig] = useState(false);
 
   useEffect(() => {
     const fetchCheckinCount = async () => {
       try {
-        const count = await getHackathonCheckinCount(
-          "cm6vgqdwr0000l703iuxogwcy"
-        );
+        const count = await getHackathonCheckinCount();
         setHackathonCheckinCount(count);
       } catch (error) {
         console.error("Failed to fetch check-in count:", error);
@@ -149,6 +156,54 @@ export default function AdminTabsPage() {
 
     fetchTotalRegistrations();
   }, []);
+
+  useEffect(() => {
+    const loadFoodGroupData = async () => {
+      try {
+        const [config, stats] = await Promise.all([getFoodGroupConfig(), getFoodGroupStats()]);
+        setNumGroupsInput(String(config.numGroups));
+        setGroupStats(stats);
+        setAliasEdits(Object.fromEntries(stats.map((s) => [s.group, s.name ?? ""])));
+      } catch (error) {
+        console.error("Failed to load food group data:", error);
+      }
+    };
+    loadFoodGroupData();
+  }, []);
+
+  const handleSaveAlias = async (group: number) => {
+    setSavingAlias((prev) => ({ ...prev, [group]: true }));
+    try {
+      await setFoodGroupAlias(group, aliasEdits[group] ?? "");
+      const stats = await getFoodGroupStats();
+      setGroupStats(stats);
+      toast.success(`Group ${group} name saved`);
+    } catch {
+      toast.error("Failed to save alias");
+    } finally {
+      setSavingAlias((prev) => ({ ...prev, [group]: false }));
+    }
+  };
+
+  const handleSaveFoodGroupConfig = async () => {
+    const n = parseInt(numGroupsInput, 10);
+    if (isNaN(n) || n < 1) {
+      toast.error("Number of groups must be at least 1");
+      return;
+    }
+    setIsSavingGroupConfig(true);
+    try {
+      await setFoodGroupConfig(n);
+      const stats = await getFoodGroupStats();
+      setGroupStats(stats);
+      setAliasEdits(Object.fromEntries(stats.map((s) => [s.group, s.name ?? ""])));
+      toast.success(`Food groups updated to ${n}`);
+    } catch {
+      toast.error("Failed to save food group config");
+    } finally {
+      setIsSavingGroupConfig(false);
+    }
+  };
 
   const userColumns: ColumnDef<ExtendedUser>[] = [
     {
@@ -324,7 +379,7 @@ export default function AdminTabsPage() {
               <TabsTrigger value="analytics">Analytics</TabsTrigger>
               <TabsTrigger value="checkins">Check-ins</TabsTrigger>
             </TabsList>
-            <TabsList className="mb-4 hidden md:block">
+            <TabsList className="mb-4">
               <TabsTrigger value="reimbursements">Reimbursements</TabsTrigger>
               <Link href="/admin/events">
                 <TabsTrigger value="events">Manage Events</TabsTrigger>
@@ -441,7 +496,56 @@ export default function AdminTabsPage() {
           </div>
         </TabsContent>
         <TabsContent value="actions">
-          <div className="flex flex-col items-start space-y-2">
+          <div className="flex flex-col items-start space-y-4">
+            {/* Food Group Configuration */}
+            <div className="w-full p-4 border rounded-lg space-y-3">
+              <h3 className="font-semibold text-lg">Food Group Configuration</h3>
+              <p className="text-sm text-muted-foreground">
+                Hackers are automatically assigned to a food group at check-in. Groups are kept balanced.
+              </p>
+              <div className="rounded border-l-4 border-yellow-500 bg-yellow-50 p-2">
+                <strong>WARNING</strong>: Changing the number of groups will reassign everyone to a new food group!
+                <div className="flex items-center gap-2 mt-4">
+                  <label className="text-sm font-medium">Number of groups:</label>
+                  <input
+                    type="number"
+                    min={1}
+                    value={numGroupsInput}
+                    onChange={(e) => setNumGroupsInput(e.target.value)}
+                    className="border rounded px-2 py-1 w-20 text-sm"
+                  />
+                  <Button onClick={handleSaveFoodGroupConfig} disabled={isSavingGroupConfig} size="sm">
+                    {isSavingGroupConfig ? "Saving..." : "Save"}
+                  </Button>
+                </div>
+              </div>
+              {groupStats.length > 0 && (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  {groupStats.map(({ group, count, name }) => (
+                    <div key={group} className="p-2 border rounded text-sm space-y-1">
+                      <div className="font-semibold text-center">{name || `Group ${group}`}</div>
+                      <div className="text-muted-foreground text-center">{count} hackers</div>
+                      <input
+                        type="text"
+                        placeholder={`Group ${group}`}
+                        value={aliasEdits[group] ?? name ?? ""}
+                        onChange={(e) => setAliasEdits((prev) => ({ ...prev, [group]: e.target.value }))}
+                        onKeyDown={(e) => e.key === "Enter" && handleSaveAlias(group)}
+                        className="border rounded px-2 py-1 w-full text-xs"
+                      />
+                      <Button
+                        size="sm"
+                        className="w-full text-xs h-7"
+                        disabled={savingAlias[group]}
+                        onClick={() => handleSaveAlias(group)}
+                      >
+                        {savingAlias[group] ? "Saving..." : "Save name"}
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
             <Button onClick={handleBackup}>
               Batch Backup Registration Data
             </Button>

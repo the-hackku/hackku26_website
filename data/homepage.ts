@@ -26,15 +26,10 @@ export const faqs = [
     answer:
     "No, HackKU is an in-person event. We believe that the best experience comes from being on-site, collaborating with others, and engaging in the full hackathon experience.",
   },
-  // {
-  //   question: "Do you offer travel reimbursements?",
-  //   answer: (
-  //     <>
-  //       Yes! We offer travel reimbursements for participants who are traveling
-  //       from outside of Lawrence, KS.
-  //     </>
-  //   ),
-  // },
+  {
+    question: "Do you offer travel reimbursements?",
+    answer: "Unfortunately due to financial constraints this year we will not be offering travel reimbursement.",
+  },
   {
     question: "When do you send out acceptance letters?",
     answer:
@@ -102,7 +97,7 @@ export const teamMembers: TeamMember[] = [
     name: "Kelly Yee",
     role: "Logistics Co-Lead",
     linkedin: "http://linkedin.com/in/jiakyee",
-    image: "",
+    image: "/images/team/kelly.png",
     fish: "kelly.svg",
   },
   {
@@ -114,7 +109,7 @@ export const teamMembers: TeamMember[] = [
   {
     name: "Addison Ladish",
     role: "Marketing Co-Lead",
-    image: "",
+    image: "/images/team/addison.png",
     fish: "addison.svg",
   },
   {
@@ -162,7 +157,7 @@ export const teamMembers: TeamMember[] = [
     name: "Mark Horvath",
     role: "Interdisciplinary Involvement Co-Lead",
     linkedin: "https://www.linkedin.com/in/markandrewhorvath/",
-    image: "",
+    image: "/images/team/mark.png",
     fish: "mark.svg",
   },
   {
