@@ -97,7 +97,7 @@ export const teamMembers: TeamMember[] = [
     name: "Kelly Yee",
     role: "Logistics Co-Lead",
     linkedin: "http://linkedin.com/in/jiakyee",
-    image: "",
+    image: "/images/team/kelly.png",
     fish: "kelly.svg",
   },
   {
@@ -109,7 +109,7 @@ export const teamMembers: TeamMember[] = [
   {
     name: "Addison Ladish",
     role: "Marketing Co-Lead",
-    image: "",
+    image: "/images/team/addison.png",
     fish: "addison.svg",
   },
   {
@@ -157,7 +157,7 @@ export const teamMembers: TeamMember[] = [
     name: "Mark Horvath",
     role: "Interdisciplinary Involvement Co-Lead",
     linkedin: "https://www.linkedin.com/in/markandrewhorvath/",
-    image: "",
+    image: "/images/team/mark.png",
     fish: "mark.svg",
   },
   {
