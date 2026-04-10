@@ -13,8 +13,6 @@ export const predefinedCountries = [
   { label: "Australia", value: "Australia" },
   { label: "India", value: "India" },
   { label: "Singapore", value: "Singapore" },
-  { label: "India", value: "India" },
-  { label: "Singapore", value: "Singapore" },
   { label: "Other", value: "Other" },
 ];
 
