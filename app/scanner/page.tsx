@@ -10,7 +10,6 @@ import {
   fetchScanHistory,
   searchUsers,
   manualCheckIn,
-  getFoodGroupStats,
 } from "@/app/actions/admin";
 import { fetchEvents } from "@/app/actions/events";
 

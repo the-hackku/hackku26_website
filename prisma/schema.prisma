@@ -88,17 +88,18 @@ model Authenticator {
 }
 
 model Event {
-  id          String    @id @default(cuid())
-  name        String
-  startDate   DateTime
-  endDate     DateTime
-  location    String?
-  description String?
-  eventType   EventType @default(REQUIRED)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  checkins    Checkin[]
-  scans       Scan[]
+  id              String            @id @default(cuid())
+  name            String
+  startDate       DateTime
+  endDate         DateTime
+  location        String?
+  description     String?
+  eventType       EventType         @default(REQUIRED)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  checkins        Checkin[]
+  scans           Scan[]
+  hackathonConfig HackathonConfig[]
 }
 
 model Scan {
@@ -215,6 +216,12 @@ model ThemedRoomReservation {
 model FoodGroupConfig {
   id        String @id @default("singleton")
   numGroups Int    @default(4)
+}
+
+model HackathonConfig {
+  id             String  @id @default("singleton")
+  checkinEventId String?
+  checkinEvent   Event?  @relation(fields: [checkinEventId], references: [id], onDelete: SetNull)
 }
 
 model FoodGroupAlias {

@@ -26,15 +26,10 @@ export const faqs = [
     answer:
     "No, HackKU is an in-person event. We believe that the best experience comes from being on-site, collaborating with others, and engaging in the full hackathon experience.",
   },
-  // {
-  //   question: "Do you offer travel reimbursements?",
-  //   answer: (
-  //     <>
-  //       Yes! We offer travel reimbursements for participants who are traveling
-  //       from outside of Lawrence, KS.
-  //     </>
-  //   ),
-  // },
+  {
+    question: "Do you offer travel reimbursements?",
+    answer: "Unfortunately due to financial constraints this year we will not be offering travel reimbursement.",
+  },
   {
     question: "When do you send out acceptance letters?",
     answer:

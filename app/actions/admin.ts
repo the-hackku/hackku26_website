@@ -2,6 +2,8 @@
 
 import { prisma } from "@/lib/prisma";
 import { isAdmin, isAdminOrVolunteer } from "@/middlewares/isAdmin";
+import { batchBackupRegistration } from "@/scripts/googleSheetsExport";
+
 import {
   Checkin,
   EventType,
@@ -28,9 +30,8 @@ export type AdminReservationRequest = {
   themedRoomLocation: string | null;
   createdAt: Date;
 };
-import { batchBackupRegistration } from "@/scripts/googleSheetsExport";
 
-// Type for the Event data used in creating or updating events// Type for the Event data used in creating or updating events
+// Type for the Event data used in creating or updating events
 
 interface EventData {
   startDate: string;
@@ -323,6 +324,14 @@ export async function validateQrCode(
     };
   }
 
+  // Fetch the configured checkin event ID to gate food group assignment
+  const hackathonConfig = await prisma.hackathonConfig.upsert({
+    where: { id: "singleton" },
+    create: {},
+    update: {},
+  });
+  const checkinEventId = hackathonConfig.checkinEventId;
+
   // Fetch the user associated with the scanned QR code
   const user = await prisma.user.findUnique({
     where: { id: scannedCode },
@@ -392,7 +401,11 @@ export async function validateQrCode(
         successful: true,
       },
     });
-    return assignFoodGroup(user.id, tx);
+    // Only assign food group if this is the configured checkin event
+    if (checkinEventId && eventId === checkinEventId) {
+      return assignFoodGroup(user.id, tx);
+    }
+    return null;
   });
 
   const fullName = user.ParticipantInfo
@@ -457,6 +470,14 @@ export async function manualCheckIn(
     };
   }
 
+  // Fetch the configured checkin event ID to gate food group assignment
+  const hackathonConfig = await prisma.hackathonConfig.upsert({
+    where: { id: "singleton" },
+    create: {},
+    update: {},
+  });
+  const checkinEventId = hackathonConfig.checkinEventId;
+
   // Fetch the user by userId
   const user = await prisma.user.findUnique({
     where: { id: userId },
@@ -513,7 +534,11 @@ export async function manualCheckIn(
         successful: true,
       },
     });
-    return assignFoodGroup(user.id, tx);
+    // Only assign food group if this is the configured checkin event
+    if (checkinEventId && eventId === checkinEventId) {
+      return assignFoodGroup(user.id, tx);
+    }
+    return null;
   });
 
   const fullName = user.ParticipantInfo
@@ -789,11 +814,41 @@ export async function getTotalRegistrationNumber() {
   return totalRegistrations;
 }
 
-export async function getHackathonCheckinCount(eventId: string) {
+export async function getCheckinEvent(): Promise<{ id: string; name: string } | null> {
+  await isAdminOrVolunteer();
+  const config = await prisma.hackathonConfig.upsert({
+    where: { id: "singleton" },
+    create: {},
+    update: {},
+    include: { checkinEvent: { select: { id: true, name: true } } },
+  });
+  return config.checkinEvent ?? null;
+}
+
+export async function setCheckinEvent(eventId: string | null): Promise<void> {
+  await isAdmin();
+  await prisma.hackathonConfig.upsert({
+    where: { id: "singleton" },
+    create: { checkinEventId: eventId },
+    update: { checkinEventId: eventId },
+  });
+}
+
+export async function getHackathonCheckinCount() {
   await isAdmin();
 
+  const config = await prisma.hackathonConfig.upsert({
+    where: { id: "singleton" },
+    create: {},
+    update: {},
+  });
+
+  if (!config.checkinEventId) {
+    return 0;
+  }
+
   const count = await prisma.checkin.count({
-    where: { eventId },
+    where: { eventId: config.checkinEventId },
   });
 
   return count;

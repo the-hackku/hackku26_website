@@ -125,7 +125,6 @@ export default function AdminTabsPage() {
   const [hackathonCheckinCount, setHackathonCheckinCount] = useState<
     number | null
   >(null);
-  const [numGroups, setNumGroups] = useState<number>(4);
   const [numGroupsInput, setNumGroupsInput] = useState<string>("4");
   const [groupStats, setGroupStats] = useState<{ group: number; count: number; name: string | null }[]>([]);
   const [aliasEdits, setAliasEdits] = useState<Record<number, string>>({});
@@ -135,9 +134,7 @@ export default function AdminTabsPage() {
   useEffect(() => {
     const fetchCheckinCount = async () => {
       try {
-        const count = await getHackathonCheckinCount(
-          "cm6vgqdwr0000l703iuxogwcy"
-        );
+        const count = await getHackathonCheckinCount();
         setHackathonCheckinCount(count);
       } catch (error) {
         console.error("Failed to fetch check-in count:", error);
@@ -164,7 +161,6 @@ export default function AdminTabsPage() {
     const loadFoodGroupData = async () => {
       try {
         const [config, stats] = await Promise.all([getFoodGroupConfig(), getFoodGroupStats()]);
-        setNumGroups(config.numGroups);
         setNumGroupsInput(String(config.numGroups));
         setGroupStats(stats);
         setAliasEdits(Object.fromEntries(stats.map((s) => [s.group, s.name ?? ""])));
@@ -198,7 +194,6 @@ export default function AdminTabsPage() {
     setIsSavingGroupConfig(true);
     try {
       await setFoodGroupConfig(n);
-      setNumGroups(n);
       const stats = await getFoodGroupStats();
       setGroupStats(stats);
       setAliasEdits(Object.fromEntries(stats.map((s) => [s.group, s.name ?? ""])));
