@@ -23,8 +23,6 @@ The **HackKU Management System** manages hackathon logistics for HackKU 2026, fr
 
 ## Development Setup
 
-> **Node version**: Use Node 18 or 20. Most webpack/library issues are caused by a mismatched Node version.
-
 ### 1. Clone and install
 
 ```bash
