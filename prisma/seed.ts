@@ -82,7 +82,6 @@ async function main() {
   console.log('Clearing existing seed data...')
   try {
     await prisma.participantInfo.deleteMany()
-    await prisma.themedRoomReservation.deleteMany()
     await prisma.reservationRequest.deleteMany()
     await prisma.checkin.deleteMany()
     await prisma.scan.deleteMany()

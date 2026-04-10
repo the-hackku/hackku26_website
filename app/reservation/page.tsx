@@ -1,7 +1,7 @@
 "use client";
 
 import constants from "@/constants";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,17 +23,20 @@ import {
 import { Input } from "@/components/ui/input";
 import { IconUser } from "@tabler/icons-react";
 
-// -- Import your server actions (adjust paths as needed):
 import { searchUsersByEmail } from "@/app/actions/reimbursement";
-import { createReservationRequest } from "@/app/actions/reservationRequest";
+import {
+  createReservationRequest,
+  getPublicThemedRooms,
+  getTakenRoomTimeCombos,
+} from "@/app/actions/reservationRequest";
+import { TimeSlot } from "@prisma/client";
+import { ALL_TIMESLOTS, formatTimeSlot } from "@/lib/reservationRequests";
 
-// ----- Zod schema definition
 const reservationSchema = z.object({
   teamName: z.string().min(1, { message: "Team Name is required." }),
   isOutOfStateOrHighSchool: z.enum(["Yes", "No"], {
     errorMap: () => ({ message: "Please select Yes or No." }),
   }),
-  // An array of user objects. We expect the user to add them via search.
   groupMembers: z
     .array(
       z.object({
@@ -43,18 +46,19 @@ const reservationSchema = z.object({
       })
     )
     .min(1, { message: "Please add at least one group member." }),
-
-  // Optionally allow typed emails (comma-separated)
   memberEmails: z.string().optional(),
+  themedRoomId: z.string().min(1, { message: "Please select a room." }),
+  timeSlot: z.string().min(1, { message: "Please select a time slot." }),
 });
 
 type ReservationFormData = z.infer<typeof reservationSchema>;
+
+type ThemedRoom = { id: string; name: string; location: string };
 
 export default function RoomReservationForm() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // For searching + storing group members
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<
     { id: string; email: string; name: string }[]
@@ -62,7 +66,20 @@ export default function RoomReservationForm() {
   const [isSearching, setIsSearching] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
 
-  // React Hook Form setup
+  const [themedRooms, setThemedRooms] = useState<ThemedRoom[]>([]);
+  const [takenCombos, setTakenCombos] = useState<
+    { themedRoomId: string; timeSlot: TimeSlot }[]
+  >([]);
+
+  useEffect(() => {
+    Promise.all([getPublicThemedRooms(), getTakenRoomTimeCombos()])
+      .then(([rooms, combos]) => {
+        setThemedRooms(rooms);
+        setTakenCombos(combos);
+      })
+      .catch(console.error);
+  }, []);
+
   const form = useForm<ReservationFormData>({
     resolver: zodResolver(reservationSchema),
     defaultValues: {
@@ -70,13 +87,39 @@ export default function RoomReservationForm() {
       isOutOfStateOrHighSchool: "No",
       groupMembers: [],
       memberEmails: "",
+      themedRoomId: "",
+      timeSlot: "",
     },
   });
 
-  // Access the groupMembers from the form state
   const groupMembers = form.watch("groupMembers");
+  const selectedRoomId = form.watch("themedRoomId");
 
-  // Debounced search function for user emails
+  // When rooms load, set the default themedRoomId
+  useEffect(() => {
+    if (themedRooms.length > 0 && !form.getValues("themedRoomId")) {
+      form.setValue("themedRoomId", themedRooms[0].id);
+    }
+  }, [themedRooms]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const availableTimeSlots = ALL_TIMESLOTS.filter(
+    (slot) =>
+      !takenCombos.some(
+        (r) => r.themedRoomId === selectedRoomId && r.timeSlot === slot
+      )
+  );
+
+  // Reset timeSlot when room changes and current slot is no longer available
+  useEffect(() => {
+    const currentSlot = form.getValues("timeSlot");
+    if (
+      availableTimeSlots.length > 0 &&
+      (!currentSlot || !availableTimeSlots.includes(currentSlot as TimeSlot))
+    ) {
+      form.setValue("timeSlot", availableTimeSlots[0]);
+    }
+  }, [selectedRoomId, takenCombos]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const debouncedSearch = useMemo(
     () =>
       debounce(async (query: string) => {
@@ -85,7 +128,6 @@ export default function RoomReservationForm() {
           setHasSearched(false);
           return;
         }
-
         try {
           setIsSearching(true);
           const results = await searchUsersByEmail(query);
@@ -100,56 +142,33 @@ export default function RoomReservationForm() {
     []
   );
 
-  // Add a member to the group
   const handleAddMember = (user: {
     id: string;
     email: string;
     name: string;
   }) => {
-    // Prevent duplicates
     if (groupMembers.some((m) => m.id === user.id)) return;
-
-    // Limit group size if you want. For example, 10:
-    if (groupMembers.length >= 10) {
-      toast.error("A group can have a maximum of 10 members.");
+    if (groupMembers.length >= 4) {
+      toast.error("A group can have a maximum of 4 members.");
       return;
     }
-
-    // Use setValue from RHF to update groupMembers in the form state
     form.setValue("groupMembers", [...groupMembers, user]);
     setSearchQuery("");
     setSearchResults([]);
     setHasSearched(false);
   };
 
-  // Remove a member from the group
   const handleRemoveMember = (userId: string) => {
     const updated = groupMembers.filter((m) => m.id !== userId);
     form.setValue("groupMembers", updated);
   };
 
-  // onSubmit handler
   const onSubmit = async (data: ReservationFormData) => {
     setIsSubmitting(true);
 
-    // 1) Parse typed emails into an array
-    const typedEmails = data.memberEmails
-      ? data.memberEmails
-          .split(",")
-          .map((e) => e.trim())
-          .filter(Boolean)
-      : [];
-
-    // 2) Gather groupMembers' emails
     const groupMemberEmails = data.groupMembers.map((m) => m.email);
-
-    // 3) Combine and deduplicate
-    const allEmails = [...typedEmails, ...groupMemberEmails];
-    const uniqueEmails = Array.from(new Set(allEmails));
+    const uniqueEmails = Array.from(new Set(groupMemberEmails));
     const finalEmailString = uniqueEmails.join(", ");
-
-    // For completeness, let's also keep a comma-separated list of their IDs or names.
-    // We'll store them in a 'teamMembers' column if you like. E.g.:
     const teamMembersList = data.groupMembers.map((m) => m.id).join(", ");
 
     try {
@@ -159,11 +178,13 @@ export default function RoomReservationForm() {
           memberEmails: finalEmailString,
           teamMembers: teamMembersList,
           outOfState: data.isOutOfStateOrHighSchool === "Yes",
+          themedRoomId: data.themedRoomId,
+          timeSlot: data.timeSlot as TimeSlot,
         }),
         {
           loading: "Submitting your room reservation...",
           success: "Room reservation submitted successfully!",
-          error: "Failed to submit. Please try again.",
+          error: "That room and time slot was just taken. Please try another.",
         }
       );
 
@@ -188,10 +209,10 @@ export default function RoomReservationForm() {
           organized space allocation for all participants during the 36-hour
           hackathon.
         </p>
-        <div className="p-2 rounded border-l-4 border-indigo-500 bg-indigo-50">
+        <div className="px-2 py-3 rounded border-l-4 border-indigo-500 bg-indigo-50">
           <p>
-            If your reservation is confirmed, you will see the room you are assigned{" "} 
-            show up in the 
+            If your reservation is confirmed, you will see the room you are assigned{" "}
+            show up in the
             <Link href="/profile" className="border-2 border-gray-400 bg-gray-200 rounded p-[3px] mx-1">
               <IconUser size={16} className="inline-flex align-middle mr-2" />
               Profile
@@ -199,17 +220,23 @@ export default function RoomReservationForm() {
             tab!
           </p>
         </div>
-        <p>
-          <strong>Event Timing:</strong> {constants.dates}
-          <br />
-          <strong>Event Address:</strong> 1520 W. 15th Street, Lawrence, Kansas,
-          66045
-          <br />
-          <strong>Contact us:</strong>{" "}
-          <Link href="mailto:hack@ku.edu" className="underline">
-            hack@ku.edu
-          </Link>
-        </p>
+        <div className="px-2 py-3 rounded border-l-4 border-yellow-500 bg-yellow-50">
+          <h1 className="text-xl font-bold mb-2">Notice:</h1>
+          <p>
+            In order to keep access to themed rooms fair, rooms will be <strong>first-come first-serve</strong>. 
+            Your team will be only be allocated <strong>one time slot for one room total</strong>. 
+            If you have any issues, questions, and or concerns reserving or claiming a room 
+            during the event please find an organizer or reach out to us over the{" "}
+            <a className="font-bold text-blue-500 hover:text-blue-400" href={constants.discordInvite}>discord</a>.
+            Make your choice wisely!
+
+            <br />
+            <strong>Contact Us:</strong>{" "}
+            <Link href="mailto:hack@ku.edu" className="underline">
+              hack@ku.edu
+            </Link>
+          </p>
+        </div>
       </div>
 
       {/* The Actual Form */}
@@ -233,8 +260,13 @@ export default function RoomReservationForm() {
           {/* Group Member Search/Select */}
           <div>
             <FormLabel>
-              Search and Add Registered Users to Your Team (up to 10)
+              Search and Add Registered Users to Your Team (up to 4)
             </FormLabel>
+            {form.formState.errors.groupMembers && (
+              <p className="text-sm font-medium text-destructive mt-1">
+                {form.formState.errors.groupMembers.message}
+              </p>
+            )}
             <Input
               placeholder="Search by email..."
               value={searchQuery}
@@ -251,7 +283,6 @@ export default function RoomReservationForm() {
               </div>
             )}
 
-            {/* Show "no user found" if search done but no results */}
             {!isSearching &&
               hasSearched &&
               searchResults.length === 0 &&
@@ -334,6 +365,65 @@ export default function RoomReservationForm() {
                     </label>
                   </div>
                 </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Room selection */}
+          <FormField
+            control={form.control}
+            name="themedRoomId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Preferred Room *</FormLabel>
+                <FormControl>
+                  <select
+                    {...field}
+                    className="w-full border p-2 rounded text-sm"
+                    disabled={themedRooms.length === 0}
+                  >
+                    {themedRooms.length === 0 && (
+                      <option value="">Loading rooms...</option>
+                    )}
+                    {themedRooms.map((room) => (
+                      <option key={room.id} value={room.id}>
+                        {room.name} — {room.location}
+                      </option>
+                    ))}
+                  </select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Time slot selection */}
+          <FormField
+            control={form.control}
+            name="timeSlot"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Preferred Time Slot *</FormLabel>
+                {availableTimeSlots.length === 0 ? (
+                  <p className="text-sm text-red-500">
+                    All time slots for this room are taken. Please select a
+                    different room.
+                  </p>
+                ) : (
+                  <FormControl>
+                    <select
+                      {...field}
+                      className="w-full border p-2 rounded text-sm"
+                    >
+                      {availableTimeSlots.map((slot) => (
+                        <option key={slot} value={slot}>
+                          {formatTimeSlot(slot)}
+                        </option>
+                      ))}
+                    </select>
+                  </FormControl>
+                )}
                 <FormMessage />
               </FormItem>
             )}

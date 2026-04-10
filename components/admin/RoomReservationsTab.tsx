@@ -284,6 +284,7 @@ export function RoomReservationsTab() {
                 <TableHead>User</TableHead>
                 <TableHead>Members</TableHead>
                 <TableHead>Out of State</TableHead>
+                <TableHead>Time Slot</TableHead>
                 <TableHead>Assigned Room</TableHead>
                 <TableHead>Submitted</TableHead>
                 <TableHead>Actions</TableHead>
@@ -308,6 +309,7 @@ export function RoomReservationsTab() {
                     {req.memberEmails}
                   </TableCell>
                   <TableCell>{req.outOfState ? "Yes" : "No"}</TableCell>
+                  <TableCell className="text-sm">{req.timeSlot ?? "—"}</TableCell>
                   <TableCell>
                     {assigningId === req.id ? (
                       <IconLoader size={16} className="animate-spin" />

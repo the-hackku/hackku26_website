@@ -54,7 +54,11 @@ export function RegistrationForm() {
         try {
           const parsedData = JSON.parse(savedData);
           delete parsedData.resume; // Ensure 'resume' is not included
+          console.log("HispanicOrLatino Loaded: ", parsedData.hispanicOrLatino);
           form.reset(parsedData);
+          if (parsedData.levelOfStudy === "High School") {
+            setShowChaperoneFields(true);
+          }
         } catch (error) {
           console.error("Failed to parse saved form data:", error);
           localStorage.removeItem(LOCAL_STORAGE_KEY);
@@ -171,6 +175,7 @@ export function RegistrationForm() {
   useEffect(() => {
     const subscription = form.watch((values) => {
       const { ...valuesWithoutFile } = values; // Exclude 'resume'
+      console.log("HispanicOrLatino Saved: ", valuesWithoutFile.hispanicOrLatino);
       localStorage.setItem(
         LOCAL_STORAGE_KEY,
         JSON.stringify(valuesWithoutFile)
