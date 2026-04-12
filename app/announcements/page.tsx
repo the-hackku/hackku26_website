@@ -22,19 +22,21 @@ export default async function AnnouncementsPage() {
 
         {announcements.map((a) => {
           const authorName = a.authorName;
-          const pubStr = format(new Date(a.publishedAt), "PPP p");
-          const dateStr = format(new Date(a.updatedAt), "PPP p");
+          const pubDate = new Date(a.publishedAt);
+          const upDate = new Date(a.updatedAt);
 
           return (
             <article key={a.id} className="p-4 border rounded-md shadow-md">
-              <header className="flex-col items-center justify-start space-x-4 mb-3">
+              <header className="flex items-center justify-between mb-3">
                 <div>
-                  <div className="text-lg">{authorName}</div>
+                  <div className="text-lg font-bold">{authorName}</div>
                 </div>
                 <div>
-                    <span className="italic text-sm text-muted-foreground">Published: <time>{pubStr}</time></span>
-                    <br/>
-                    <span className="italic text-sm text-muted-foreground">Updated: <time>{dateStr}</time></span>
+                  {pubDate === upDate ? (
+                    <span className="italic text-sm text-muted-foreground">Published: <time>{format(pubDate, "PPP p")}</time></span>
+                  ) : (
+                    <span className="italic text-sm text-muted-foreground">Updated: <time>{format(upDate, "PPP p")}</time></span>
+                  )}
                 </div>
               </header>
               <hr />

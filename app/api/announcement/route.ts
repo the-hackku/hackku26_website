@@ -1,21 +1,58 @@
 // app/api/announcements/route.ts
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
+import { timingSafeEqual } from "crypto";
 import { prisma } from "@/lib/prisma";
 
 const SECRET = process.env.ANNOUNCEMENT_SECRET;
 
-export async function POST(request: Request) {
-  const headerSecret = request.headers.get("x-announcement-secret") || (() => {
-    const auth = request.headers.get("authorization") || "";
-    return auth.startsWith("Bearer ") ? auth.slice(7) : null;
-  })();
+interface PostBody {
+  content: string;
+  publishedAt?: string;
+  authorId?: string;
+  authorName?: string;
+}
 
-  if (!SECRET || headerSecret !== SECRET) {
+interface PatchBody {
+  id: string;
+  content: string;
+}
+
+interface DeleteBody {
+  id: string;
+}
+
+function getRequestSecret(request: Request): string | null {
+  const direct = request.headers.get("x-announcement-secret");
+  if (direct) return direct;
+
+  const auth = request.headers.get("authorization") ?? "";
+  return auth.startsWith("Bearer ") ? auth.slice(7) : null;
+}
+
+// Date-time strings without a timezone offset are interpreted as local time by
+// the ECMAScript spec, not UTC. Append "Z" when no offset is present so the
+// timestamp is always treated as UTC regardless of the server's local timezone.
+function parseUtcDate(dateStr: string): Date {
+  const hasOffset = dateStr.endsWith("Z") || /[+-]\d{2}:?\d{2}$/.test(dateStr);
+  return new Date(hasOffset ? dateStr : dateStr + "Z");
+}
+
+function isAuthorized(headerSecret: string | null): boolean {
+  if (!SECRET || !headerSecret) return false;
+  try {
+    return timingSafeEqual(Buffer.from(headerSecret), Buffer.from(SECRET));
+  } catch {
+    return false;
+  }
+}
+
+export async function POST(request: Request) {
+  if (!isAuthorized(getRequestSecret(request))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  let body: any;
+  let body: PostBody;
   try {
     body = await request.json();
   } catch {
@@ -24,6 +61,7 @@ export async function POST(request: Request) {
 
   const { content, publishedAt, authorId } = body;
   let { authorName } = body;
+
   if (!content) {
     return NextResponse.json({ error: "Missing required fields: body" }, { status: 400 });
   }
@@ -32,21 +70,12 @@ export async function POST(request: Request) {
   }
 
   try {
-    const account = await prisma.account.findFirst({
-      where: { providerAccountId: authorId }
-    });
-    if (account) {
-      const info = await prisma.participantInfo.findFirst({
-        where: { userId: account.userId }
-      });
-      authorName = info?.firstName + " " + info?.lastName.substring(0, 1) || authorName;
-    }
     const created = await prisma.announcement.create({
       data: {
-        content: content,
-        authorId: authorId,
-        authorName: authorName,
-        publishedAt: publishedAt ? new Date(publishedAt) : new Date(),
+        content,
+        authorId: authorId ?? "",
+        authorName: authorName ?? "HackKU Team",
+        publishedAt: publishedAt ? parseUtcDate(publishedAt) : new Date(),
       },
     });
     revalidatePath("/announcements");
@@ -63,16 +92,11 @@ export async function POST(request: Request) {
 }
 
 export async function PATCH(request: Request) {
-  const headerSecret = request.headers.get("x-announcement-secret") || (() => {
-    const auth = request.headers.get("authorization") || "";
-    return auth.startsWith("Bearer ") ? auth.slice(7) : null;
-  })();
-
-  if (!SECRET || headerSecret !== SECRET) {
+  if (!isAuthorized(getRequestSecret(request))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  let body: any;
+  let body: PatchBody;
   try {
     body = await request.json();
   } catch {
@@ -89,10 +113,8 @@ export async function PATCH(request: Request) {
 
   try {
     const updated = await prisma.announcement.update({
-      where: { id: id },
-      data: {
-        content: content,
-      },
+      where: { id },
+      data: { content },
     });
     revalidatePath("/announcements");
 
@@ -108,15 +130,11 @@ export async function PATCH(request: Request) {
 }
 
 export async function DELETE(request: Request) {
-  const headerSecret = request.headers.get("x-announcement-secret") || (() => {
-    const auth = request.headers.get("authorization") || "";
-    return auth.startsWith("Bearer ") ? auth.slice(7) : null;
-  })();
-
-  if (!SECRET || headerSecret !== SECRET) {
+  if (!isAuthorized(getRequestSecret(request))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  let body: any;
+
+  let body: DeleteBody;
   try {
     body = await request.json();
   } catch {
@@ -129,11 +147,9 @@ export async function DELETE(request: Request) {
   }
 
   try {
-    await prisma.announcement.delete({
-      where: { id: id },
-    });
+    await prisma.announcement.delete({ where: { id } });
     revalidatePath("/announcements");
-    
+
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("DELETE /api/announcements error:", err);
