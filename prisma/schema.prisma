@@ -279,3 +279,12 @@ model InfoPageContent {
   logoUrl       String?
   updatedAt     DateTime @updatedAt
 }
+
+model Announcement { 
+  id String @id @default(cuid())
+  content String
+  authorId String
+  authorName String
+  publishedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
