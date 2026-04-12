@@ -25,6 +25,7 @@ export type AdminReservationRequest = {
   userEmail: string;
   memberEmails: string;
   outOfState: boolean;
+  timeSlot: string | null;
   themedRoomId: string | null;
   themedRoomName: string | null;
   themedRoomLocation: string | null;
@@ -937,6 +938,7 @@ export async function getReservationRequests(
       userEmail: emailMap[r.userId] ?? "N/A",
       memberEmails: r.memberEmails,
       outOfState: r.outOfState,
+      timeSlot: r.timeSlot ?? null,
       themedRoomId: r.themedRoomId,
       themedRoomName: r.themedRoom?.name ?? null,
       themedRoomLocation: r.themedRoom?.location ?? null,

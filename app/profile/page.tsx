@@ -1,6 +1,5 @@
 /* app/profile/page.tsx */
 import { redirect } from "next/navigation";
-// import LocalDateTime from "@/components/localDateTime";
 import QrCodeComponent from "@/components/UserQRCode";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,16 +12,14 @@ import {
   IconUserFilled,
   IconToolsKitchen2,
   IconLock,
-  // IconHistory,
-  // IconCheck,
-  // IconEdit,
 } from "@tabler/icons-react";
-
 import { prisma } from "@/lib/prisma";
 import {
   getUserWithReimbursement,
   // userHasReimbursement,
 } from "../actions/reimbursement";
+import { formatTimeSlot } from "@/lib/reservationRequests";
+
 // import type { UserWithReimbursement } from "../actions/reimbursement";
 
 /**
@@ -420,6 +417,12 @@ export default async function ProfilePage() {
                           <span className="font-medium">Team Name:</span>{" "}
                           {reservationRequest.teamName}
                         </p>
+                        {reservationRequest.timeSlot && (
+                          <p>
+                            <span className="font-medium">Requested Time Slot:</span>{" "}
+                            {formatTimeSlot(reservationRequest.timeSlot)}
+                          </p>
+                        )}
                       </div>
                     )}
 
