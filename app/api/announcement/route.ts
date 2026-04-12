@@ -59,8 +59,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const { content, publishedAt, authorId } = body;
-  let { authorName } = body;
+  const { content, publishedAt, authorId, authorName } = body;
 
   if (!content) {
     return NextResponse.json({ error: "Missing required fields: body" }, { status: 400 });
@@ -69,6 +68,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid field types" }, { status: 400 });
   }
 
+  // TODO: Create a lookup table for specific author ids
   try {
     const created = await prisma.announcement.create({
       data: {
