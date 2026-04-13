@@ -14,7 +14,7 @@ export default async function AnnouncementsPage() {
   const announcements = await getAnnouncements();
 
   return (
-    <div className="container mx-auto py-6">
+    <div className="container md:mx-auto px-3 py-6">
       <h1 className="text-3xl font-bold mb-6">Announcements</h1>
 
       <div className="space-y-4">
@@ -31,11 +31,11 @@ export default async function AnnouncementsPage() {
                 <div>
                   <div className="text-lg font-bold">{authorName}</div>
                 </div>
-                <div>
+                <div className="italic text-sm text-muted-foreground text-right float-right">
                   {pubDate === upDate ? (
-                    <span className="italic text-sm text-muted-foreground">Published: <time>{format(pubDate, "PPP p")}</time></span>
+                    <span>Published: <time>{format(pubDate, "PPP p")}</time></span>
                   ) : (
-                    <span className="italic text-sm text-muted-foreground">Updated: <time>{format(upDate, "PPP p")}</time></span>
+                    <span>Updated: <time>{format(upDate, "PPP p")}</time></span>
                   )}
                 </div>
               </header>
