@@ -54,7 +54,7 @@ export default async function SchedulePage() {
   // );
 
   return (
-    <div className="container mx-auto py-4">
+    <div className="container mx-auto">
       {/* Pass only the main schedule events to the big schedule */}
       {/* <BeginnerWorkshops schedule={beginnerWorkshops} /> */}
       {/* <hr className="my-8" /> */}

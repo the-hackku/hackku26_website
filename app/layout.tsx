@@ -8,6 +8,7 @@ import { authOptions } from "@/lib/authoptions";
 import { getServerSession } from "next-auth";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import AnnouncementsButton from "@/components/AnnouncementsButton";
 import Providers from "@/providers/ProgressBarProvider";
 import { Analytics } from "@vercel/analytics/react";
 
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
   title: "HackKU26",
   description: "The Official Website for HackKU 2026. Join us for a weekend of innovation, coding, and creativity at the University of Kansas!",
   icons: {
-    // icon: "/images/branding/logo_white_bg.png",
+    icon: "/images/branding/logo_color_square.png",
   },
 };
 
@@ -54,6 +55,7 @@ export default async function RootLayout({
                 <HeaderWrapper />
                 <main className="flex-grow">{children}</main>
                 <Footer />
+                <AnnouncementsButton />
                 <Toaster />
                 <Analytics />
               </div>
