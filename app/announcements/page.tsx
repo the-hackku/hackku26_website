@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { format } from "date-fns";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import AutoRefresh from "./AutoRefresh";
 
 async function getAnnouncements() {
   return prisma.announcement.findMany({
@@ -15,6 +16,7 @@ export default async function AnnouncementsPage() {
 
   return (
     <div className="container md:mx-auto px-3 py-6">
+      <AutoRefresh />
       <h1 className="text-3xl font-bold mb-6">Announcements</h1>
 
       <div className="space-y-4">
