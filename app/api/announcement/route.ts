@@ -10,6 +10,7 @@ interface PostBody {
   content: string;
   publishedAt?: string;
   authorId?: string;
+  role?: string;
   authorName?: string;
 }
 
@@ -59,7 +60,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const { content, publishedAt, authorId, authorName } = body;
+  const { content, publishedAt, role } = body;
+  let { authorId, authorName } = body;
 
   if (!content) {
     return NextResponse.json({ error: "Missing required fields: body" }, { status: 400 });
@@ -68,13 +70,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid field types" }, { status: 400 });
   }
 
-  // TODO: Create a lookup table for specific author ids
+  authorId = authorId ?? "";
+  authorName = authorName ?? "HackKU Team";
+  
+  if (role) authorName += ` [${role}]`;
+
   try {
     const created = await prisma.announcement.create({
       data: {
         content,
-        authorId: authorId ?? "",
-        authorName: authorName ?? "HackKU Team",
+        authorId,
+        authorName,
         publishedAt: publishedAt ? parseUtcDate(publishedAt) : new Date(),
       },
     });

@@ -12,6 +12,8 @@ import AnnouncementsButton from "@/components/AnnouncementsButton";
 import Providers from "@/providers/ProgressBarProvider";
 import { Analytics } from "@vercel/analytics/react";
 
+// TODO: Make Announcements button toggleable in admin panel
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
