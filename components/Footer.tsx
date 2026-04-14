@@ -55,23 +55,38 @@ export default function Footer() {
           </Link>
         </div>
 
-        {/* Center text */}
-        <div className="text-gray-400 underline underline-offset-2" >
-          <Link
-            href="/mlh/code-of-conduct"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mr-1"
-          >
-            MLH Code of Conduct
-          </Link>
-        </div>
-
         {/* Text on the right */}
         <div className="text-right">
           <p className="text-sm text-gray-500">
             ©{new Date().getFullYear()} HackKU Team
           </p>
+        </div>
+      </div>
+
+      {/* Center text */}
+      <div className="container mx-auto px-4 pt-4 flex justify-between items-center" >
+        <div className="flex flex-col text-gray-400 underline underline-offset-2">
+          <Link
+            href="/mlh/code-of-conduct"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            MLH Code of Conduct
+          </Link>
+          <Link
+            href="/legal/code-of-conduct"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            HackKU Code of Conduct
+          </Link>
+          <Link
+            href="/legal/waiver"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Photo Release Waiver
+          </Link>
         </div>
       </div>
     </footer>
