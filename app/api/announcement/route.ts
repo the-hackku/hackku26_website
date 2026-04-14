@@ -12,6 +12,8 @@ interface PostBody {
   authorId?: string;
   role?: string;
   authorName?: string;
+  authorColor?: string;
+  authorImageUrl?: string;
 }
 
 interface PatchBody {
@@ -60,8 +62,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const { content, publishedAt, role } = body;
-  let { authorId, authorName } = body;
+  const { content, role, authorColor, authorImageUrl } = body;
+  let { authorId, authorName, publishedAt } = body;
 
   if (!content) {
     return NextResponse.json({ error: "Missing required fields: body" }, { status: 400 });
@@ -72,6 +74,7 @@ export async function POST(request: Request) {
 
   authorId = authorId ?? "";
   authorName = authorName ?? "HackKU Team";
+  publishedAt = publishedAt ? parseUtcDate(publishedAt) : new Date();
   
   if (role) authorName += ` [${role}]`;
 
@@ -81,7 +84,10 @@ export async function POST(request: Request) {
         content,
         authorId,
         authorName,
-        publishedAt: publishedAt ? parseUtcDate(publishedAt) : new Date(),
+        authorColor,
+        authorImageUrl,
+        publishedAt,
+        updatedAt: publishedAt, // NOTE: Force same as published time force same time to account for network delays.
       },
     });
     revalidatePath("/announcements");

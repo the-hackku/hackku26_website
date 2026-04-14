@@ -280,11 +280,13 @@ model InfoPageContent {
   updatedAt     DateTime @updatedAt
 }
 
-model Announcement { 
+model Announcement {
   id String @id @default(cuid())
   content String
   authorId String
   authorName String
+  authorColor String?
+  authorImageUrl String?
   publishedAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

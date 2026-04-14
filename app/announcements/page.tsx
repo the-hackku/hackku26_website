@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import AutoRefresh from "./AutoRefresh";
+import Image from "next/image";
 
 async function getAnnouncements() {
   return prisma.announcement.findMany({
@@ -23,17 +24,33 @@ export default async function AnnouncementsPage() {
         {announcements.length === 0 && <p>No announcements yet. Check back again later!</p>}
 
         {announcements.map((a) => {
+          const authorColor = a.authorColor;
           const authorName = a.authorName;
+          const authorImageUrl = a.authorImageUrl;
           const pubDate = new Date(a.publishedAt);
           const upDate = new Date(a.updatedAt);
 
           return (
             <article key={a.id} className="p-4 border rounded-md shadow-md">
               <header className="flex items-center justify-between mb-3">
-                <div>
-                  <div className="text-lg font-bold">{authorName}</div>
+                <div className="flex space-x-2 items-center">
+                  {authorImageUrl && 
+                    <Image 
+                      className="rounded-full"
+                      alt={`${authorName}-pfp`}
+                      src={authorImageUrl} 
+                      width={35}
+                      height={35}
+                    />
+                  }
+                  <div 
+                    style={{ color: authorColor ?? "" }}
+                    className="text-lg font-bold"
+                  >
+                    {authorName}
+                  </div>
                 </div>
-                <div className="italic text-sm text-muted-foreground text-right float-right">
+                <div className="hidden md:block italic text-sm text-muted-foreground text-right float-right">
                   {pubDate === upDate ? (
                     <span>Published: <time>{format(pubDate, "PPP p")}</time></span>
                   ) : (
