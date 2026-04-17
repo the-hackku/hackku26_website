@@ -13,6 +13,8 @@ import { prisma } from "@/lib/prisma";
 
 dotenv.config();
 
+const isDev = process.env.NODE_ENV === "development";
+
 // Replace with your own Google Sheet ID and desired range:
 const SHEET_ID = "1BHgfhH0E5Ro5FuzsFgvt-wtNWI9sQ4QPqdk7aNInUi0";
 
@@ -101,6 +103,11 @@ export async function exportRegistrationToGoogleSheet(
 
     const rowValues = transformUserData(user);
 
+    if (isDev) {
+      console.log("[DEV] Skipping Google Sheets write. Would have written:", rowValues);
+      return;
+    }
+
     // Append data to the Google Sheet, starting at the correct position
     await sheetsApi.spreadsheets.values.append({
       spreadsheetId: SHEET_ID,
@@ -155,6 +162,11 @@ export async function exportReimbursementToGoogleSheet(reimbursement: {
       reimbursement.createdAt ? reimbursement.createdAt.toISOString() : "N/A",
     ];
 
+    if (isDev) {
+      console.log("[DEV] Skipping Google Sheets write. Would have written:", reimbursementData);
+      return;
+    }
+
     // ✅ Append the reimbursement data to the Google Sheet
     await sheetsApi.spreadsheets.values.append({
       spreadsheetId: SHEET_ID,
@@ -204,6 +216,11 @@ export async function batchBackupRegistration() {
 
     await ensureSheetExists(sheetsApi, newSheetTitle);
 
+    if (isDev) {
+      console.log(`[DEV] Skipping Google Sheets write. Would have written ${rows.length} rows to "${newSheetTitle}".`);
+      return;
+    }
+
     // Append data to the new sheet
     await sheetsApi.spreadsheets.values.append({
       spreadsheetId: SHEET_ID,
@@ -251,6 +268,11 @@ export async function exportReservationRequestToGoogleSheet(
       reservation.timeSlot ?? "N/A",
       reservation.createdAt ? reservation.createdAt.toISOString() : "N/A",
     ];
+
+    if (isDev) {
+      console.log("[DEV] Skipping Google Sheets write. Would have written:", reservationData);
+      return;
+    }
 
     // 3) Append the data as a new row in the "ReservationRequests" sheet (tab)
     await sheetsApi.spreadsheets.values.append({

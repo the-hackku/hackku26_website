@@ -5,10 +5,15 @@ import { usePathname } from "next/navigation";
 import { IconSpeakerphone } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 
+const DISABLED_PAGES = [
+  "/announcements",
+  "/scanner"
+]
+
 export default function AnnouncementsButton() {
   const pathname = usePathname();
 
-  if (pathname === "/announcements") return null;
+  if (pathname in DISABLED_PAGES) return null;
 
   return (
     <Link href="/announcements">
