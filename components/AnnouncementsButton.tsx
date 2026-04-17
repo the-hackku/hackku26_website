@@ -13,7 +13,7 @@ const DISABLED_PAGES = [
 export default function AnnouncementsButton() {
   const pathname = usePathname();
 
-  if (pathname in DISABLED_PAGES) return null;
+  if (DISABLED_PAGES.includes(pathname)) return <></>;
 
   return (
     <Link href="/announcements">
