@@ -163,7 +163,7 @@ export const teamMembers: TeamMember[] = [
   {
     name: "Adwaith",
     role: "Interdisciplinary Involvement Co-Lead",
-    image: "",
+    image: "/images/team/adwaith.png",
     fish: "adwaith.svg",
   },
   {
