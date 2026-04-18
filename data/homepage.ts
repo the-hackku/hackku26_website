@@ -103,7 +103,7 @@ export const teamMembers: TeamMember[] = [
   {
     name: "Maral Bat",
     role: "Design Co-Lead",
-    image: "",
+    image: "/images/team/maral.png",
     fish: "maral.svg",
   },
   {
@@ -116,7 +116,7 @@ export const teamMembers: TeamMember[] = [
     name: "Lucía Ulate",
     role: "Outreach Co-Lead",
     linkedin: "https://www.linkedin.com/in/lucia-ulate-centeno",
-    image: "",
+    image: "/images/team/lucia.png",
     fish: "lucia.svg"
   },
   {
@@ -143,7 +143,7 @@ export const teamMembers: TeamMember[] = [
   {
     name: "Richard",
     role: "Finance Lead",
-    image: "",
+    image: "/images/team/richard.png",
     fish: "richard.svg"
   },
   {
